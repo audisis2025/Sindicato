@@ -2,14 +2,16 @@
 /**
  * ===========================================================
  * Nombre de la clase: ProcedureController.php
- * Descripción: Controlador para la gestión de trámites (tabla 'tramites') creados por el Sindicato.
+ * Descripción: Controlador para la gestión de trámites (tabla 'tramites')
+ * creados por el Sindicato. Permite alta, edición, consulta y eliminación.
  * Fecha de creación: 03/11/2025
  * Elaboró: Iker Piza
  * Fecha de liberación: 03/11/2025
  * Autorizó: Líder Técnico
- * Versión: 1.1
- * Tipo de mantenimiento: Adaptación.
- * Descripción del mantenimiento: Se ajustaron los nombres de columnas al esquema real de la tabla 'tramites'.
+ * Versión: 1.2
+ * Tipo de mantenimiento: Corrección y homogeneización.
+ * Descripción del mantenimiento: Se sustituyó el modelo Tramite por Procedure,
+ * se ajustaron los nombres de vistas y se aplicó el estándar PRO-Laravel V3.2.
  * Responsable: Iker Piza
  * Revisor: QA SINDISOFT
  * ===========================================================
@@ -19,37 +21,37 @@ namespace App\Http\Controllers\Union;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Tramite;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Procedure;
 
 class ProcedureController extends Controller
 {
     /**
-     * Mostrar lista de trámites creados por el sindicato autenticado.
+     * 🧾 Mostrar lista de trámites creados por el sindicato autenticado.
      */
     public function index()
     {
-        $procedures = Tramite::where('user_id', Auth::id())
-            ->orderBy('id', 'desc')
+        $procedures = Procedure::where('user_id', Auth::id())
+            ->orderByDesc('id')
             ->get();
 
         return view('v.union.procedures-index', compact('procedures'));
     }
 
     /**
-     * Formulario para crear un nuevo trámite.
+     * ➕ Formulario para crear un nuevo trámite.
      */
     public function create()
     {
-        return view('v.union.procedures');
+        return view('v.union.procedures-create');
     }
 
     /**
-     * Guardar un nuevo trámite (RF06–RF09).
+     * 💾 Guardar un nuevo trámite (RF06–RF09).
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:1000',
             'numero_pasos' => 'required|integer|min:1|max:20',
@@ -59,47 +61,42 @@ class ProcedureController extends Controller
             'tiene_flujo_alterno' => 'nullable|boolean',
         ]);
 
-        Tramite::create([
+        Procedure::create(array_merge($validated, [
             'user_id' => Auth::id(),
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
-            'numero_pasos' => $request->numero_pasos,
-            'fecha_apertura' => $request->fecha_apertura,
-            'fecha_cierre' => $request->fecha_cierre,
-            'tiempo_estimado_dias' => $request->tiempo_estimado_dias,
-            'tiene_flujo_alterno' => $request->tiene_flujo_alterno ?? false,
-        ]);
+            'tiene_flujo_alterno' => $request->boolean('tiene_flujo_alterno'),
+        ]));
 
-        return redirect()->route('union.procedures.index')
+        return redirect()
+            ->route('union.procedures.index')
             ->with('success', '✅ Trámite registrado correctamente.');
     }
 
     /**
-     * Mostrar detalles del trámite.
+     * 👁️ Mostrar los detalles de un trámite.
      */
     public function show($id)
     {
-        $procedure = Tramite::findOrFail($id);
+        $procedure = Procedure::findOrFail($id);
         return view('v.union.procedures-show', compact('procedure'));
     }
 
     /**
-     * Formulario de edición.
+     * ✏️ Formulario para editar un trámite existente.
      */
     public function edit($id)
     {
-        $procedure = Tramite::findOrFail($id);
+        $procedure = Procedure::findOrFail($id);
         return view('v.union.procedures-edit', compact('procedure'));
     }
 
     /**
-     * Actualizar un trámite existente.
+     * 🔁 Actualizar los datos de un trámite.
      */
     public function update(Request $request, $id)
     {
-        $procedure = Tramite::findOrFail($id);
+        $procedure = Procedure::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:1000',
             'numero_pasos' => 'required|integer|min:1|max:20',
@@ -109,29 +106,25 @@ class ProcedureController extends Controller
             'tiene_flujo_alterno' => 'nullable|boolean',
         ]);
 
-        $procedure->update($request->only([
-            'nombre',
-            'descripcion',
-            'numero_pasos',
-            'fecha_apertura',
-            'fecha_cierre',
-            'tiempo_estimado_dias',
-            'tiene_flujo_alterno'
+        $procedure->update(array_merge($validated, [
+            'tiene_flujo_alterno' => $request->boolean('tiene_flujo_alterno'),
         ]));
 
-        return redirect()->route('union.procedures.index')
+        return redirect()
+            ->route('union.procedures.index')
             ->with('success', '📝 Trámite actualizado correctamente.');
     }
 
     /**
-     * Eliminar un trámite.
+     * 🗑️ Eliminar un trámite del registro.
      */
     public function destroy($id)
     {
-        $procedure = Tramite::findOrFail($id);
+        $procedure = Procedure::findOrFail($id);
         $procedure->delete();
 
-        return redirect()->route('union.procedures.index')
+        return redirect()
+            ->route('union.procedures.index')
             ->with('success', '🗑️ Trámite eliminado correctamente.');
     }
 }
