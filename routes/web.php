@@ -29,7 +29,7 @@ use App\Http\Controllers\Union\NewsController;
 use App\Http\Controllers\Union\WorkerRequestController;
 use App\Http\Controllers\Union\WorkerProcedureController;
 use App\Models\Notification;
-
+use Illuminate\Support\Facades\Auth;
 // ===============================
 // 🔸 Public Home Page
 // ===============================
@@ -41,12 +41,14 @@ Route::get('/', function () {
 // 🔸 Main Dashboard (custom logic)
 // ===============================
 Route::get('/dashboard', function () {
-    $rol = auth()->user()->rol ?? 'trabajador';
+    $user = Auth::user();
+    $rol  = $user?->rol ?? 'trabajador';
+
 
     $notificaciones = collect();
 
     if ($rol === 'trabajador') {
-        $notificaciones = Notification::where('user_id', auth()->id())
+        $notificaciones = Notification::where('user_id', Auth::id())
             ->where('estado', 'no_leida')
             ->latest()
             ->take(5)
@@ -167,8 +169,10 @@ Route::middleware(['auth'])->group(function () {
                 ->name('worker.procedures.show');
 
             // ✅ Completar paso
-            Route::post('/procedures/{solicitudId}/steps/{pasoId}/complete',
-                [WorkerProcedureController::class, 'completeStep'])
+            Route::post(
+                '/procedures/{solicitudId}/steps/{pasoId}/complete',
+                [WorkerProcedureController::class, 'completeStep']
+            )
                 ->name('worker.procedures.complete-step');
 
             // 👁️ Ver detalle completo
@@ -176,8 +180,10 @@ Route::middleware(['auth'])->group(function () {
                 ->name('worker.requests.show');
 
             // 📤 Subir archivo de paso
-            Route::post('/procedures/{solicitudId}/steps/{pasoId}/upload',
-                [WorkerProcedureController::class, 'upload'])
+            Route::post(
+                '/procedures/{solicitudId}/steps/{pasoId}/upload',
+                [WorkerProcedureController::class, 'upload']
+            )
                 ->name('worker.procedures.upload');
 
             // 📰 Noticias / convocatorias visibles para trabajador

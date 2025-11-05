@@ -26,15 +26,12 @@
 <body class="bg-[#FFFFFF] font-sans text-[#000000]">
     <div class="min-h-screen flex flex-col justify-center items-center px-4">
 
-        <!-- Contenedor principal -->
         <div
             class="bg-[#FFFFFF] shadow-lg rounded-2xl p-8 sm:p-10 text-center border border-[#272800]/20 w-full max-w-md">
 
-            <!-- Logo -->
             <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
                 class="mx-auto w-28 sm:w-32 mb-4 rounded-full border border-[#272800]/30 shadow-sm bg-white">
 
-            <!-- Título -->
             <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601]">
                 Bienvenido a SINDISOFT
             </h1>
@@ -42,7 +39,6 @@
                 Inicia sesión con tu usuario y contraseña asignados por el Sindicato
             </p>
 
-            <!-- ✅ Mensajes de éxito (cerrar sesión, restablecer contraseña, etc.) -->
             @if (session('status'))
                 <div
                     class="bg-[#DC6601]/10 border border-[#DC6601]/30 text-[#DC6601] text-sm font-semibold rounded-lg p-3 mt-4 text-center">
@@ -50,7 +46,6 @@
                 </div>
             @endif
 
-            <!-- ❌ Mensajes de error -->
             @if ($errors->any())
                 <div
                     class="bg-[#EE0000]/10 border border-[#EE0000]/30 text-[#EE0000] text-sm font-semibold rounded-lg p-3 mt-4 text-center">
@@ -58,11 +53,9 @@
                 </div>
             @endif
 
-            <!-- Formulario -->
             <form method="POST" action="{{ route('login.store') }}" class="mt-6 text-left font-[Inter]">
                 @csrf
 
-                <!-- Usuario -->
                 <div class="mb-4">
                     <label for="usuario" class="block text-[#000000] font-semibold mb-1">Usuario</label>
                     <input id="usuario" name="usuario" type="text" required placeholder="Ejemplo: jperez61"
