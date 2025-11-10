@@ -16,23 +16,21 @@
 <x-layouts.app :title="__('Noticias y convocatorias')">
     <div class="flex flex-col gap-6 p-6 w-full">
 
-        <!-- 🔸 Encabezado -->
         <div class="flex justify-between items-center">
             <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601]">
                 Noticias y convocatorias
             </h1>
 
             <a href="{{ route('union.news.create') }}"
-                class="inline-flex items-center gap-2 bg-[#DC6601] hover:bg-[#241178] text-white font-semibold px-4 py-2 rounded-lg transition">
+                class="inline-flex items-center gap-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold px-4 py-2 rounded-lg transition">
                 <x-heroicon-o-plus class="w-5 h-5" />
                 Nueva publicación
             </a>
         </div>
 
-        <!-- 🔹 Tabla de publicaciones -->
         <div class="bg-white border border-[#D9D9D9]/60 rounded-xl shadow-sm overflow-hidden">
             <table class="min-w-full text-sm text-left text-[#241178]">
-                <thead class="bg-[#DC6601]/10 text-[#241178] uppercase font-semibold">
+                <thead class="bg-[#241178] text-white">
                     <tr>
                         <th scope="col" class="px-4 py-3">Título</th>
                         <th scope="col" class="px-4 py-3">Categoría</th>

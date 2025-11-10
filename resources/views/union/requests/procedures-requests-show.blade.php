@@ -70,7 +70,7 @@
                 action="{{ route('union.procedures.finalize', [$requestData->id, 'Completado']) }}">
                 @csrf
                 <button type="submit"
-                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                    class="px-6 py-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold rounded-lg transition flex items-center gap-2 justify-center">
                     Marcar como completado
                 </button>
             </form>
