@@ -57,7 +57,7 @@
                                 <!-- 👁️ Ver detalle -->
                                 <a href="{{ route('worker.requests.show', $t->id) }}"
                                     class="bg-[#241178] hover:bg-[#1e0f6b] text-white px-3 py-1 rounded-md text-sm transition">
-                                    👁️ Ver detalle
+                                    Ver detalle
                                 </a>
 
 
@@ -69,7 +69,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                         class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                        ❌ Cancelar
+                                        Cancelar
                                     </button>
                                 </form>
                             </td>
@@ -143,7 +143,7 @@
                                     @csrf
                                     <button type="submit"
                                         class="bg-[#DC6601] hover:bg-[#EE0000] text-white px-3 py-1 rounded-md text-sm transition">
-                                        🚀 Iniciar trámite
+                                        Iniciar trámite
                                     </button>
                                 </form>
                             </td>

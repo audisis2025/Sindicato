@@ -39,7 +39,7 @@
                             <!-- Editar -->
                             <a href="{{ route('users.edit', $user->id) }}"
                                 class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                ✏️ Editar
+                                Editar
                             </a>
 
                             <!-- Activar/Inactivar -->
@@ -55,12 +55,12 @@
 
                             <!-- Eliminar -->
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                onsubmit="return confirm('⚠️ ¿Seguro que deseas eliminar este usuario?')">
+                                onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
                                     class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                    🗑️ Eliminar
+                                    Eliminar
                                 </button>
                             </form>
                         </td>

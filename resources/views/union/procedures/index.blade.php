@@ -55,13 +55,13 @@
                                 <!-- Ver -->
                                 <a href="{{ route('union.procedures.show', $procedure->id) }}"
                                     class="bg-[#241178] hover:bg-[#3828a8] text-white px-3 py-1 rounded-md text-sm transition">
-                                    👁️ Ver
+                                    Ver
                                 </a>
 
                                 <!-- Editar -->
                                 <a href="{{ route('union.procedures.edit', $procedure->id ?? 0) }}"
                                     class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                    ✏️ Editar
+                                    Editar
                                 </a>
 
                                 <!-- Eliminar -->
@@ -71,7 +71,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                         class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                        🗑️ Eliminar
+                                        Eliminar
                                     </button>
                                 </form>
                             </td>

@@ -84,7 +84,7 @@
         <div class="mt-10 sm:mt-14"></div>
 
         <footer class="text-center text-xs sm:text-sm text-[#272800] font-[Inter] leading-tight">
-            © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación – Sección 61<br>
+            © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación<br>
             <span class="text-[#241178] font-semibold">Sistema SINDISOFT</span>
         </footer>
     </div>

@@ -61,7 +61,7 @@
                             <td class="p-2 text-center">
                                 <a href="{{ route('union.procedures.requests.show', $solicitud->id) }}"
                                     class="bg-[#DC6601] hover:bg-[#EE0000] text-white px-3 py-1 rounded-md text-sm transition">
-                                    🔍 Revisar
+                                    Revisar
                                 </a>
                             </td>
                         </tr>

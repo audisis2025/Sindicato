@@ -83,7 +83,7 @@
                                 <!-- Editar -->
                                 <a href="{{ route('union.members.edit', $worker->id) }}"
                                     class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                    ✏️ Editar
+                                    Editar
                                 </a>
 
 
@@ -94,7 +94,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                         class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                        🗑️ Eliminar
+                                        Eliminar
                                     </button>
                                 </form>
                             </td>

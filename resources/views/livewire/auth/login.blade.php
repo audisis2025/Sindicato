@@ -5,10 +5,9 @@
  Elaboró: Iker Piza
  Fecha de liberación: 01/11/2025
  Autorizó: Líder Técnico
- Versión: 1.7
+ Versión: 1.8
  Tipo de mantenimiento: Correctivo y perfectivo.
- Descripción del mantenimiento: Se agregaron mensajes de validación (éxito y error),
- compatibilidad móvil y homogeneización visual completa.
+ Descripción del mantenimiento: Eliminado el entorno tipo tarjeta para un diseño más limpio.
  Responsable: Iker Piza
  Revisor: QA SINDISOFT
 =========================================================== --}}
@@ -26,8 +25,8 @@
 <body class="bg-[#FFFFFF] font-sans text-[#000000]">
     <div class="min-h-screen flex flex-col justify-center items-center px-4">
 
-        <div
-            class="bg-[#FFFFFF] shadow-lg rounded-2xl p-8 sm:p-10 text-center border border-[#272800]/20 w-full max-w-md">
+        <!-- Contenedor principal sin tarjeta -->
+        <div class="text-center w-full max-w-md">
 
             <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
                 class="mx-auto w-28 sm:w-32 mb-4 rounded-full border border-[#272800]/30 shadow-sm bg-white">
@@ -63,7 +62,6 @@
                         class="w-full border border-[#272800] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
                 </div>
 
-                <!-- Contraseña -->
                 <div class="mb-4">
                     <label for="password" class="block text-[#000000] font-semibold mb-1">Contraseña</label>
                     <input id="password" name="password" type="password" required autocomplete="current-password"
@@ -71,7 +69,6 @@
                         class="w-full border border-[#272800] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
                 </div>
 
-                <!-- Recordarme -->
                 <div class="flex items-center mb-5">
                     <input id="remember" name="remember" type="checkbox"
                         class="h-4 w-4 text-[#DC6601] border-[#272800] rounded focus:ring-[#DC6601]">
@@ -80,13 +77,11 @@
                     </label>
                 </div>
 
-                <!-- Botón -->
                 <button type="submit"
                     class="w-full font-[Poppins] bg-[#DC6601] hover:bg-[#EE0000] text-[#FFFFFF] font-semibold py-2 rounded-lg transition">
                     Iniciar sesión
                 </button>
 
-                <!-- Enlace de recuperación -->
                 <div class="text-center mt-4">
                     <a href="{{ route('password.request') }}"
                         class="text-sm font-[Poppins] text-[#241178] hover:text-[#EE0000] transition">
@@ -96,9 +91,8 @@
             </form>
         </div>
 
-        <!-- Pie institucional -->
         <footer class="mt-10 text-center text-xs font-[Inter] text-[#000000]/80">
-            © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación – Sección 61<br>
+            © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación<br>
             Sistema <span class="text-[#241178] font-semibold">SINDISOFT</span>
         </footer>
     </div>

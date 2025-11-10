@@ -16,17 +16,17 @@
             <div class="flex gap-3">
                 <a href="{{ route('union.reports.export-pdf', request()->all()) }}"
                    class="bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold py-2 px-4 rounded-lg transition">
-                    📄 Exportar PDF
+                    Exportar PDF
                 </a>
 
                 <a href="{{ route('union.reports.export-excel', request()->all()) }}"
                    class="bg-[#241178] hover:bg-[#1e0f6b] text-white font-semibold py-2 px-4 rounded-lg transition">
-                    📊 Exportar Excel
+                    Exportar Excel
                 </a>
 
                 <a href="{{ route('union.reports.export-csv', request()->all()) }}"
                    class="bg-[#D9D9D9] hover:bg-[#B8B8B8] text-[#241178] font-semibold py-2 px-4 rounded-lg transition">
-                    📁 Exportar CSV
+                    Exportar CSV
                 </a>
             </div>
         </div>
@@ -61,7 +61,7 @@
             <div class="md:col-span-3 flex items-center justify-end">
                 <button type="submit"
                         class="bg-[#241178] hover:bg-[#1e0f6b] text-white font-semibold px-4 py-2 rounded-lg transition">
-                    🔍 Filtrar
+                    Filtrar
                 </button>
             </div>
         </form>

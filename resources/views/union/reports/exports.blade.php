@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-    <h1>📊 Reporte de Trámites Sindicales</h1>
+    <h1>Reporte de Trámites Sindicales</h1>
     <p><strong>Generado por:</strong> {{ auth()->user()->name }}</p>
     <p><strong>Fecha de generación:</strong> {{ now()->format('d/m/Y H:i') }}</p>
 

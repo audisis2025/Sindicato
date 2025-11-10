@@ -26,7 +26,7 @@
 
             <a href="{{ route('union.reports.index') }}"
                 class="px-4 py-2 bg-[#241178]/10 hover:bg-[#241178]/20 text-[#241178] font-semibold rounded-lg transition mt-3 sm:mt-0">
-                ⬅️ Volver
+                Volver
             </a>
         </div>
 
@@ -64,7 +64,7 @@
                         <div class="mt-3">
                             <a href="{{ asset('storage/' . $paso->archivo_trabajador) }}" target="_blank"
                                 class="text-[#241178] hover:text-[#DC6601] font-semibold text-sm underline">
-                                📎 Ver documento enviado por el trabajador
+                                Ver documento enviado por el trabajador
                             </a>
                         </div>
                     @else
@@ -77,14 +77,14 @@
                             @csrf
                             <button type="submit"
                                 class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg transition">
-                                ✅ Aprobar paso
+                                Aprobar paso
                             </button>
                         </form>
 
                         <button type="button"
                             onclick="openErrorModal({{ $paso->id }})"
                             class="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-4 py-2 rounded-lg transition">
-                            ⚠️ Notificar error
+                            Notificar error
                         </button>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                     @csrf
                     <button type="submit"
                         class="bg-[#241178] hover:bg-[#1e0f6b] text-white font-semibold px-5 py-2 rounded-lg transition">
-                        🏁 Marcar como completado
+                        Marcar como completado
                     </button>
                 </form>
 
@@ -106,7 +106,7 @@
                     @csrf
                     <button type="submit"
                         class="bg-[#EE0000] hover:bg-[#DC6601] text-white font-semibold px-5 py-2 rounded-lg transition">
-                        ❌ Rechazar trámite
+                        Rechazar trámite
                     </button>
                 </form>
             </div>

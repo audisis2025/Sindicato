@@ -81,7 +81,7 @@
                         </a>
 
 
-                        <a href="{{ route('admin.configuration') }}"
+                        {{-- <a href="{{ route('admin.configuration') }}"
                             class="flex justify-center lg:justify-start items-center gap-3 px-2 py-2 rounded-lg transition
                             {{ request()->routeIs('admin.configuration')
                                 ? 'bg-[#DC6601]/10 text-[#DC6601] font-semibold'
@@ -89,7 +89,7 @@
                             <x-heroicon-o-cog-6-tooth
                                 class="w-5 h-5 {{ request()->routeIs('admin.configuration') ? 'text-[#DC6601]' : 'text-[#241178]' }}" />
                             <span>Configuración del sistema</span>
-                        </a>
+                        </a> --}}
                         <a href="{{ route('admin.configuration.logs') }}"
                             class="flex justify-center lg:justify-start items-center gap-3 px-2 py-2 rounded-lg transition
                             {{ request()->routeIs('admin.configuration.logs')

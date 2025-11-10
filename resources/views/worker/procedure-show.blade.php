@@ -47,7 +47,7 @@
                         @if ($paso->formato_path)
                             <a href="{{ asset('storage/' . $paso->formato_path) }}"
                                 class="text-[#DC6601] hover:underline text-sm font-semibold">
-                                📄 Descargar formato
+                                Descargar formato
                             </a>
                         @endif
                     </div>
@@ -62,12 +62,12 @@
                                 class="block w-full text-sm border rounded-md mt-1 p-2">
                             <button type="submit"
                                 class="mt-2 bg-[#241178] hover:bg-[#1e0f6b] text-white px-4 py-1 rounded-lg">
-                                📤 Subir archivo
+                                Subir archivo
                             </button>
                         </form>
                     @elseif($paso->formato_path && $bloqueado)
                         <p class="text-gray-500 text-sm italic mt-3 border-t pt-3">
-                            🔒 Este paso requiere subir un archivo, pero primero completa el paso anterior.
+                            Este paso requiere subir un archivo, pero primero completa el paso anterior.
                         </p>
                     @endif
 
@@ -78,12 +78,12 @@
                             @csrf
                             <button type="submit"
                                 class="bg-[#DC6601] hover:bg-[#EE0000] text-white px-4 py-2 rounded-lg font-semibold transition">
-                                ✅ Marcar paso como realizado
+                                Marcar paso como realizado
                             </button>
                         </form>
                     @else
                         <p class="text-gray-400 text-sm mt-2">
-                            🔒 Este paso se habilitará cuando completes el paso anterior.
+                            Este paso se habilitará cuando completes el paso anterior.
                         </p>
                     @endif
                 </li>

@@ -25,7 +25,7 @@
 
             <a href="{{ route('union.procedures.index') }}"
                 class="px-4 py-2 bg-[#241178]/10 hover:bg-[#241178]/20 text-[#241178] font-semibold rounded-lg transition">
-                ⬅️ Volver
+                Volver
             </a>
         </div>
 
@@ -122,7 +122,7 @@
                                 @if ($paso->formato_path)
                                     <a href="{{ asset('storage/' . $paso->formato_path) }}" target="_blank"
                                         class="text-[#241178] hover:text-[#DC6601] underline text-sm">
-                                        📄 Ver archivo existente
+                                        Ver archivo existente
                                     </a>
                                 @else
                                     <p class="text-gray-500 text-sm">Sin archivo</p>

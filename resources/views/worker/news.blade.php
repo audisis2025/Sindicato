@@ -24,7 +24,7 @@
                         {{ $item->titulo }}
                     </h2>
                     <p class="text-gray-600 text-sm mb-3">
-                        📅 Publicado el {{ $item->created_at->format('d/m/Y') }}
+                        Publicado el {{ $item->created_at->format('d/m/Y') }}
                         — <span class="capitalize">{{ $item->tipo }}</span>
                     </p>
                     <p class="text-[#000000] font-[Inter] text-base leading-relaxed mb-4">
@@ -34,7 +34,7 @@
                     @if ($item->archivo_path)
                         <a href="{{ asset('storage/' . $item->archivo_path) }}"
                            class="text-[#DC6601] hover:underline font-semibold text-sm">
-                           📄 Descargar archivo adjunto
+                           Descargar archivo adjunto
                         </a>
                     @endif
                 </div>

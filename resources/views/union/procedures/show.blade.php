@@ -26,7 +26,7 @@
             <div class="flex gap-3 mt-3 sm:mt-0">
                 <a href="{{ route('union.procedures.index') }}"
                     class="px-4 py-2 bg-[#241178]/10 hover:bg-[#241178]/20 text-[#241178] font-semibold rounded-lg transition">
-                    ⬅️ Volver
+                    Volver
                 </a>
                 <a href="{{ route('union.procedures.edit', $procedure->id) }}"
                     class="px-4 py-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold rounded-lg transition flex items-center gap-2">
@@ -86,7 +86,7 @@
                                 <div class="mt-3">
                                     <a href="{{ asset('storage/' . $paso->formato_path) }}" target="_blank"
                                         class="text-[#241178] hover:text-[#DC6601] font-semibold text-sm underline">
-                                        📄 Ver formato asociado
+                                        Ver formato asociado
                                     </a>
                                 </div>
                             @endif

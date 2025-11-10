@@ -202,7 +202,7 @@ class ProcedureController extends Controller
         $requestData = SolicitudTramite::with(['trabajador', 'tramite', 'pasos'])
             ->findOrFail($id);
 
-        return view('union.procedures-requests-show', compact('requestData'));
+        return view('union.requests.procedures-requests-show', compact('requestData'));
     }
 
     /**

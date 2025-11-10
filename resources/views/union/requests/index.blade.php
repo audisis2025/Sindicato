@@ -42,7 +42,7 @@
                             <td class="p-2 text-center">
                                 <a href="{{ route('union.procedures.requests.show', $s->id) }}"
                                     class="bg-[#241178] hover:bg-[#1e0f6b] text-white px-3 py-1 rounded-md text-sm transition">
-                                    👁️ Ver detalle
+                                    Ver detalle
                                 </a>
                             </td>
                         </tr>

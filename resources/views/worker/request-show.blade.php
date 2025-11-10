@@ -92,7 +92,7 @@
                         @if ($paso->formato_path)
                             <a href="{{ asset('storage/' . $paso->formato_path) }}"
                                 class="text-[#DC6601] hover:underline text-sm font-semibold">
-                                📄 Descargar formato
+                                Descargar formato
                             </a>
                         @endif
                     </div>

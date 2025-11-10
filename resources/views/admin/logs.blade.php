@@ -57,7 +57,7 @@
 
         <!-- 📘 Pie -->
         <footer class="mt-10 text-center text-sm text-[#272800] leading-tight">
-            © {{ date('Y') }} SNTE Sección 61 – Sistema SINDISOFT<br>
+            © {{ date('Y') }} SNTE – Sistema SINDISOFT<br>
             <span class="text-[#241178]">Bitácora del sistema</span> | Módulo Administrativo v1.0
         </footer>
     </div>

@@ -36,7 +36,7 @@
             <!-- 📝 Título -->
             <div>
                 <label for="title" class="block text-sm font-semibold text-[#241178] mb-1">
-                    📝 Título
+                    Título
                 </label>
                 <input type="text" id="title" name="title"
                        placeholder="Ej. Convocatoria Becas 2025"
@@ -46,7 +46,7 @@
             <!-- 📄 Descripción breve -->
             <div>
                 <label for="description" class="block text-sm font-semibold text-[#241178] mb-1">
-                    📄 Descripción breve
+                    Descripción breve
                 </label>
                 <textarea id="description" name="description" rows="3"
                           placeholder="Resumen o propósito de la publicación"
@@ -57,7 +57,7 @@
             <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                     <label for="publication_date" class="block text-sm font-semibold text-[#241178] mb-1">
-                        📅 Fecha de publicación
+                        Fecha de publicación
                     </label>
                     <input type="date" id="publication_date" name="publication_date"
                            class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
@@ -65,7 +65,7 @@
 
                 <div>
                     <label for="expiration_date" class="block text-sm font-semibold text-[#241178] mb-1">
-                        ⏰ Fecha de vigencia (opcional)
+                        Fecha de vigencia (opcional)
                     </label>
                     <input type="date" id="expiration_date" name="expiration_date"
                            class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
@@ -75,7 +75,7 @@
             <!-- 📂 Categoría -->
             <div>
                 <label for="category" class="block text-sm font-semibold text-[#241178] mb-1">
-                    📂 Categoría
+                    Categoría
                 </label>
                 <select id="category" name="category"
                         class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#DC6601]">
@@ -89,7 +89,7 @@
             <!-- 📎 Archivo adjunto -->
             <div>
                 <label for="attachment" class="block text-sm font-semibold text-[#241178] mb-1">
-                    📎 Archivo adjunto (opcional)
+                    Archivo adjunto (opcional)
                 </label>
                 <input type="file" id="attachment" name="attachment"
                        class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm text-[#241178]" />
@@ -98,7 +98,7 @@
             <!-- 🖼️ Imagen de portada -->
             <div>
                 <label for="cover_image" class="block text-sm font-semibold text-[#241178] mb-1">
-                    🖼️ Imagen de portada (opcional)
+                    Imagen de portada (opcional)
                 </label>
                 <input type="file" id="cover_image" name="cover_image"
                        class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm text-[#241178]" />
@@ -107,7 +107,7 @@
             <!-- 🟢 Estado -->
             <div>
                 <label for="status" class="block text-sm font-semibold text-[#241178] mb-1">
-                    🟢 Estado
+                    Estado
                 </label>
                 <select id="status" name="status"
                         class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#DC6601]">

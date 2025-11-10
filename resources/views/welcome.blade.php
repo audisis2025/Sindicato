@@ -20,41 +20,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SINDISOFT - Portal del Sindicato</title>
-    @vite('resources/css/app.css')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-[#FFFFFF] font-[Inter] text-[#000000] min-h-screen flex flex-col justify-center items-center p-4 sm:p-6">
+<body class="bg-[#FFFFFF] text-[#000000] font-[Inter] flex flex-col min-h-screen">
 
-    <!-- 🔹 Contenedor principal -->
-    <div class="w-full max-w-sm sm:max-w-md md:max-w-lg bg-[#FFFFFF] border border-[#272800]/20 rounded-2xl shadow-lg p-8 sm:p-10 text-center">
+    {{-- Encabezado --}}
+    <header class="bg-[#FFFFFF] border-b border-[#272800]/20 shadow-sm py-4">
+        <div class="container mx-auto px-6 flex items-center justify-between">
 
-        <!-- 🧩 Logo -->
-        <img src="{{ asset('assets/img/logo_sindisoft.png') }}"
-             alt="Logo SINDISOFT"
-             class="mx-auto w-24 sm:w-28 md:w-32 mb-5 rounded-full border border-[#272800]/30 shadow-sm bg-white">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
+                    class="w-12 h-12 rounded-full border border-[#272800]/30 shadow-sm bg-white">
 
-        <!-- 🏷️ Título -->
-        <h1 class="text-2xl sm:text-3xl font-[Poppins] font-bold text-[#DC6601] mb-2">
+                <h1 class="text-xl sm:text-2xl font-[Poppins] font-bold text-[#DC6601]">
+                    SINDISOFT
+                </h1>
+            </div>
+
+            <nav>
+                <a href="{{ route('login') }}"
+                    class="font-[Poppins] text-[#DC6601] hover:text-[#EE0000] font-semibold px-4 py-2 rounded-lg transition">
+                    Iniciar sesión
+                </a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-6 py-16 flex flex-col justify-center items-center text-center">
+
+        <h2 class="text-3xl sm:text-4xl font-[Poppins] font-bold text-[#DC6601] mb-4">
             Bienvenido a SINDISOFT
-        </h1>
+        </h2>
 
-        <!-- 💬 Subtítulo -->
-        <p class="text-[#241178] font-[Inter] text-sm sm:text-base md:text-lg mb-6">
+        <p class="text-[#241178] font-[Inter] text-base sm:text-lg max-w-xl">
             Sistema de Gestión de Trámites del Sindicato
         </p>
 
-        <!-- 🔘 Botón de acceso -->
-        <a href="{{ route('login') }}"
-           class="inline-block font-[Poppins] bg-[#DC6601] hover:bg-[#EE0000] text-[#FFFFFF] font-semibold py-2.5 px-6 sm:px-8 rounded-lg transition w-full sm:w-auto shadow-md">
-            Iniciar sesión
-        </a>
-    </div>
+    </main>
 
-    <!-- 📅 Pie institucional -->
-    <footer class="mt-10 text-center text-xs sm:text-sm font-[Inter] text-[#272800]/80 leading-relaxed">
-        © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación – Sección 61<br>
+
+    {{-- Pie de página --}}
+    <footer
+        class="bg-[#FFFFFF] border-t border-[#272800]/20 text-center py-6 text-xs sm:text-sm font-[Inter] text-[#272800]/80 leading-relaxed mt-auto">
+        © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación<br>
         <span class="text-[#241178] font-semibold">Sistema SINDISOFT</span>
     </footer>
 
 </body>
+
 </html>
