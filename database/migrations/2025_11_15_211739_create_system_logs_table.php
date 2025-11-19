@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pasos_tramite', function (Blueprint $table) {
+        Schema::create('system_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tramite_id')->constrained('tramites')->onDelete('cascade');
-            $table->string('nombre_paso');
-            $table->text('descripcion')->nullable();
-            $table->integer('orden')->default(1);
-            $table->integer('tiempo_estimado_dias')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('action');
+            $table->text('description')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pasos_tramite');
+        Schema::dropIfExists('system_logs');
     }
 };

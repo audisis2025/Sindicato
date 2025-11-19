@@ -5,9 +5,9 @@
  Elaboró: Iker Piza
  Fecha de liberación: 01/11/2025
  Autorizó: Líder Técnico
- Versión: 1.8
- Tipo de mantenimiento: Correctivo y perfectivo.
- Descripción del mantenimiento: Eliminado el entorno tipo tarjeta para un diseño más limpio.
+ Versión: 2.0
+ Tipo de mantenimiento: Homogeneización visual institucional.
+ Descripción del mantenimiento: Sustitución de tonos azules por paleta naranja institucional.
  Responsable: Iker Piza
  Revisor: QA SINDISOFT
 =========================================================== --}}
@@ -22,32 +22,30 @@
     @vite('resources/css/app.css')
 </head>
 
-<body class="bg-[#FFFFFF] font-sans text-[#000000]">
+<body class="bg-white font-sans text-black">
     <div class="min-h-screen flex flex-col justify-center items-center px-4">
 
-        <!-- Contenedor principal sin tarjeta -->
         <div class="text-center w-full max-w-md">
 
             <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
                 class="mx-auto w-28 sm:w-32 mb-4 rounded-full border border-[#272800]/30 shadow-sm bg-white">
 
-            <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601]">
+            <h1 class="text-3xl font-[Poppins] font-bold text-[#DE6601]">
                 Bienvenido a SINDISOFT
             </h1>
-            <p class="text-[#241178] font-[Inter] text-sm mt-2">
+
+            <p class="text-[#272800] font-[Inter] text-sm mt-2">
                 Inicia sesión con tu usuario y contraseña asignados por el Sindicato
             </p>
 
             @if (session('status'))
-                <div
-                    class="bg-[#DC6601]/10 border border-[#DC6601]/30 text-[#DC6601] text-sm font-semibold rounded-lg p-3 mt-4 text-center">
+                <div class="bg-[#DE6601]/10 border border-[#DE6601]/30 text-[#DE6601] text-sm font-semibold rounded-lg p-3 mt-4 text-center">
                     {{ session('status') }}
                 </div>
             @endif
 
             @if ($errors->any())
-                <div
-                    class="bg-[#EE0000]/10 border border-[#EE0000]/30 text-[#EE0000] text-sm font-semibold rounded-lg p-3 mt-4 text-center">
+                <div class="bg-[#EE0000]/10 border border-[#EE0000]/30 text-[#EE0000] text-sm font-semibold rounded-lg p-3 mt-4 text-center">
                     {{ $errors->first() }}
                 </div>
             @endif
@@ -56,44 +54,44 @@
                 @csrf
 
                 <div class="mb-4">
-                    <label for="usuario" class="block text-[#000000] font-semibold mb-1">Usuario</label>
+                    <label for="usuario" class="block text-black font-semibold mb-1">Usuario</label>
                     <input id="usuario" name="usuario" type="text" required placeholder="Ejemplo: jperez61"
                         autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
-                        class="w-full border border-[#272800] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
+                        class="w-full h-12 border border-[#272800] rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-[#DE6601]" />
                 </div>
 
                 <div class="mb-4">
-                    <label for="password" class="block text-[#000000] font-semibold mb-1">Contraseña</label>
+                    <label for="password" class="block text-black font-semibold mb-1">Contraseña</label>
                     <input id="password" name="password" type="password" required autocomplete="current-password"
                         placeholder="********"
-                        class="w-full border border-[#272800] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
+                        class="w-full h-12 border border-[#272800] rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-[#DE6601]" />
                 </div>
 
                 <div class="flex items-center mb-5">
                     <input id="remember" name="remember" type="checkbox"
-                        class="h-4 w-4 text-[#DC6601] border-[#272800] rounded focus:ring-[#DC6601]">
-                    <label for="remember" class="ml-2 text-sm text-[#000000]">
+                        class="h-4 w-4 text-[#DE6601] border-[#272800] rounded focus:ring-[#DE6601]">
+                    <label for="remember" class="ml-2 text-sm text-black">
                         Recordarme
                     </label>
                 </div>
 
                 <button type="submit"
-                    class="w-full font-[Poppins] bg-[#DC6601] hover:bg-[#EE0000] text-[#FFFFFF] font-semibold py-2 rounded-lg transition">
+                    class="w-full font-[Poppins] bg-[#DE6601] hover:bg-[#EE0000] text-white font-semibold py-2 rounded-lg transition">
                     Iniciar sesión
                 </button>
 
                 <div class="text-center mt-4">
                     <a href="{{ route('password.request') }}"
-                        class="text-sm font-[Poppins] text-[#241178] hover:text-[#EE0000] transition">
+                        class="text-sm font-[Poppins] text-[#DE6601] hover:text-[#272800] transition">
                         ¿Olvidaste tu contraseña?
                     </a>
                 </div>
             </form>
         </div>
 
-        <footer class="mt-10 text-center text-xs font-[Inter] text-[#000000]/80">
+        <footer class="mt-10 text-center text-xs font-[Inter] text-[#272800]">
             © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación<br>
-            Sistema <span class="text-[#241178] font-semibold">SINDISOFT</span>
+            Sistema <span class="text-[#DE6601] font-semibold">SINDISOFT</span>
         </footer>
     </div>
 </body>

@@ -1,126 +1,180 @@
 <?php
 
-/**
- * ===========================================================
- * File name: UserController.php
- * Description: Controller to manage user creation and listing in SINDISOFT.
- * Creation date: 01/11/2025
- * Author: Iker Piza
- * Release date: 01/11/2025
- * Approved by: Technical Lead
- * Version: 1.0
- * Maintenance type: Creation.
- * Maintenance description: Enables administrator to create users for the
- * Union and Workers modules, with validation and role assignment.
- * Responsible: Iker Piza
- * Reviewer: QA SINDISOFT
- * ===========================================================
- */
+/*
+* ===========================================================
+* Nombre de la clase: UserController.php
+* Descripción de la clase: Controlador para gestionar la creación y listado de usuarios
+* por el Administrador.
+* Fecha de creación: 01/11/2025
+* Elaboró: Iker Piza
+* Fecha de liberación: 01/11/2025
+* Autorizó: Líder Técnico
+* Versión: 2.1
+*
+* Fecha de mantenimiento: 12/11/2025
+* Folio de mantenimiento: [Tu Folio 2]
+* Tipo de mantenimiento: Perfectivo (Traducción)
+* Descripción del mantenimiento: Se traducen todos los campos (store/update) para
+* alinear con la migración de 'users' en inglés (username, role, gender, etc.).
+* Responsable: [Tu Nombre]
+* Revisor: Gemini
+* ===========================================================
+*/
 
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use App\Services\SystemLogger;
+
 
 class UserController extends Controller
 {
     /**
-     * Display all registered users.
+     * Aplica el middleware de administrador a todos los métodos.
      */
-    public function index()
+    public function __construct()
     {
-        $users = User::orderBy('id', 'desc')->get();
+        $this->middleware('auth');
+        $this->middleware('isAdmin');
+    }
+
+    /**
+     * Muestra todos los usuarios registrados.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index(Request $request)
+    {
+        $query = User::query();
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->orderBy('id', 'desc')->get();
 
         return view('admin.users.index', compact('users'));
     }
 
+
     /**
-     * Show form to create a new user.
+     * Muestra el formulario para crear un nuevo usuario.
+     *
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         return view('admin.users.create');
     }
 
     /**
-     * Store a newly created user in database.
+     * Almacena un nuevo usuario en la base de datos.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'usuario' => 'required|string|max:50|unique:users,usuario',
+        $validatedData = $request->validate([
+            'username' => 'required|string|max:50|unique:users,username',
             'name' => 'required|string|max:100',
             'email' => 'nullable|email|max:100|unique:users,email',
             'password' => 'required|string|min:8',
-            'rol' => 'required|in:sindicato,trabajador',
+            'role' => 'required|in:union,worker',
             'curp' => 'nullable|string|max:18',
             'rfc' => 'nullable|string|max:13',
-            'sexo' => 'nullable|in:H,M',
-            'clave_presupuestal' => 'nullable|string|max:50',
+            'gender' => 'nullable|in:H,M',
+            'budget_key' => 'nullable|string|max:50',
         ]);
 
         $user = User::create([
-            'usuario' => $request->usuario,
-            'name' => $request->name,
-            'email' => $request->email ?? null,
-            'password' => Hash::make($request->password),
-            'rol' => $request->rol,
-            'activo' => true,
+            'username' => $validatedData['username'],
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'] ?? null,
+            'password' => Hash::make($validatedData['password']),
+            'role' => $validatedData['role'],
+            'curp' => $validatedData['curp'] ?? null,
+            'rfc' => $validatedData['rfc'] ?? null,
+            'gender' => $validatedData['gender'] ?? null,
+            'budget_key' => $validatedData['budget_key'] ?? null,
+            'active' => true,
         ]);
 
-        $user->detalle()->create([
-            'curp' => $request->curp,
-            'rfc' => $request->rfc,
-            'sexo' => $request->sexo,
-            'clave_presupuestal' => $request->clave_presupuestal,
-            'activo' => true,
-        ]);
+        app(\App\Services\SystemLogger::class)->log(
+            'Crear usuario',
+            'El administrador creó al usuario: ' . $user->username
+        );
 
-        return redirect()->route('users.index')->with('success', '✅ Usuario creado correctamente.');
+        return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
     }
     /**
-     * Show edit form.
+     * Muestra el formulario de edición del usuario.
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\View\View
      */
-    public function edit(User $user)
+    public function edit(User $user): View
     {
         return view('admin.users.edit', compact('user'));
     }
 
     /**
-     * Update user data.
+     * Actualiza los datos del usuario.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User $user
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): RedirectResponse
     {
-        $request->validate([
+        // Lógica corregida: Se validan todos los campos en inglés
+        $validatedData = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'nullable|email|max:100|unique:users,email,' . $user->id,
-            'rol' => 'required|in:sindicato,trabajador',
+            'role' => 'required|in:union,worker', // 'rol' y valores
+            'curp' => 'nullable|string|max:18',
+            'rfc' => 'nullable|string|max:13',
+            'gender' => 'nullable|in:H,M', // 'sexo'
+            'budget_key' => 'nullable|string|max:50', // 'clave_presupuestal'
+            'active' => 'required|boolean', // 'activo'
         ]);
 
-        $user->update($request->only('name', 'email', 'rol'));
+        $user->update($validatedData);
+        app(\App\Services\SystemLogger::class)->log(
+            'Actualizar usuario',
+            'El administrador actualizó al usuario: ' . $user->username
+        );
 
-        return redirect()->route('users.index')->with('success', '✅ Usuario actualizado correctamente.');
+        return redirect()->route('users.index')->with('success', ' ✅  Usuario actualizado correctamente.');
     }
 
     /**
-     * Toggle activation status.
+     * Elimina un usuario de la base de datos.
+     *
+     * @param \App\Models\User $user
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function toggle(User $user)
-    {
-        $user->activo = !$user->activo;
-        $user->save();
-
-        return back()->with('success', '⚙️ Estado del usuario actualizado.');
-    }
-
-    /**
-     * Delete user (logical or real).
-     */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
         $user->delete();
+        app(\App\Services\SystemLogger::class)->log(
+            'Eliminar usuario',
+            'El administrador eliminó al usuario: ' . $user->username
+        );
 
-        return back()->with('success', '🗑️ Usuario eliminado correctamente.');
+        return back()->with('success', ' 🗑️  Usuario eliminado correctamente.');
+    }
+    public function toggle($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->active = !$user->active;
+        $user->save();
+
+        return back()->with('success', 'Estado del usuario actualizado correctamente.');
     }
 }

@@ -12,7 +12,6 @@ class Authenticate extends Middleware
     protected function redirectTo($request): ?string
     {
         if (! $request->expectsJson()) {
-            // 🔒 Aquí defines la ruta del login (Fortify la maneja automáticamente)
             return route('login');
         }
 

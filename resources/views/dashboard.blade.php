@@ -5,87 +5,114 @@
  Elaboró: Iker Piza
  Fecha de liberación: 01/11/2025
  Autorizó: Líder Técnico
- Versión: 2.0
- Tipo de mantenimiento: Extensión funcional.
- Descripción del mantenimiento: Se agregó visualización automática de notificaciones
- pendientes al iniciar sesión para el rol Trabajador.
+ Versión: 2.2
+ Tipo de mantenimiento: Correctivo y perfectivo.
+ Descripción del mantenimiento: Homogeneización visual en tonos naranjas institucionales.
  Responsable: Iker Piza
  Revisor: QA SINDISOFT
- =========================================================== --}}
+=========================================================== --}}
 
 <x-layouts.app :title="__('Dashboard')">
-    @php
-        $rol = auth()->user()->rol ?? 'trabajador';
 
-        // 🔔 Obtener notificaciones no leídas (solo trabajador)
+    @php
+        $rol = auth()->user()->role ?? 'trabajador';
+
         $notificaciones = collect();
         if ($rol === 'trabajador') {
             $notificaciones = \App\Models\Notification::where('user_id', auth()->id())
-                ->where('estado', 'no_leida')
+                ->where('status', 'unread')
                 ->latest()
                 ->take(5)
                 ->get();
         }
     @endphp
 
-    <div class="flex flex-col items-center justify-center w-full min-h-[80vh] bg-[#FFFFFF] p-6 sm:p-10 text-center font-[Inter]">
+    <div
+        class="flex flex-col items-center justify-center w-full min-h-[80vh] bg-white p-6 sm:p-10 text-center font-[Inter]">
 
         @if (session('status'))
-            <div class="mb-6 w-full max-w-md bg-[#DC6601]/10 border border-[#DC6601]/30 text-[#DC6601] font-semibold rounded-xl p-4 shadow-sm">
+            <div
+                class="mb-6 w-full max-w-md bg-[#DE6601]/10 border border-[#DE6601]/30 text-[#DE6601] font-semibold rounded-xl p-4 shadow-sm">
                 {{ session('status') }}
             </div>
         @endif
 
         @if ($rol === 'trabajador' && $notificaciones->count() > 0)
-            <div class="w-full max-w-2xl mb-8 bg-[#FFF6EE] border border-[#DC6601]/40 rounded-xl shadow-sm p-5 text-left">
-                <h3 class="text-[#DC6601] font-bold font-[Poppins] text-lg mb-2">
-                    🔔 Tienes {{ $notificaciones->count() }} notificación(es) pendiente(s)
+            <div
+                class="w-full max-w-2xl mb-8 bg-[#FFF6EE] border border-[#DE6601]/40 rounded-xl shadow-sm p-5 text-left">
+
+                <h3 class="text-[#DE6601] font-bold font-[Poppins] text-lg mb-2">
+                    Tienes {{ $notificaciones->count() }} notificación(es) pendiente(s)
                 </h3>
+
                 <ul class="list-disc list-inside text-[#272800] text-sm font-[Inter] space-y-1">
                     @foreach ($notificaciones as $n)
                         <li>
-                            <strong>{{ $n->titulo }}:</strong> {{ $n->mensaje }}
+                            <strong>{{ $n->title }}:</strong> {{ $n->message }}
                         </li>
                     @endforeach
                 </ul>
+
                 <div class="mt-3 text-right">
                     <a href="{{ route('worker.notifications.index') }}"
-                       class="text-[#241178] hover:text-[#DC6601] font-semibold text-sm">
-                        Ver todas →
+                        class="text-[#DE6601] hover:text-[#272800] font-semibold text-sm">
+                        Ver todas
                     </a>
                 </div>
             </div>
         @endif
 
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-[Poppins] font-bold text-[#DC6601] mb-3">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-[Poppins] font-bold text-[#DE6601] mb-3">
             Bienvenido a SINDISOFT
         </h1>
 
-        <p class="text-[#241178] text-base sm:text-lg md:text-xl font-[Inter] mb-3">
+        <p class="text-[#272800] text-base sm:text-lg md:text-xl font-[Inter] mb-3">
             {{ auth()->user()->name }} — Rol:
-            <span class="capitalize font-semibold">{{ $rol }}</span>
+            <span class="capitalize font-semibold">
+                {{ $rol === 'admin' ? 'Administrador' : ($rol === 'union' ? 'Sindicato' : 'Trabajador') }}
+            </span>
         </p>
 
-        <div class="w-16 sm:w-20 h-[3px] bg-[#DC6601] rounded-full mb-8"></div>
+        <div class="w-16 sm:w-20 h-[3px] bg-[#DE6601] rounded-full mb-8"></div>
 
-        <div class="max-w-xl sm:max-w-2xl text-sm sm:text-base md:text-lg text-[#000000] leading-relaxed px-2">
-            @if ($rol === 'administrador')
-                <p>Como <strong>Administrador del sistema</strong>, puedes gestionar usuarios, configurar el sistema y supervisar los módulos activos desde el menú lateral.</p>
-                <p class="mt-3 text-[#241178] font-semibold">Accede a tus herramientas desde la barra izquierda.</p>
-            @elseif ($rol === 'sindicato')
-                <p>Como <strong>Usuario Sindicato</strong>, puedes registrar y revisar los trámites sindicales, además de consultar la información de los miembros asociados.</p>
-                <p class="mt-3 text-[#241178] font-semibold">Utiliza el menú lateral para gestionar tus actividades sindicales.</p>
+        <div class="max-w-xl sm:max-w-2xl text-sm sm:text-base md:text-lg text-black leading-relaxed px-2">
+
+            @if ($rol === 'admin')
+                <p>Como <strong>Administrador del sistema</strong>, puedes gestionar usuarios, configurar el sistema y
+                    supervisar los módulos activos desde el menú lateral.</p>
+                <p class="mt-3 text-[#DE6601] font-semibold">Accede a tus herramientas desde la barra izquierda.</p>
+            @elseif ($rol === 'union')
+                <p>Como <strong>Usuario Sindicato</strong>, puedes registrar y revisar los trámites sindicales, además
+                    de consultar la información de los miembros asociados.</p>
+                <p class="mt-3 text-[#DE6601] font-semibold">Utiliza el menú lateral para gestionar tus actividades
+                    sindicales.</p>
             @else
-                <p>Como <strong>Trabajador</strong>, puedes consultar tus trámites, revisar su estatus, recibir notificaciones y acceder al área de soporte para resolver incidencias.</p>
-                <p class="mt-3 text-[#241178] font-semibold">Encuentra todo lo necesario en el menú lateral.</p>
+                <div class="w-full max-w-xl bg-white border border-[#D9D9D9] rounded-2xl shadow-md p-6 mt-6">
+
+                    <h2 class="text-2xl font-[Poppins] font-bold text-[#241178] mb-3">
+                        Catálogo de Trámites
+                    </h2>
+
+                    <p class="text-[#272800] text-sm mb-4">
+                        Consulta todos los trámites disponibles y revisa sus requisitos.
+                    </p>
+
+                    <a href="{{ route('worker.catalog.index') }}"
+                        class="inline-block bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold px-5 py-2 rounded-lg transition">
+                        Ver catálogo completo →
+                    </a>
+
+                </div>
             @endif
+
+
         </div>
 
-        <div class="mt-10 sm:mt-14"></div>
-
-        <footer class="text-center text-xs sm:text-sm text-[#272800] font-[Inter] leading-tight">
+        <footer class="mt-10 text-center text-xs sm:text-sm text-[#272800] font-[Inter] leading-tight">
             © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación<br>
-            <span class="text-[#241178] font-semibold">Sistema SINDISOFT</span>
+            <span class="text-[#DE6601] font-semibold">Sistema SINDISOFT</span>
         </footer>
+
     </div>
+
 </x-layouts.app>
