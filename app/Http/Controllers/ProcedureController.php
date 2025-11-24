@@ -1,59 +1,32 @@
 <?php
-/*
-* ===========================================================
-* Nombre de la clase: ProcedureController.php
-* Descripción de la clase: Controlador para la gestión de plantillas de trámites (tabla 'procedures')
-* creados por el Sindicato. Permite alta, edición, consulta y eliminación.
-* Fecha de creación: 03/11/2025
-* Elaboró: Iker Piza
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 2.0
-*
-* Fecha de mantenimiento: 10/11/2025
-* Folio de mantenimiento: [Tu Folio]
-* Tipo de mantenimiento: Perfectivo
-* Descripción del mantenimiento: Refactorizado al 100% para usar la BD en inglés.
-* Se eliminaron modelos obsoletos (SolicitudTramite, TramitePaso) y
-* se tradujeron todas las claves (nombre, pasos, etc.).
-* Se eliminaron métodos de 'WorkerRequestController' (notifyError, approveStep).
-* Responsable: [Tu Nombre]
-* Revisor: [Tu Revisor]
-* ===========================================================
-*/
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Procedure;
 use App\Models\ProcedureStep;
+use App\Services\SystemLogger;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use App\Services\SystemLogger;
 
-class ProcedureController extends Controller // [cite: 887-890]
+class ProcedureController extends Controller
 {
     /**
-     * Muestra el listado de plantillas de trámites.
-     *
-     * @return \Illuminate\View\View
+     * Listado de trámites del sindicato autenticado.
      */
-    public function index(): View // [cite: 200, 217-218]
+    public function index(): View
     {
         $procedures = Procedure::where('user_id', Auth::id())
             ->orderBy('id', 'desc')
             ->get();
 
-        return view('union.procedures.index', compact('procedures')); // [cite: 288-291]
+        return view('union.procedures.index', compact('procedures'));
     }
 
     /**
-     * Muestra el formulario de creación de trámite.
-     *
-     * @return \Illuminate\View\View
+     * Formulario para crear trámite.
      */
     public function create(): View
     {
@@ -61,96 +34,100 @@ class ProcedureController extends Controller // [cite: 887-890]
     }
 
     /**
-     * Registra un nuevo trámite y sus pasos.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * Guarda un trámite y sus pasos.
      */
-    public function store(Request $request): RedirectResponse // [cite: 200, 214-215]
+    public function store(Request $request): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255', // Antes 'nombre'
-            'description' => 'nullable|string|max:1000', // Antes 'descripcion'
-            'opening_date' => 'nullable|date', // Antes 'fecha_apertura'
-            'closing_date' => 'nullable|date|after_or_equal:opening_date', // Antes 'fecha_cierre'
-            'estimated_days' => 'nullable|integer|min:1|max:365', // Antes 'tiempo_estimado_dias'
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'opening_date' => 'nullable|date',
+            'closing_date' => 'nullable|date|after_or_equal:opening_date',
+            'estimated_days' => 'nullable|integer|min:1|max:365',
 
-            // Validación por pasos
-            'steps' => 'required|array|min:1', // Antes 'pasos'
-            'steps.*.order' => 'required|integer|min:1', // Antes 'orden'
-            'steps.*.step_name' => 'required|string|max:255', // Antes 'nombre_paso'
-            'steps.*.step_description' => 'nullable|string|max:1000', // Antes 'descripcion_paso'
-            'steps.*.estimated_days' => 'nullable|integer|min:1|max:365', // Antes 'tiempo_estimado_dias'
+            'steps' => 'required|array|min:1',
+
+            'steps.*.order' => 'required|integer|min:1',
+            'steps.*.step_name' => 'required|string|max:255',
+            'steps.*.step_description' => 'nullable|string|max:1000',
+            'steps.*.estimated_days' => 'nullable|integer|min:1|max:365',
             'steps.*.next_step_if_fail' => 'nullable|integer|min:1',
-            'steps.*.file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240', // Antes 'formato'
+            'steps.*.requires_file' => 'required|in:yes,no',
+            'steps.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
         ]);
 
-        // Validación de flujo alterno
-        $totalSteps = count($validatedData['steps']);
-        foreach ($validatedData['steps'] as $step) {
-            if (!empty($step['next_step_if_fail']) && $step['next_step_if_fail'] > $totalSteps) {
-                return back()
-                    ->withInput()
-                    ->with('error', 'El flujo alterno de un paso no puede apuntar a un paso mayor al total definido.');
+        $steps = $validated['steps'];
+        $totalSteps = count($steps);
+
+        /**
+         * Validación del flujo alterno:
+         * - No puede apuntar a un paso mayor
+         * - No puede apuntar a sí mismo
+         */
+        foreach ($steps as $step) {
+            if (!empty($step['next_step_if_fail'])) {
+                if ($step['next_step_if_fail'] > $totalSteps) {
+                    return back()->withInput()->with('error', 'El flujo alterno apunta a un paso inexistente.');
+                }
+
+                if ($step['next_step_if_fail'] == $step['order']) {
+                    return back()->withInput()->with('error', 'Un paso no puede fallar hacia sí mismo.');
+                }
             }
         }
 
+        /**
+         * Crear trámite
+         */
         $procedure = Procedure::create([
             'user_id' => Auth::id(),
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
-            'steps_count' => $totalSteps, // Antes 'numero_pasos'
-            'opening_date' => $validatedData['opening_date'],
-            'closing_date' => $validatedData['closing_date'],
-            'estimated_days' => $validatedData['estimated_days'],
-            'has_alternate_flow' => false, // Lógica ahora por paso
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'steps_count' => $totalSteps,
+            'opening_date' => $validated['opening_date'],
+            'closing_date' => $validated['closing_date'],
+            'estimated_days' => $validated['estimated_days'],
+            'has_alternate_flow' => collect($steps)->contains(fn($s) => !empty($s['next_step_if_fail'])),
         ]);
-        app(SystemLogger::class)->log(
-            'Crear trámite',
-            'El sindicato creó un trámite: ' . $procedure->id
-        );
 
-        // Guardar pasos
-        foreach ($validatedData['steps'] as $stepData) {
-            $filePath = null; // [cite: 236-239]
+        app(SystemLogger::class)->log('Crear trámite', "El sindicato creó el trámite: {$procedure->id}");
 
-            if (isset($stepData['file'])) {
-                $filePath = $stepData['file']->store('procedure_files', 'public');
+        /**
+         * Guardar cada paso
+         */
+        foreach ($steps as $stepData) {
+            $filePath = null;
+
+            if (!empty($stepData['file_path'])) {
+                $filePath = $stepData['file_path']->store('procedure_files', 'public');
             }
 
-            // Asumimos que el modelo Procedure tiene una relación hasMany('steps')
             $procedure->steps()->create([
                 'order' => $stepData['order'],
                 'step_name' => $stepData['step_name'],
                 'step_description' => $stepData['step_description'] ?? null,
                 'estimated_days' => $stepData['estimated_days'] ?? null,
-                'file_path' => $filePath, // Antes 'formato_path'
                 'next_step_if_fail' => $stepData['next_step_if_fail'] ?? null,
+                'requires_file' => $stepData['requires_file'] === 'yes',
+                'file_path' => $filePath,
             ]);
         }
 
-        return redirect()
-            ->route('union.procedures.index')
-            ->with('success', '✅ Trámite creado correctamente.'); // [cite: 1291-1294]
+        return redirect()->route('union.procedures.index')
+            ->with('success', 'Trámite creado correctamente.');
     }
 
     /**
-     * Muestra el detalle del trámite.
-     *
-     * @param string $id
-     * @return \Illuminate\View\View
+     * Mostrar detalle del trámite.
      */
     public function show(string $id): View
     {
-        $procedure = Procedure::with('steps')->findOrFail($id); // Carga los pasos
+        $procedure = Procedure::with('steps')->findOrFail($id);
         return view('union.procedures.show', compact('procedure'));
     }
 
     /**
-     * Muestra el formulario de edición del trámite.
-     *
-     * @param string $id
-     * @return \Illuminate\View\View
+     * Formulario de edición.
      */
     public function edit(string $id): View
     {
@@ -159,17 +136,13 @@ class ProcedureController extends Controller // [cite: 887-890]
     }
 
     /**
-     * Actualiza la información del trámite y sus pasos.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param string $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Actualizar trámite.
      */
     public function update(Request $request, string $id): RedirectResponse
     {
         $procedure = Procedure::findOrFail($id);
 
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'opening_date' => 'nullable|date',
@@ -177,46 +150,59 @@ class ProcedureController extends Controller // [cite: 887-890]
             'estimated_days' => 'nullable|integer|min:1|max:365',
 
             'steps' => 'nullable|array',
+
             'steps.*.order' => 'nullable|integer|min:1',
             'steps.*.step_name' => 'nullable|string|max:255',
             'steps.*.step_description' => 'nullable|string|max:1000',
             'steps.*.estimated_days' => 'nullable|integer|min:1|max:365',
-            'steps.*.file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
             'steps.*.next_step_if_fail' => 'nullable|integer|min:1',
+            'steps.*.requires_file' => 'nullable|in:yes,no',
+            'steps.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
         ]);
 
+        /**
+         * Actualizar trámite
+         */
         $procedure->update([
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
-            'opening_date' => $validatedData['opening_date'],
-            'closing_date' => $validatedData['closing_date'],
-            'estimated_days' => $validatedData['estimated_days'],
-            'steps_count' => $request->has('steps') ? count($request->steps) : $procedure->steps_count,
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'opening_date' => $validated['opening_date'],
+            'closing_date' => $validated['closing_date'],
+            'estimated_days' => $validated['estimated_days'],
+            'steps_count' => $request->has('steps')
+                ? count($validated['steps'])
+                : $procedure->steps_count,
+            'has_alternate_flow' =>
+            isset($validated['steps']) &&
+                collect($validated['steps'])->contains(fn($s) => !empty($s['next_step_if_fail'])),
         ]);
 
+        /**
+         * Actualizar pasos
+         */
         if ($request->has('steps')) {
-            // Eliminar pasos viejos que no vinieron en el request
-            $currentStepOrders = collect($validatedData['steps'])->pluck('order')->filter();
-            $procedure->steps()->whereNotIn('order', $currentStepOrders)->delete();
+            $newOrders = collect($validated['steps'])->pluck('order')->filter();
+            $procedure->steps()->whereNotIn('order', $newOrders)->delete();
 
-            foreach ($validatedData['steps'] as $stepData) {
+            foreach ($validated['steps'] as $stepData) {
                 if (empty($stepData['order']) || empty($stepData['step_name'])) continue;
 
                 $step = $procedure->steps()->where('order', $stepData['order'])->first();
                 $filePath = $step->file_path ?? null;
 
-                if (isset($stepData['file'])) {
+                if (!empty($stepData['file_path'])) {
                     if ($filePath) Storage::disk('public')->delete($filePath);
-                    $filePath = $stepData['file']->store('procedure_files', 'public');
+                    $filePath = $stepData['file_path']->store('procedure_files', 'public');
                 }
 
                 $procedure->steps()->updateOrCreate(
-                    ['order' => $stepData['order']], // Busca por orden
+                    ['order' => $stepData['order']],
                     [
                         'step_name' => $stepData['step_name'],
                         'step_description' => $stepData['step_description'] ?? null,
                         'estimated_days' => $stepData['estimated_days'] ?? null,
                         'next_step_if_fail' => $stepData['next_step_if_fail'] ?? null,
+                        'requires_file' => $stepData['requires_file'] === 'yes',
                         'file_path' => $filePath,
                     ]
                 );
@@ -224,29 +210,44 @@ class ProcedureController extends Controller // [cite: 887-890]
         }
 
         return redirect()->route('union.procedures.index')
-            ->with('success', '📝 Trámite actualizado correctamente.');
+            ->with('success', 'Trámite actualizado correctamente.');
     }
 
     /**
-     * Elimina una plantilla de trámite.
-     *
-     * @param string $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Eliminar trámite.
      */
     public function destroy(string $id): RedirectResponse
     {
         $procedure = Procedure::with('steps')->findOrFail($id);
 
-        // Eliminar archivos de pasos
         foreach ($procedure->steps as $step) {
             if ($step->file_path) {
                 Storage::disk('public')->delete($step->file_path);
             }
         }
-        // Pasos y Trámite se borran en cascada (definido en la migración)
+
         $procedure->delete();
 
         return redirect()->route('union.procedures.index')
-            ->with('success', '🗑️ Trámite eliminado correctamente.'); // [cite: 1257-1264]
+            ->with('success', 'Trámite eliminado correctamente.');
+    }
+    /**
+     * Mostrar el detalle de una solicitud de trámite (RF-04).
+     *
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function showRequest($id): View
+    {
+        $requestData = \App\Models\ProcedureRequest::with([
+            'user',
+            'procedure',
+            'procedure.steps'
+        ])->findOrFail($id);
+
+        return view('union.requests.procedures_requests_show', [
+            'request' => $requestData
+
+        ]);
     }
 }

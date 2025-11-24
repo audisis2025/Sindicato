@@ -34,21 +34,22 @@ class ProcedureStep extends Model // [cite: 298-301, 512, 532-536]
      *
      * @var array<int, string>
      */
-    protected $fillable = [ // [cite: 532-536]
+    protected $fillable = [
         'procedure_id',
         'order',
         'step_name',
         'step_description',
-        'file_path',
-        'next_step_if_fail',
         'estimated_days',
+        'next_step_if_fail',
+        'requires_file',
+        'file_path',
     ];
 
-    /**
-     * Obtiene el trámite (plantilla) al que pertenece este paso.
-     * (Relación Uno a Muchos Inversa)
-     */
-    public function procedure(): BelongsTo // [cite: 588-592]
+    protected $casts = [
+        'requires_file' => 'boolean',
+    ];
+
+    public function procedure()
     {
         return $this->belongsTo(Procedure::class);
     }

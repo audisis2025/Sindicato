@@ -21,7 +21,7 @@
 */
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Worker\WorkerProcedureController;
+use App\Http\Controllers\WorkerProcedureController;
 
 Route::prefix('worker')->middleware(['auth'])->group(function () {
 

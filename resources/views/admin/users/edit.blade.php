@@ -13,6 +13,7 @@
             @csrf
             @method('PUT')
 
+            <!-- Nombre -->
             <div>
                 <label for="name" class="block font-semibold text-[#272800] mb-1">Nombre completo</label>
                 <input type="text" name="name" id="name" required
@@ -23,19 +24,10 @@
                 @enderror
             </div>
 
-            <div>
-                <label for="username" class="block font-semibold text-[#272800] mb-1">Usuario</label>
-                <input type="text" name="username" id="username" required
-                       class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DE6601] outline-none"
-                       value="{{ old('username', $user->username) }}">
-                @error('username')
-                    <p class="text-[#EE0000] text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
+            <!-- Email -->
             <div>
                 <label for="email" class="block font-semibold text-[#272800] mb-1">Correo electrónico</label>
-                <input type="email" name="email" id="email"
+                <input type="email" name="email" id="email" required
                        class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DE6601] outline-none"
                        value="{{ old('email', $user->email) }}">
                 @error('email')
@@ -43,6 +35,7 @@
                 @enderror
             </div>
 
+            <!-- Rol -->
             <div>
                 <label for="role" class="block font-semibold text-[#272800] mb-1">Rol del usuario</label>
                 <select name="role" id="role" required
@@ -56,6 +49,7 @@
                 @enderror
             </div>
 
+            <!-- Datos adicionales -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                 <div>
@@ -91,6 +85,7 @@
 
             </div>
 
+            <!-- Estado -->
             <div>
                 <label for="active" class="block font-semibold text-[#272800] mb-1">Estado</label>
                 <select name="active" id="active" required

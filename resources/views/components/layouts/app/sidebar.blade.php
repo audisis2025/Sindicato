@@ -23,13 +23,22 @@
 
     @php
         // Rol REAL de la base de datos
-        $roleDB = auth()->user()->role ?? 'worker';
+        $roleDB = auth()->check() ? auth()->user()->role : 'guest';
 
-        // Mapa hacia los nombres usados en este sidebar
         $rol = match ($roleDB) {
             'admin' => 'administrador',
             'union' => 'sindicato',
-            default => 'trabajador',
+            'worker' => 'trabajador',
+            default => 'invitado',
+        };
+
+    @endphp
+    @php
+        $rutaInicio = match ($rol) {
+            'administrador' => 'dashboard',
+            'sindicato' => 'dashboard',
+            'trabajador' => 'worker.catalog.index',
+            default => 'dashboard',
         };
     @endphp
 
@@ -40,11 +49,10 @@
         <div>
             <a href="{{ route('dashboard') }}"
                 class="flex items-center justify-center lg:justify-start space-x-3 mb-6 px-2">
-                <img src="{{ asset('assets/img/logo_sindisoft.png') }}" 
-                    alt="Logo SINDISOFT"
+                <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
                     class="w-10 h-10 rounded-lg border border-[#272800]/30 shadow-sm">
                 <span class="font-[Poppins] font-bold text-[#DE6601] text-lg tracking-wide">
-                    SINDISOFT
+                    Sindisoft
                 </span>
             </a>
 
@@ -55,20 +63,17 @@
 
                 <nav class="space-y-2 font-[Inter] text-center lg:text-left">
 
-                    <!-- INICIO -->
-                    <a href="{{ route('dashboard') }}"
+                    <a href="{{ route($rutaInicio) }}"
                         class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                        {{ request()->routeIs('dashboard')
+                        {{ request()->routeIs($rutaInicio)
                             ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
                             : 'text-[#241178] hover:text-[#DE6601]' }}">
-                        <x-heroicon-o-home
-                            class="w-5 h-5 {{ request()->routeIs('dashboard') ? 'text-[#DE6601]' : 'text-[#241178]' }}" />
+                        <x-heroicon-o-home class="w-5 h-5" />
                         <span>Inicio</span>
                     </a>
 
                     <!-- ADMINISTRADOR -->
                     @if ($rol === 'administrador')
-                        
                         <a href="{{ route('users.index') }}"
                             class="flex items-center gap-3 px-2 py-2 rounded-lg transition
                             {{ request()->routeIs('users.index')
@@ -95,12 +100,10 @@
                             <x-heroicon-o-clipboard-document-list class="w-5 h-5" />
                             <span>Bitácora del sistema</span>
                         </a>
-
                     @endif
 
                     <!-- SINDICATO -->
                     @if ($rol === 'sindicato')
-
                         <a href="{{ route('union.procedures.index') }}"
                             class="flex items-center gap-3 px-2 py-2 rounded-lg transition
                             {{ request()->routeIs('union.procedures.*')
@@ -145,12 +148,10 @@
                             <x-heroicon-o-megaphone class="w-5 h-5" />
                             <span>Noticias y convocatorias</span>
                         </a>
-
                     @endif
 
                     <!-- TRABAJADOR -->
                     @if ($rol === 'trabajador')
-
                         <a href="{{ route('worker.index') }}"
                             class="flex items-center gap-3 px-3 py-2 rounded-lg transition
                             {{ request()->routeIs('worker.index')
@@ -177,7 +178,6 @@
                             <x-heroicon-o-megaphone class="w-5 h-5" />
                             <span>Convocatorias y anuncios</span>
                         </a>
-
                     @endif
 
                 </nav>
@@ -186,7 +186,8 @@
 
         <div class="border-t border-[#D9D9D9]/50 pt-4 mt-4">
             <div class="flex flex-col lg:flex-row lg:items-center gap-3 px-2 text-center lg:text-left">
-                <div class="flex h-10 w-10 items-center justify-center mx-auto lg:mx-0 rounded-lg bg-[#DE6601]/10 text-[#DE6601] font-semibold">
+                <div
+                    class="flex h-10 w-10 items-center justify-center mx-auto lg:mx-0 rounded-lg bg-[#DE6601]/10 text-[#DE6601] font-semibold">
                     {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                 </div>
                 <div>
@@ -218,8 +219,8 @@
         </flux:sidebar.toggle>
 
         <flux:dropdown position="top" align="end">
-            <flux:profile :initials="strtoupper(substr(auth()->user()->name, 0, 2))"
-                icon-trailing="chevron-down" class="text-[#241178]" />
+            <flux:profile :initials="strtoupper(substr(auth()->user()->name, 0, 2))" icon-trailing="chevron-down"
+                class="text-[#241178]" />
             <flux:menu class="bg-white text-black border border-[#D9D9D9] rounded-xl shadow-md">
 
                 <flux:menu.item :href="route('profile.edit')" wire:navigate>
@@ -248,4 +249,5 @@
     @fluxScripts
 
 </body>
+
 </html>

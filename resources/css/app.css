@@ -1,17 +1,11 @@
-/* ✅ Importar fuentes SIEMPRE primero */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap');
-
-/* ✅ Luego Tailwind y otros CSS */
 @import 'tailwindcss';
 @import '../../vendor/livewire/flux/dist/flux.css';
-
-/* ✅ Rutas de plantillas */
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
-/* ✅ Configuración y temas */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {

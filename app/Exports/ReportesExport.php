@@ -3,14 +3,11 @@
 /**
  * ===========================================================
  * Nombre de la clase: ReportesExport
- * Descripción: Clase de exportación para generar reportes sindicales
- * en formato Excel y CSV, conforme al estándar PRO-Laravel V3.2.
- * Fecha de creación: 04/11/2025
- * Elaboró: Iker Piza
- * Versión: 1.0
- * Tipo de mantenimiento: Creación inicial.
- * Descripción del mantenimiento: Implementación de exportación institucional
- * de trámites sindicales (RF20) con encabezado, filtros y formato tabular.
+ * Descripción: Exporta tablas sindicales (por pestaña) a Excel
+ * conforme al estándar PRO-Laravel V3.2.
+ * Fecha de creación original: 04/11/2025
+ * Mantenimiento: Refactor total para exportación dinámica por pestaña.
+ * Versión: 3.0 (24/11/2025)
  * Responsable: Iker Piza
  * Revisor: QA SINDISOFT
  * ===========================================================
@@ -18,56 +15,104 @@
 
 namespace App\Exports;
 
-use App\Models\SolicitudTramite;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use App\Models\User;
+use App\Models\ProcedureRequest;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ReportesExport implements FromView, WithTitle, ShouldAutoSize
+class ReportesExport implements FromArray, WithHeadings
 {
-    protected $filters;
+    protected string $tab;
 
     /**
-     * Constructor que recibe los filtros del reporte.
+     * Recibe el nombre de la pestaña activa.
      */
-    public function __construct(array $filters = [])
+    public function __construct(string $tab)
     {
-        $this->filters = $filters;
+        $this->tab = $tab;
     }
 
     /**
-     * Generar la vista que alimentará el archivo Excel/CSV.
+     * ENCABEZADOS SEGÚN PESTAÑA
      */
-    public function view(): View
+    public function headings(): array
     {
-        $query = SolicitudTramite::with(['trabajador', 'tramite']);
+        switch ($this->tab) {
 
-        if (!empty($this->filters['from']) && !empty($this->filters['to'])) {
-            $query->whereBetween('created_at', [
-                $this->filters['from'],
-                $this->filters['to']
-            ]);
+            case 'gender':
+                return ['Género', 'Cantidad'];
+
+            case 'status':
+                return ['Estado', 'Cantidad'];
+
+            case 'types':
+                return ['Tipo de trámite', 'Cantidad'];
+
+            case 'table':
+            default:
+                return ['#', 'Trabajador', 'Trámite', 'Estado', 'Fecha'];
         }
-
-        if (!empty($this->filters['type'])) {
-            $query->where('tipo_tramite', $this->filters['type']);
-        }
-
-        $solicitudes = $query->orderBy('created_at', 'desc')->get();
-
-        return view('union.reports.exports', [
-            'solicitudes' => $solicitudes,
-            'filters' => $this->filters,
-        ]);
     }
 
     /**
-     * Definir título de la hoja de Excel.
+     * FILAS SEGÚN PESTAÑA
      */
-    public function title(): string
+    public function array(): array
     {
-        return 'Reporte Sindical';
+        switch ($this->tab) {
+
+            /* ===========================================================
+               TAB: GÉNERO (H, M, ND, X)
+            =========================================================== */
+            case 'gender':
+                return [
+                    ['Hombres',     User::where('gender', 'H')->count()],
+                    ['Mujeres',     User::where('gender', 'M')->count()],
+                    ['No definido', User::where('gender', 'ND')->count()],
+                    ['No dice',     User::where('gender', 'X')->count()],
+                ];
+
+            /* ===========================================================
+               TAB: ESTADOS
+            =========================================================== */
+            case 'status':
+                return [
+                    ['Completados', ProcedureRequest::where('status', 'completed')->count()],
+                    ['Pendientes',  ProcedureRequest::where('status', 'pending')->count()],
+                ];
+
+            /* ===========================================================
+               TAB: TIPOS DE TRÁMITE
+            =========================================================== */
+            case 'types':
+                $stats = ProcedureRequest::with('procedure')->get()
+                    ->groupBy(fn($r) => $r->procedure->name ?? 'Sin Trámite')
+                    ->map->count();
+
+                $rows = [];
+                foreach ($stats as $name => $total) {
+                    $rows[] = [$name, $total];
+                }
+                return $rows;
+
+            /* ===========================================================
+               TAB: TABLA COMPLETA
+            =========================================================== */
+            case 'table':
+            default:
+                $requests = ProcedureRequest::with(['user', 'procedure'])->get();
+
+                $rows = [];
+                foreach ($requests as $i => $r) {
+                    $rows[] = [
+                        $i + 1,
+                        $r->user->name ?? '—',
+                        $r->procedure->name ?? '—',
+                        $r->status ?? '—',
+                        optional($r->created_at)->format('d/m/Y'),
+                    ];
+                }
+                return $rows;
+        }
     }
 }
-

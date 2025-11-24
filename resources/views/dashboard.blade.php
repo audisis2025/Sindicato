@@ -87,24 +87,8 @@
                 <p class="mt-3 text-[#DE6601] font-semibold">Utiliza el menú lateral para gestionar tus actividades
                     sindicales.</p>
             @else
-                <div class="w-full max-w-xl bg-white border border-[#D9D9D9] rounded-2xl shadow-md p-6 mt-6">
-
-                    <h2 class="text-2xl font-[Poppins] font-bold text-[#241178] mb-3">
-                        Catálogo de Trámites
-                    </h2>
-
-                    <p class="text-[#272800] text-sm mb-4">
-                        Consulta todos los trámites disponibles y revisa sus requisitos.
-                    </p>
-
-                    <a href="{{ route('worker.catalog.index') }}"
-                        class="inline-block bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold px-5 py-2 rounded-lg transition">
-                        Ver catálogo completo →
-                    </a>
-
-                </div>
+           
             @endif
-
 
         </div>
 

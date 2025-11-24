@@ -7,7 +7,6 @@
             </h1>
         </div>
 
-        {{-- BOTONES DE SECCIONES --}}
         <div class="flex gap-3">
             <button onclick="showSection('active')" 
                 class="tab-btn bg-[#241178] text-white px-4 py-2 rounded-lg font-semibold"
@@ -28,7 +27,6 @@
             </button>
         </div>
 
-        {{-- SECCIÓN: TRÁMITES ACTIVOS --}}
         <section id="section-active" class="section-card">
             <div class="bg-white border border-[#D9D9D9] rounded-2xl shadow-md p-5">
                 <h2 class="text-xl font-semibold text-[#241178] font-[Poppins] mb-4">
@@ -48,11 +46,40 @@
 
                     <tbody>
                         @forelse ($active_requests as $i => $req)
+                            @php
+                                $colors = [
+                                    'initiated' => 'text-blue-600',
+                                    'in_progress' => 'text-[#DC6601]',
+                                    'pending_worker' => 'text-yellow-600',
+                                    'pending_union' => 'text-purple-600',
+                                    'completed' => 'text-green-600',
+                                    'cancelled' => 'text-gray-600',
+                                    'rejected' => 'text-red-600',
+                                ];
+
+                                $labels = [
+                                    'initiated' => 'Iniciado',
+                                    'in_progress' => 'En proceso',
+                                    'pending_worker' => 'Pendiente de acción del trabajador',
+                                    'pending_union' => 'Pendiente del sindicato',
+                                    'completed' => 'Finalizado',
+                                    'cancelled' => 'Cancelado',
+                                    'rejected' => 'Rechazado',
+                                ];
+                            @endphp
+
                             <tr class="border-t border-[#272800]/20 hover:bg-[#F9F9F9] transition">
                                 <td class="p-2">{{ $i + 1 }}</td>
                                 <td class="p-2">{{ $req->procedure->name }}</td>
-                                <td class="p-2 text-[#DC6601] font-semibold">En proceso</td>
+
+                                <td class="p-2 font-semibold">
+                                    <span class="{{ $colors[$req->status] ?? 'text-gray-600' }}">
+                                        {{ $labels[$req->status] ?? '—' }}
+                                    </span>
+                                </td>
+
                                 <td class="p-2">{{ $req->created_at->format('d/m/Y') }}</td>
+
                                 <td class="p-2 text-center">
                                     <a href="{{ route('worker.requests.show', $req->id) }}"
                                         class="bg-[#241178] text-white px-3 py-1 rounded-md text-sm">
@@ -60,15 +87,17 @@
                                     </a>
                                 </td>
                             </tr>
+
                         @empty
-                            <tr><td colspan="5" class="text-center py-4 text-gray-500">No hay trámites activos.</td></tr>
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-500">No hay trámites activos.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </section>
 
-        {{-- SECCIÓN: HISTORIAL --}}
         <section id="section-history" class="section-card hidden">
             <div class="bg-white border border-[#D9D9D9] rounded-2xl shadow-md p-5">
                 <h2 class="text-xl font-semibold text-[#241178] font-[Poppins] mb-4">
@@ -87,25 +116,51 @@
 
                     <tbody>
                         @forelse ($finished_requests as $i => $req)
+                            @php
+                                $colors = [
+                                    'initiated' => 'text-blue-600',
+                                    'in_progress' => 'text-[#DC6601]',
+                                    'pending_worker' => 'text-yellow-600',
+                                    'pending_union' => 'text-purple-600',
+                                    'completed' => 'text-green-600',
+                                    'cancelled' => 'text-gray-600',
+                                    'rejected' => 'text-red-600',
+                                ];
+
+                                $labels = [
+                                    'initiated' => 'Iniciado',
+                                    'in_progress' => 'En proceso',
+                                    'pending_worker' => 'Pendiente de acción del trabajador',
+                                    'pending_union' => 'Pendiente del sindicato',
+                                    'completed' => 'Finalizado',
+                                    'cancelled' => 'Cancelado',
+                                    'rejected' => 'Rechazado',
+                                ];
+                            @endphp
+
                             <tr class="border-t hover:bg-[#F9F9F9] transition">
                                 <td class="p-2">{{ $i + 1 }}</td>
                                 <td class="p-2">{{ $req->procedure->name }}</td>
+
                                 <td class="p-2">
-                                    <span class="{{ $req->status === 'completed' ? 'text-green-600' : 'text-red-600' }}">
-                                        {{ $req->status === 'completed' ? 'Completado' : 'Rechazado' }}
+                                    <span class="{{ $colors[$req->status] ?? 'text-gray-600' }}">
+                                        {{ $labels[$req->status] ?? '—' }}
                                     </span>
                                 </td>
+
                                 <td class="p-2">{{ $req->updated_at->format('d/m/Y') }}</td>
                             </tr>
+
                         @empty
-                            <tr><td colspan="4" class="text-center py-4 text-gray-500">No hay historial.</td></tr>
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-gray-500">No hay historial.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </section>
 
-        {{-- SECCIÓN: TRÁMITES DISPONIBLES --}}
         <section id="section-available" class="section-card hidden">
             <div class="bg-white border border-[#D9D9D9] rounded-2xl shadow-md p-5">
                 <h2 class="text-xl font-semibold text-[#241178] font-[Poppins] mb-4">
@@ -128,6 +183,7 @@
                                 <td class="p-2">{{ $i + 1 }}</td>
                                 <td class="p-2 font-semibold">{{ $proc->name }}</td>
                                 <td class="p-2">{{ $proc->description ?? 'Sin descripción' }}</td>
+
                                 <td class="p-2 text-center">
                                     <form method="POST" action="{{ route('worker.procedures.start', $proc->id) }}">
                                         @csrf
@@ -137,8 +193,11 @@
                                     </form>
                                 </td>
                             </tr>
+
                         @empty
-                            <tr><td colspan="4" class="text-center py-4 text-gray-500">No hay trámites disponibles.</td></tr>
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-gray-500">No hay trámites disponibles.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>

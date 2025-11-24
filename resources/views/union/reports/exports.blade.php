@@ -1,11 +1,3 @@
-{{-- ===========================================================
- Nombre de la vista: exports.blade.php
- Descripción: Plantilla para exportación institucional de reportes.
- Fecha de creación: 04/11/2025
- Elaboró: Iker Piza
- Versión: 1.0
-=========================================================== --}}
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,13 +20,28 @@
     </style>
 </head>
 <body>
+
     <h1>Reporte de Trámites Sindicales</h1>
+
     <p><strong>Generado por:</strong> {{ auth()->user()->name }}</p>
     <p><strong>Fecha de generación:</strong> {{ now()->format('d/m/Y H:i') }}</p>
 
-    @if(!empty($filters['from']) && !empty($filters['to']))
+    @if (!empty($filters['from']) && !empty($filters['to']))
         <p><strong>Rango:</strong> {{ $filters['from'] }} al {{ $filters['to'] }}</p>
     @endif
+
+    @php
+        // Mapeo RF-04
+        $statusLabels = [
+            'initiated'        => 'Iniciado',
+            'in_progress'      => 'En proceso',
+            'pending_worker'   => 'Pendiente de acción del trabajador',
+            'pending_union'    => 'Pendiente del sindicato',
+            'completed'        => 'Finalizado',
+            'cancelled'        => 'Cancelado',
+            'rejected'         => 'Rechazado',
+        ];
+    @endphp
 
     <table>
         <thead>
@@ -46,14 +53,21 @@
                 <th>Fecha de Creación</th>
             </tr>
         </thead>
+
         <tbody>
-            @forelse($solicitudes as $s)
+            @forelse ($requests as $req)
                 <tr>
-                    <td>{{ $s->id }}</td>
-                    <td>{{ $s->trabajador->nombre ?? '—' }}</td>
-                    <td>{{ $s->tipo_tramite }}</td>
-                    <td>{{ ucfirst($s->estado) }}</td>
-                    <td>{{ $s->created_at->format('d/m/Y') }}</td>
+                    <td>{{ $req->id }}</td>
+
+                    <td>{{ $req->user->name ?? '—' }}</td>
+
+                    <td>{{ $req->procedure->name ?? '—' }}</td>
+
+                    <td>
+                        {{ $statusLabels[$req->status] ?? '—' }}
+                    </td>
+
+                    <td>{{ $req->created_at->format('d/m/Y') }}</td>
                 </tr>
             @empty
                 <tr>
@@ -62,5 +76,6 @@
             @endforelse
         </tbody>
     </table>
+
 </body>
 </html>

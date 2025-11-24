@@ -37,17 +37,25 @@ class ProcedureDocument extends Model // [cite: 298-301, 512, 532-536]
     protected $fillable = [ // [cite: 532-536]
         'procedure_request_id',
         'file_name',
+        'procedure_step_id',
         'file_path',
         'type',
         'year',
     ];
 
     /**
-     * Obtiene la solicitud a la que pertenece este documento.
-     * (Relación Uno a Muchos Inversa)
+     * Relación: el archivo pertenece a una solicitud (ProcedureRequest)
      */
-    public function procedureRequest(): BelongsTo // [cite: 588-592]
+    public function request(): BelongsTo
     {
-        return $this->belongsTo(ProcedureRequest::class);
+        return $this->belongsTo(ProcedureRequest::class, 'procedure_request_id');
+    }
+
+    /**
+     * Relación: el archivo pertenece a un paso del trámite
+     */
+    public function step(): BelongsTo
+    {
+        return $this->belongsTo(ProcedureStep::class, 'procedure_step_id');
     }
 }

@@ -1,23 +1,8 @@
-{{-- ===========================================================
- Nombre de la clase: reports-index.blade.php
- Descripción: Listado general de solicitudes de trámite enviadas por los trabajadores.
- Fecha de creación: 04/11/2025
- Elaboró: Iker Piza
- Fecha de liberación: 04/11/2025
- Autorizó: Líder Técnico
- Versión: 1.0
- Tipo de mantenimiento: Creación.
- Descripción del mantenimiento: Implementa RF13 y RF14 mostrando el estado
- de los trámites de trabajadores con acceso a revisión detallada.
- Responsable: Iker Piza
- Revisor: QA SINDISOFT
-=========================================================== --}}
-
 <x-layouts.app :title="__('Solicitudes de trabajadores')">
 
     <div class="flex flex-col gap-6 p-6 w-full">
 
-        <!-- 🔸 Encabezado -->
+        <!-- Encabezado -->
         <div class="flex justify-between items-center">
             <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601]">
                 Solicitudes de trabajadores
@@ -27,7 +12,7 @@
             </span>
         </div>
 
-        <!-- 📊 Tabla principal -->
+        <!-- Tabla principal -->
         <div class="overflow-x-auto bg-white border border-[#D9D9D9] rounded-2xl shadow-md">
             <table class="w-full border-collapse text-sm font-[Inter]">
                 <thead class="bg-[#241178] text-white">
@@ -39,31 +24,49 @@
                         <th class="p-2 text-center">Acciones</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    @forelse ($solicitudes as $solicitud)
+                    @forelse ($requests as $req)
                         <tr class="border-t border-[#272800]/10 hover:bg-[#F9F9F9] transition">
-                            <td class="p-2">{{ $solicitud->trabajador->name }}</td>
-                            <td class="p-2">{{ $solicitud->tramite->nombre }}</td>
-                            <td class="p-2 text-center">
-                                {{ $solicitud->created_at->format('d/m/Y') }}
+
+                            <!-- Trabajador -->
+                            <td class="p-2">
+                                {{ $req->user->name ?? '—' }}
                             </td>
+
+                            <!-- Trámite -->
+                            <td class="p-2">
+                                {{ $req->procedure->name ?? '—' }}
+                            </td>
+
+                            <!-- Fecha -->
                             <td class="p-2 text-center">
-                                @if ($solicitud->estado === 'Pendiente')
+                                {{ $req->created_at->format('d/m/Y') }}
+                            </td>
+
+                            <!-- Estado -->
+                            <td class="p-2 text-center">
+                                @if ($req->status === 'pending')
                                     <span class="text-[#DC6601] font-semibold">Pendiente</span>
-                                @elseif ($solicitud->estado === 'Completado')
+                                @elseif ($req->status === 'in_progress')
+                                    <span class="text-blue-600 font-semibold">En proceso</span>
+                                @elseif ($req->status === 'completed')
                                     <span class="text-green-600 font-semibold">Completado</span>
-                                @elseif ($solicitud->estado === 'Rechazado')
+                                @elseif ($req->status === 'rejected')
                                     <span class="text-red-600 font-semibold">Rechazado</span>
                                 @else
                                     <span class="text-gray-600">—</span>
                                 @endif
                             </td>
+
+                            <!-- Acciones -->
                             <td class="p-2 text-center">
-                                <a href="{{ route('union.procedures.requests.show', $solicitud->id) }}"
+                                <a href="{{ route('union.procedures.requests.show', $req->id) }}"
                                     class="bg-[#DC6601] hover:bg-[#EE0000] text-white px-3 py-1 rounded-md text-sm transition">
                                     Revisar
                                 </a>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
@@ -73,8 +76,10 @@
                         </tr>
                     @endforelse
                 </tbody>
+
             </table>
         </div>
+
     </div>
 
 </x-layouts.app>

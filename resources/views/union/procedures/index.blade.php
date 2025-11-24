@@ -5,9 +5,9 @@
  Elaboró: Iker Piza
  Fecha de liberación: 03/11/2025
  Autorizó: Líder Técnico
- Versión: 1.0
- Tipo de mantenimiento: Creación.
- Descripción del mantenimiento: Implementa tabla institucional para gestión de trámites (RF06–RF09, RF14) conforme al Manual PRO-Laravel V3.2.
+ Versión: 1.1
+ Tipo de mantenimiento: Correctivo.
+ Descripción del mantenimiento: Se actualizan campos conforme al modelo Procedure (name, steps_count, opening_date, etc.) y al estándar PRO-Laravel V3.4.
  Responsable: Iker Piza
  Revisor: QA SINDISOFT
 =========================================================== --}}
@@ -22,8 +22,9 @@
             </h1>
 
             <a href="{{ route('union.procedures.create') }}"
-                class="bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold py-2 px-4 rounded-lg transition">
-                + Crear nuevo trámite
+               class="inline-flex items-center gap-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold px-4 py-2 rounded-lg transition">
+               <x-heroicon-o-plus class="w-5 h-5" />
+                Crear nuevo trámite
             </a>
         </div>
 
@@ -43,37 +44,62 @@
                 <tbody>
                     @forelse ($procedures as $procedure)
                         <tr class="border-t border-[#272800]/10 hover:bg-[#F9F9F9] transition">
-                            <td class="p-2 max-w-[200px] truncate">{{ $procedure->nombre }}</td>
-                            <td class="p-2">{{ $procedure->num_pasos ?? '—' }}</td>
-                            <td class="p-2">{{ $procedure->tiempo_estimado ?? '—' }} días</td>
-                            <td class="p-2">{{ $procedure->flujo_alterno ?? 'N/A' }}</td>
-                            <td class="p-2 text-sm">
-                                Apertura: <b>{{ $procedure->fecha_apertura ?? '—' }}</b><br>
-                                Cierre: <b>{{ $procedure->fecha_cierre ?? '—' }}</b>
+
+                            <!-- Nombre -->
+                            <td class="p-2 max-w-[200px] truncate">
+                                {{ $procedure->name }}
                             </td>
+
+                            <!-- Número de pasos -->
+                            <td class="p-2">
+                                {{ $procedure->steps_count ?? '—' }}
+                            </td>
+
+                            <!-- Tiempo estimado -->
+                            <td class="p-2">
+                                {{ $procedure->estimated_days ? $procedure->estimated_days . ' días' : '—' }}
+                            </td>
+
+                            <!-- Flujo alterno -->
+                            <td class="p-2">
+                                {{ $procedure->has_alternate_flow ? 'Sí' : 'No' }}
+                            </td>
+
+                            <!-- Fechas -->
+                            <td class="p-2 text-sm">
+                                Apertura: <b>{{ $procedure->opening_date ?? '—' }}</b><br>
+                                Cierre: <b>{{ $procedure->closing_date ?? '—' }}</b>
+                            </td>
+
+                            <!-- Acciones -->
                             <td class="p-2 flex flex-wrap gap-2 justify-center">
+
                                 <!-- Ver -->
                                 <a href="{{ route('union.procedures.show', $procedure->id) }}"
-                                    class="bg-[#241178] hover:bg-[#3828a8] text-white px-3 py-1 rounded-md text-sm transition">
+                                   class="bg-[#241178] hover:bg-[#3828a8] text-white px-3 py-1 rounded-md text-sm transition">
                                     Ver
                                 </a>
 
                                 <!-- Editar -->
-                                <a href="{{ route('union.procedures.edit', $procedure->id ?? 0) }}"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition">
+                                <a href="{{ route('union.procedures.edit', $procedure->id) }}"
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition">
                                     Editar
                                 </a>
 
                                 <!-- Eliminar -->
-                                <form action="{{ route('union.procedures.destroy', $procedure->id) }}" method="POST"
-                                    onsubmit="return confirm('⚠️ ¿Seguro que deseas eliminar este trámite?')">
+                                <form action="{{ route('union.procedures.destroy', $procedure->id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('⚠️ ¿Seguro que deseas eliminar este trámite?')">
+
                                     @csrf
                                     @method('DELETE')
+
                                     <button type="submit"
                                         class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition">
                                         Eliminar
                                     </button>
                                 </form>
+
                             </td>
                         </tr>
                     @empty

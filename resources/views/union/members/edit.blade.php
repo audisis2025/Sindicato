@@ -1,120 +1,152 @@
 {{-- ===========================================================
  Nombre de la clase: members-edit.blade.php
- Descripción: Vista para editar los datos de un trabajador por el Sindicato.
- Fecha: 04/11/2025
- Elaboró: Iker Piza
- Fecha de liberación: 04/11/2025
- Autorizó: Líder Técnico
- Versión: 1.0
- Tipo de mantenimiento: Creación.
- Descripción del mantenimiento: Implementa edición de trabajadores (RF02-RF13)
- conforme al Manual PRO-Laravel V3.2.
- Responsable: Iker Piza
- Revisor: QA SINDISOFT
+ Descripción: Vista para editar datos de trabajador.
+ Versión: 1.3 (Eliminado username – login solo por correo)
 =========================================================== --}}
 
 <x-layouts.app :title="__('Editar trabajador')">
 
     <div class="w-full flex flex-col items-center justify-start min-h-[80vh] bg-[#FFFFFF] text-[#000000] p-6">
 
-        <!-- 🔸 Encabezado -->
+        <!-- Encabezado -->
         <div class="w-full max-w-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
             <div>
                 <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601] mb-1">Editar Trabajador</h1>
-                <p class="text-[#241178] font-[Inter] text-sm">Actualiza los datos del trabajador seleccionado.</p>
+                <p class="text-[#241178] font-[Inter] text-sm">
+                    Actualiza los datos del trabajador seleccionado.
+                </p>
             </div>
 
             <a href="{{ route('union.members.index') }}"
-               class="px-4 py-2 bg-[#241178]/10 hover:bg-[#241178]/20 text-[#241178] font-semibold rounded-lg transition">
-                ⬅Volver
+                class="px-4 py-2 bg-[#241178]/10 hover:bg-[#241178]/20 text-[#241178] 
+                       font-semibold rounded-lg transition">
+                ⬅ Volver
             </a>
         </div>
 
-        <!-- 📋 Formulario -->
         <form action="{{ route('union.members.update', $worker->id) }}" method="POST"
-              class="w-full max-w-3xl bg-[#FFFFFF] border border-[#D9D9D9] shadow-md rounded-2xl p-8 space-y-6 font-[Inter]">
+              class="w-full max-w-3xl bg-[#FFFFFF] border border-[#D9D9D9] shadow-md rounded-2xl p-8
+                     space-y-6 font-[Inter]">
+
             @csrf
             @method('PUT')
 
-            <!-- Nombre -->
+            {{-- Nombre --}}
             <div>
-                <label for="name" class="block font-semibold text-[#272800] mb-1">Nombre completo</label>
-                <input type="text" id="name" name="name" value="{{ old('name', $worker->name) }}" required
+                <label class="block font-semibold text-[#272800] mb-1" for="name">Nombre completo</label>
+                <input type="text" name="name" id="name" required
                        class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DC6601] outline-none"
-                       placeholder="Ejemplo: Juan Pérez Gómez">
+                       value="{{ old('name', $worker->name) }}">
                 @error('name')
                     <p class="text-[#EE0000] text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Correo -->
+            {{-- Email --}}
             <div>
                 <label for="email" class="block font-semibold text-[#272800] mb-1">Correo electrónico</label>
-                <input type="email" id="email" name="email" value="{{ old('email', $worker->email) }}"
+                <input type="email" name="email" id="email" required
                        class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DC6601] outline-none"
+                       value="{{ old('email', $worker->email) }}"
                        placeholder="correo@ejemplo.com">
                 @error('email')
                     <p class="text-[#EE0000] text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Datos complementarios -->
+            {{-- Datos adicionales --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                {{-- CURP --}}
                 <div>
-                    <label for="curp" class="block font-semibold text-[#272800] mb-1">CURP</label>
-                    <input type="text" id="curp" name="curp" value="{{ old('curp', $worker->detalle->curp ?? '') }}"
-                           class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DC6601] outline-none"
-                           placeholder="Ejemplo: PEGA850101HDFRRN09">
+                    <label class="block font-semibold text-[#272800] mb-1" for="curp">CURP</label>
+                    <input type="text" id="curp" name="curp"
+                           oninput="this.value = this.value.toUpperCase()"
+                           value="{{ old('curp', $worker->curp) }}"
+                           class="w-full uppercase border border-[#D9D9D9] rounded-lg px-4 py-2 
+                                  focus:ring-2 focus:ring-[#DC6601] outline-none"
+                           placeholder="PEGA850101HDFRRN09">
+                    @error('curp')
+                        <p class="text-[#EE0000] text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
+                {{-- RFC --}}
                 <div>
-                    <label for="rfc" class="block font-semibold text-[#272800] mb-1">RFC</label>
-                    <input type="text" id="rfc" name="rfc" value="{{ old('rfc', $worker->detalle->rfc ?? '') }}"
-                           class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DC6601] outline-none"
-                           placeholder="Ejemplo: PEGA850101XXX">
+                    <label class="block font-semibold text-[#272800] mb-1" for="rfc">RFC</label>
+                    <input type="text" id="rfc" name="rfc"
+                           oninput="this.value = this.value.toUpperCase()"
+                           value="{{ old('rfc', $worker->rfc) }}"
+                           class="w-full uppercase border border-[#D9D9D9] rounded-lg px-4 py-2 
+                                  focus:ring-2 focus:ring-[#DC6601] outline-none"
+                           placeholder="PEGA850101XXX">
+                    @error('rfc')
+                        <p class="text-[#EE0000] text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
+                {{-- Gender --}}
                 <div>
-                    <label for="sexo" class="block font-semibold text-[#272800] mb-1">Sexo</label>
-                    <select id="sexo" name="sexo"
-                            class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DC6601] outline-none">
+                    <label class="block font-semibold text-[#272800] mb-1" for="gender">Sexo / Género</label>
+                    <select name="gender" id="gender"
+                        class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 
+                               focus:ring-2 focus:ring-[#DC6601] outline-none">
+
                         <option value="">Selecciona</option>
-                        <option value="H" {{ old('sexo', $worker->detalle->sexo ?? '') == 'H' ? 'selected' : '' }}>Hombre</option>
-                        <option value="M" {{ old('sexo', $worker->detalle->sexo ?? '') == 'M' ? 'selected' : '' }}>Mujer</option>
+                        <option value="H"  {{ old('gender', $worker->gender) == 'H' ? 'selected' : '' }}>Hombre</option>
+                        <option value="M"  {{ old('gender', $worker->gender) == 'M' ? 'selected' : '' }}>Mujer</option>
+                        <option value="ND" {{ old('gender', $worker->gender) == 'ND' ? 'selected' : '' }}>No definido</option>
+                        <option value="X"  {{ old('gender', $worker->gender) == 'X' ? 'selected' : '' }}>Prefiero no decirlo</option>
                     </select>
+                    @error('gender')
+                        <p class="text-[#EE0000] text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
+                {{-- Budget Key --}}
                 <div>
-                    <label for="clave_presupuestal" class="block font-semibold text-[#272800] mb-1">Clave presupuestal</label>
-                    <input type="text" id="clave_presupuestal" name="clave_presupuestal"
-                           value="{{ old('clave_presupuestal', $worker->detalle->clave_presupuestal ?? '') }}"
-                           class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DC6601] outline-none"
+                    <label class="block font-semibold text-[#272800] mb-1" for="budget_key">Clave presupuestal</label>
+                    <input type="text" id="budget_key" name="budget_key"
+                           value="{{ old('budget_key', $worker->budget_key) }}"
+                           class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 
+                                  focus:ring-2 focus:ring-[#DC6601] outline-none"
                            placeholder="Ejemplo: 123-ABC">
+                    @error('budget_key')
+                        <p class="text-[#EE0000] text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
+
             </div>
 
-            <!-- Estado -->
+            {{-- Estado --}}
             <div>
                 <label class="block font-semibold text-[#272800] mb-1">Estado</label>
-                <select name="activo"
-                        class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#DC6601] outline-none">
-                    <option value="1" {{ $worker->activo ? 'selected' : '' }}>Activo</option>
-                    <option value="0" {{ !$worker->activo ? 'selected' : '' }}>Inactivo</option>
+                <select name="active"
+                        class="w-full border border-[#D9D9D9] rounded-lg px-4 py-2 
+                               focus:ring-2 focus:ring-[#DC6601] outline-none">
+                    <option value="1" {{ $worker->active ? 'selected' : '' }}>Activo</option>
+                    <option value="0" {{ !$worker->active ? 'selected' : '' }}>Inactivo</option>
                 </select>
             </div>
 
-            <!-- Botones -->
+            {{-- Botones --}}
             <div class="flex flex-col sm:flex-row justify-end gap-4 mt-8">
                 <a href="{{ route('union.members.index') }}"
-                   class="px-6 py-2 bg-[#241178]/10 text-[#241178] hover:bg-[#241178]/20 font-semibold rounded-lg transition text-center">
+                    class="px-6 py-2 bg-[#241178]/10 text-[#241178] hover:bg-[#241178]/20
+                           font-semibold rounded-lg transition text-center">
                     Cancelar
                 </a>
+
                 <button type="submit"
-                        class="px-6 py-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold rounded-lg transition flex items-center gap-2 justify-center">
+                    class="px-6 py-2 bg-[#DC6601] hover:bg-[#EE0000] text-white 
+                           font-semibold rounded-lg flex items-center gap-2 justify-center transition">
                     <x-heroicon-o-user-circle class="w-5 h-5" />
                     Guardar cambios
                 </button>
             </div>
+
         </form>
+
     </div>
+
 </x-layouts.app>

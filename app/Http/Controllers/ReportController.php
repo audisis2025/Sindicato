@@ -8,164 +8,216 @@
 * Elaboró: Iker Piza
 * Fecha de liberación: 10/11/2025
 * Autorizó: Líder Técnico
-* Versión: 2.0
+* Versión: 4.0 (Exportación por pestañas + refactor final)
 *
-* Fecha de mantenimiento: 10/11/2025
+* Fecha de mantenimiento: 24/11/2025
 * Folio de mantenimiento: [Tu Folio]
-* Tipo de mantenimiento: Perfectivo
-* Descripción del mantenimiento: Refactorizado para usar la BD en inglés (name),
-* consultar 'procedure_requests' (en lugar de 'procedures') y
-* cumplir con el Manual PRO-Laravel V3.2.
+* Tipo de mantenimiento: Correctivo y Perfectivo
+* Descripción del mantenimiento:
+* - Exportación dinámica según pestaña seleccionada.
+* - Eliminación definitiva de filtros.
+* - Limpieza y optimización de queries.
+* - PDF/Excel/Word convertidos a formato tabular.
 * Responsable: [Tu Nombre]
-* Revisor: [Tu Revisor]
+* Revisor: QA SINDISOFT
 * ===========================================================
 */
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Procedure;
-use App\Models\ProcedureRequest; // Modelo correcto para reportes
+use App\Models\ProcedureRequest;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ReportesExport; // Este archivo también necesitará refactorización
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReportesExport;
+use PhpOffice\PhpWord\PhpWord;
 
-class ReportController extends Controller // [cite: 887-890]
+class ReportController extends Controller
 {
     /**
-     * Panel principal de reportes (agrupa y filtra por nombre del trámite).
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\View\View
+     * Panel principal de reportes sindicales.
      */
-    public function index(Request $request): View // [cite: 200, 217-218]
+    public function index(Request $request): View
     {
-        $from = $request->input('from');
-        $to = $request->input('to');
-        $type = $request->input('type'); // nombre del trámite (procedure.name)
-        $filters = compact('from', 'to', 'type');
+        // Cargar solicitudes completas
+        $requests = ProcedureRequest::with(['user', 'procedure'])
+            ->orderByDesc('created_at')
+            ->get();
 
-        // Nombres de plantillas de trámites para el <select>
-        $procedureTypes = Procedure::query() // [cite: 236-239]
-            ->select('name') // Corregido
-            ->distinct()
-            ->orderBy('name') // Corregido
-            ->pluck('name') // Corregido
-            ->toArray();
+        /* =============================
+           KPIs solicitados en RF-06
+        ============================= */
+        $workers_attended = $requests->pluck('user_id')->unique()->count();
 
-        $query = ProcedureRequest::with(['user', 'procedure']); // Consultamos solicitudes
+        $hombres      = User::where('gender', 'H')->count();
+        $mujeres      = User::where('gender', 'M')->count();
+        $no_definido  = User::where('gender', 'ND')->count();
+        $no_dice      = User::where('gender', 'X')->count();
 
-        if ($from && $to) {
-            $query->whereBetween('created_at', [$from, $to]);
-        }
 
-        // Filtrar por nombre de trámite (usando la relación)
-        if ($type) {
-            $query->whereHas('procedure', function ($q) use ($type) {
-                $q->where('name', $type); // Corregido
-            });
-        }
+        $completed = ProcedureRequest::where('status', 'completed')->count();
+        $pending   = ProcedureRequest::where('status', 'pending')->count();
 
-        $requests = $query->orderByDesc('created_at')->get(); // [cite: 236-239]
+        $avg_time = ProcedureRequest::selectRaw("AVG(DATEDIFF(updated_at, created_at)) as avg_days")
+            ->value('avg_days');
+        $avg_time = round($avg_time ?? 0, 1);
 
-        // Estadísticas por nombre de trámite
-        $statistics = $requests // [cite: 236-239]
-            ->groupBy(fn ($req) => $req->procedure->name ?? 'Sin Trámite') // Corregido
+        // Estadísticas por tipo de trámite
+        $statistics = $requests
+            ->groupBy(fn($req) => $req->procedure->name ?? 'Sin Trámite')
             ->map->count();
 
         return view('union.reports.index', [
-            'requests' => $requests, // [cite: 288-291]
-            'statistics' => $statistics,
-            'filters' => $filters,
-            'procedure_types' => $procedureTypes, // [cite: 288-291]
+            'requests'         => $requests,
+            'statistics'       => $statistics,
+            'workers_attended' => $workers_attended,
+            'hombres'          => $hombres,
+            'mujeres'          => $mujeres,
+            'completed'        => $completed,
+            'pending'          => $pending,
+            'avg_time'         => $avg_time,
+            'no_definido'   => $no_definido,
+            'no_dice'       => $no_dice,
         ]);
     }
 
     /**
-     * Datos JSON para Chart.js (conteo por nombre de trámite).
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Datos JSON para Chart.js (Trámites por nombre).
      */
-    public function getChartData(Request $request): JsonResponse
+    public function getChartData(): JsonResponse
     {
-        $from = $request->input('from');
-        $to = $request->input('to');
-        $type = $request->input('type');
-
-        $query = ProcedureRequest::query()->join(
+        $data = ProcedureRequest::query()->join(
             'procedures',
             'procedure_requests.procedure_id',
             '=',
             'procedures.id'
-        );
-
-        if ($from && $to) {
-            $query->whereBetween('procedure_requests.created_at', [$from, $to]);
-        }
-        if ($type) {
-            $query->where('procedures.name', $type); // Corregido
-        }
-
-        $data = $query->selectRaw('COALESCE(procedures.name, "Sin Trámite") as name, COUNT(*) as total') // Corregido
-            ->groupBy('procedures.name') // Corregido
-            ->orderBy('procedures.name') // Corregido
+        )
+            ->selectRaw('COALESCE(procedures.name, "Sin Trámite") as name, COUNT(*) as total')
+            ->groupBy('procedures.name')
+            ->orderBy('procedures.name')
             ->get();
 
         return response()->json($data);
     }
 
     /**
-     * Exporta los resultados a PDF.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * Exportación PDF por pestaña.
      */
     public function exportPdf(Request $request): Response
     {
-        $query = ProcedureRequest::with(['user', 'procedure']);
+        $tab = $request->query('tab', 'gender'); // pestaña activa
 
-        if ($request->filled('from') && $request->filled('to')) {
-            $query->whereBetween('created_at', [$request->from, $request->to]);
-        }
-        if ($request->filled('type')) {
-            $query->whereHas('procedure', function ($q) use ($request) {
-                $q->where('name', $request->type); // Corregido
-            });
-        }
-        $requests = $query->get(); // [cite: 236-239]
+        switch ($tab) {
 
-        $pdf = Pdf::loadView('union.reports.exports', ['requests' => $requests]); // [cite: 288-291]
-        return $pdf->download('procedures_report.pdf'); // Corregido
+            case 'gender':
+                $data = [
+                    ['Género', 'Cantidad'],
+                    ['Hombres',     User::where('gender', 'H')->count()],
+                    ['Mujeres',     User::where('gender', 'M')->count()],
+                    ['No definido', User::where('gender', 'ND')->count()],
+                    ['No dice',     User::where('gender', 'X')->count()],
+                ];
+
+                $view = 'union.reports.exports.gender';
+                break;
+
+            case 'status':
+                $data = [
+                    ['Estado', 'Cantidad'],
+                    ['Completados', ProcedureRequest::where('status', 'completed')->count()],
+                    ['Pendientes', ProcedureRequest::where('status', 'pending')->count()],
+                ];
+                $view = 'union.reports.exports.status';
+                break;
+
+            case 'types':
+                $stats = ProcedureRequest::with('procedure')->get()
+                    ->groupBy(fn($r) => $r->procedure->name ?? 'Sin Trámite')
+                    ->map->count();
+
+                $data = $stats;
+                $view = 'union.reports.exports.types';
+                break;
+
+            case 'table':
+            default:
+                $data = ProcedureRequest::with(['user', 'procedure'])->get();
+                $view = 'union.reports.exports.table';
+                break;
+        }
+
+        $pdf = Pdf::loadView($view, ['data' => $data]);
+        return $pdf->download("reporte_$tab.pdf");
     }
 
     /**
-     * Exporta los resultados a Excel.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * Exportación Excel por pestaña.
      */
-    public function exportExcel(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function exportExcel(Request $request)
     {
-        // Pasa los filtros al Export. Tu clase ReportesExport debe ser actualizada
-        // para manejar 'name' en lugar de 'nombre'.
-        $filters = $request->only(['from', 'to', 'type']);
-        return Excel::download(new ReportesExport($filters), 'procedures_report.xlsx'); // Corregido
+        $tab = $request->query('tab', 'gender');
+
+        return Excel::download(new ReportesExport($tab), "reporte_$tab.xlsx");
     }
 
     /**
-     * Exporta los resultados a CSV.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * Exportación Word por pestaña.
      */
-    public function exportCsv(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function exportWord(Request $request)
     {
-        $filters = $request->only(['from', 'to', 'type']);
-        return Excel::download(new ReportesExport($filters), 'procedures_report.csv'); // Corregido
+        $tab = $request->query('tab', 'gender');
+
+        $phpWord = new PhpWord();
+        $section = $phpWord->addSection();
+
+        $section->addTitle("Reporte de $tab", 1);
+
+        switch ($tab) {
+
+            case 'gender':
+                $section->addText("Hombres     : " . User::where('gender', 'H')->count());
+                $section->addText("Mujeres     : " . User::where('gender', 'M')->count());
+                $section->addText("No definido : " . User::where('gender', 'ND')->count());
+                $section->addText("No dice     : " . User::where('gender', 'X')->count());
+
+                break;
+
+            case 'status':
+                $section->addText("Completados: " . ProcedureRequest::where('status', 'completed')->count());
+                $section->addText("Pendientes: " . ProcedureRequest::where('status', 'pending')->count());
+                break;
+
+            case 'types':
+                $stats = ProcedureRequest::with('procedure')->get()
+                    ->groupBy(fn($r) => $r->procedure->name ?? 'Sin Trámite')
+                    ->map->count();
+
+                foreach ($stats as $name => $total) {
+                    $section->addText("$name: $total");
+                }
+                break;
+
+            case 'table':
+            default:
+                $requests = ProcedureRequest::with(['user', 'procedure'])->get();
+                foreach ($requests as $req) {
+                    $section->addText("Trámite: " . ($req->procedure->name ?? '—'));
+                    $section->addText("Usuario: " . ($req->user->name ?? '—'));
+                    $section->addText("Estado : " . $req->status);
+                    $section->addText("-----------------------------");
+                }
+                break;
+        }
+
+        $fileName = "reporte_$tab.docx";
+        $temp = tempnam(sys_get_temp_dir(), 'word');
+        $phpWord->save($temp, 'Word2007');
+
+        return response()->download($temp, $fileName)->deleteFileAfterSend(true);
     }
 }
