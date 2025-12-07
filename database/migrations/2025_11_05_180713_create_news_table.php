@@ -42,17 +42,15 @@ return new class extends Migration
             $table->string('title', 255); 
             $table->text('content')->nullable(); 
             
-            // Enum y valores traducidos
             $table->enum('type', ['announcement', 'communication', 'event'])
-                  ->default('communication'); // Antes 'convocatoria', 'comunicado', 'evento'
+                  ->default('communication');
 
             $table->string('file_path')->nullable(); 
             
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
 
-            // Enum y valores traducidos
             $table->enum('status', ['draft', 'published'])
-                  ->default('published'); // Antes 'borrador', 'publicada'
+                  ->default('published');
             
             $table->timestamps();
         });

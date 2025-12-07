@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use App\Http\Controllers\WorkerNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,11 @@ Route::get('/', function () {
 
 // LOGIN (Volt)
 Volt::route('login', 'auth.login')->name('login');
+// FORGOT PASSWORD (Volt)
+Volt::route('forgot-password', 'auth.forgot-password')->name('password.request');
+
+// RESET PASSWORD (Volt)
+Volt::route('reset-password/{token}', 'auth.reset-password')->name('password.reset');
 
 // LOGOUT tradicional de Laravel
 Route::post('/logout', function () {
@@ -81,6 +87,11 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/profile',     'settings.profile')->name('profile.edit');
     Volt::route('settings/password',    'settings.password')->name('user-password.edit');
     Volt::route('settings/appearance',  'settings.appearance')->name('appearance.edit');
+    Route::get('/worker/notifications', [WorkerNotificationController::class, 'index'])
+        ->name('worker.notifications.index');
+
+    Route::patch('/worker/notifications/{id}/read', [WorkerNotificationController::class, 'markAsRead'])
+        ->name('worker.notifications.read');
 
     Volt::route('settings/two-factor', 'settings.two-factor')
         ->middleware(
@@ -95,13 +106,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-
-/*
-|--------------------------------------------------------------------------
-| RUTAS DE MÓDULOS SINDICALES
-|--------------------------------------------------------------------------
-*/
-
-require __DIR__ . '/union.php';
+// =====================================
+// Rutas modulares (se cargan al final)
+// =====================================
 require __DIR__ . '/admin.php';
+require __DIR__ . '/union.php';
 require __DIR__ . '/worker.php';

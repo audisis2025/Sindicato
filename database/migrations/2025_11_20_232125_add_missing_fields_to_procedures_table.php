@@ -10,13 +10,11 @@ return new class extends Migration
     {
         Schema::table('procedures', function (Blueprint $table) {
 
-            // Dueño (Sindicato que crea el trámite)
             $table->foreignId('user_id')
                 ->after('id')
                 ->constrained('users')
                 ->onDelete('cascade');
 
-            // Campos reales usados en el modelo
             $table->integer('steps_count')->after('description')->default(1);
             $table->date('opening_date')->nullable();
             $table->date('closing_date')->nullable();

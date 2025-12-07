@@ -1,16 +1,18 @@
-{{-- ===========================================================
- Nombre de la clase: sidebar.blade.php
- Descripción: Menú lateral institucional responsive de SINDISOFT con paleta clara PRO-Laravel V3.2.
- Fecha de creación: 01/11/2025
- Elaboró: Iker Piza
- Fecha de liberación: 01/11/2025
- Autorizó: Líder Técnico
- Versión: 2.0
- Tipo de mantenimiento: Correctivo y perfectivo.
- Descripción del mantenimiento: Alineación total entre roles del sidebar y roles reales del sistema.
- Responsable: Iker Piza
- Revisor: QA SINDISOFT
-=========================================================== --}}
+{{-- 
+* Nombre de la vista           : sidebar.blade.php
+* Descripción de la vista      : Menú lateral institucional responsive de SINDISOFT con paleta clara PRO-Laravel V3.2.
+* Fecha de creación            : 01/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 01/11/2025
+* Autorizó                     : Líder Técnico
+* Versión                      : 2.0
+* Fecha de mantenimiento       : 26/11/2025
+* Folio de mantenimiento       : N/A
+* Tipo de mantenimiento        : Correctivo y perfectivo
+* Descripción del mantenimiento: Alineación total entre roles del sidebar y roles reales del sistema
+* Responsable                  : Iker Piza
+* Revisor                      : QA SINDISOFT
+--}}
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -19,10 +21,9 @@
     @include('partials.head')
 </head>
 
-<body class="min-h-screen bg-white text-black font-[Inter] flex flex-col lg:flex-row">
+<body class="min-h-screen bg-white text-black font-sans flex flex-col lg:flex-row">
 
     @php
-        // Rol REAL de la base de datos
         $roleDB = auth()->check() ? auth()->user()->role : 'guest';
 
         $rol = match ($roleDB) {
@@ -32,8 +33,6 @@
             default => 'invitado',
         };
 
-    @endphp
-    @php
         $rutaInicio = match ($rol) {
             'administrador' => 'dashboard',
             'sindicato' => 'dashboard',
@@ -43,16 +42,16 @@
     @endphp
 
     <flux:sidebar
-        class="w-full lg:w-64 min-h-[60vh] lg:min-h-screen border-b lg:border-b-0 lg:border-e border-[#D9D9D9]
-               bg-white shadow-md text-black flex flex-col justify-between px-4 py-5 lg:py-6 transition-all duration-300">
+        class="w-full lg:w-64 min-h-[60vh] lg:min-h-screen border-b lg:border-e border-[#D9D9D9]
+               bg-white shadow-md text-black flex flex-col justify-between px-4 py-5 lg:py-6 transition-all">
 
         <div>
             <a href="{{ route('dashboard') }}"
                 class="flex items-center justify-center lg:justify-start space-x-3 mb-6 px-2">
                 <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
                     class="w-10 h-10 rounded-lg border border-[#272800]/30 shadow-sm">
-                <span class="font-[Poppins] font-bold text-[#DE6601] text-lg tracking-wide">
-                    Sindisoft
+                <span class="font-bold text-[#DE6601] text-lg tracking-wide">
+                    SINDISOFT
                 </span>
             </a>
 
@@ -61,7 +60,7 @@
                     Menú principal
                 </p>
 
-                <nav class="space-y-2 font-[Inter] text-center lg:text-left">
+                <nav class="space-y-2 text-center lg:text-left">
 
                     <a href="{{ route($rutaInicio) }}"
                         class="flex items-center gap-3 px-2 py-2 rounded-lg transition
@@ -72,7 +71,6 @@
                         <span>Inicio</span>
                     </a>
 
-                    <!-- ADMINISTRADOR -->
                     @if ($rol === 'administrador')
                         <a href="{{ route('users.index') }}"
                             class="flex items-center gap-3 px-2 py-2 rounded-lg transition
@@ -92,6 +90,15 @@
                             <span>Dar de alta usuario</span>
                         </a>
 
+                        <a href="{{ route('admin.reminders') }}"
+                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
+                            {{ request()->routeIs('admin.reminders')
+                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
+                                : 'text-[#241178] hover:text-[#DE6601]' }}">
+                            <x-heroicon-o-bell-alert class="w-5 h-5" />
+                            <span>Recordatorios del sistema</span>
+                        </a>
+
                         <a href="{{ route('admin.configuration.logs') }}"
                             class="flex items-center gap-3 px-2 py-2 rounded-lg transition
                             {{ request()->routeIs('admin.configuration.logs')
@@ -102,7 +109,6 @@
                         </a>
                     @endif
 
-                    <!-- SINDICATO -->
                     @if ($rol === 'sindicato')
                         <a href="{{ route('union.procedures.index') }}"
                             class="flex items-center gap-3 px-2 py-2 rounded-lg transition
@@ -122,7 +128,7 @@
                             <span>Trabajadores registrados</span>
                         </a>
 
-                        <a href="{{ route('union.workers.requests.index') }}"
+                        <a href="{{ route('union.requests.index') }}"
                             class="flex items-center gap-3 px-2 py-2 rounded-lg transition
                             {{ request()->routeIs('union.workers.requests.*')
                                 ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
@@ -150,7 +156,6 @@
                         </a>
                     @endif
 
-                    <!-- TRABAJADOR -->
                     @if ($rol === 'trabajador')
                         <a href="{{ route('worker.index') }}"
                             class="flex items-center gap-3 px-3 py-2 rounded-lg transition
@@ -191,7 +196,7 @@
                     {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                 </div>
                 <div>
-                    <p class="text-sm font-[Poppins] font-semibold text-black leading-tight">
+                    <p class="text-sm font-semibold text-black leading-tight">
                         {{ auth()->user()->name }}
                     </p>
                     <p class="text-xs text-[#241178] leading-tight">
@@ -214,6 +219,7 @@
 
     <flux:header
         class="lg:hidden bg-white shadow-sm text-black px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+
         <flux:sidebar.toggle class="text-[#DE6601]" inset="left">
             <x-heroicon-o-bars-3 class="w-6 h-6" />
         </flux:sidebar.toggle>
@@ -221,6 +227,7 @@
         <flux:dropdown position="top" align="end">
             <flux:profile :initials="strtoupper(substr(auth()->user()->name, 0, 2))" icon-trailing="chevron-down"
                 class="text-[#241178]" />
+
             <flux:menu class="bg-white text-black border border-[#D9D9D9] rounded-xl shadow-md">
 
                 <flux:menu.item :href="route('profile.edit')" wire:navigate>

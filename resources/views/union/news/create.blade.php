@@ -1,135 +1,104 @@
-{{-- ===========================================================
- Nombre de la vista: create.blade.php
- Descripción: Formulario de creación de nuevas noticias, avisos o convocatorias.
- Fecha de creación: 03/11/2025
- Elaboró: Iker Piza
- Fecha de liberación: 03/11/2025
- Autorizó: Líder Técnico
- Versión: 1.0
- Tipo de mantenimiento: Creación inicial.
- Descripción del mantenimiento: Maquetación del formulario de publicación conforme
- al Manual PRO-Laravel V3.2 y estándares Flux UI.
- Responsable: Iker Piza
- Revisor: QA SINDISOFT
-=========================================================== --}}
+{{-- 
+* Nombre de la vista           : news-create.blade.php
+* Descripción de la vista      : Formulario para la creación de noticias y convocatorias del sindicato.
+* Fecha de creación            : 27/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 27/11/2025
+* Autorizó                     : Líder Técnico
+* Versión                      : 1.0
+* Fecha de mantenimiento       : 27/11/2025
+* Folio de mantenimiento       : N/A
+* Tipo de mantenimiento        : Correctivo y perfectivo
+* Descripción del mantenimiento: Homologación con alta de trabajadores y ajuste a controlador NewsController@store según Manual PRO-Laravel V3.4.
+* Responsable                  : Iker Piza
+* Revisor                      : QA SINDISOFT
+--}}
 
 <x-layouts.app :title="__('Nueva publicación')">
-    <div class="max-w-5xl mx-auto p-6">
 
-        <!-- 🔸 Título principal -->
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601]">
+    <div class="w-full flex flex-col items-center justify-center min-h-[80vh] bg-white text-black p-6">
+
+        <div class="w-full max-w-4xl flex items-center justify-between mb-6">
+            <h1 class="text-3xl font-bold text-[#DE6601]">
                 Crear nueva publicación
             </h1>
-            <a href="{{ route('union.news.index') }}"
-               class="flex items-center gap-2 text-[#241178] hover:text-[#DC6601] font-semibold transition">
-                <x-heroicon-o-arrow-long-left class="w-5 h-5" />
+
+            <flux:button icon="arrow-long-left" icon-variant="outline" variant="ghost" :href="route('union.news.index')"
+                class="px-4 py-2 !bg-transparent hover:!bg-zinc-100 !text-[#241178] font-semibold rounded-lg mt-3 sm:mt-0">
                 Volver al listado
-            </a>
+            </flux:button>
         </div>
 
-        <!-- 🧾 Formulario -->
-        <form method="POST" action="#" enctype="multipart/form-data"
-              class="bg-white border border-[#D9D9D9]/60 rounded-xl shadow-sm p-6 space-y-5">
+        <form method="POST" action="{{ route('union.news.store') }}" enctype="multipart/form-data"
+            class="w-full max-w-4xl bg-white border border-[#D9D9D9] shadow-md rounded-2xl p-8 space-y-6">
             @csrf
 
-            <!-- 📝 Título -->
+            <flux:input name="title" :label="__('Título')" type="text" required value="{{ old('title') }}"
+                placeholder="Convocatoria Becas 2025" />
+
             <div>
-                <label for="title" class="block text-sm font-semibold text-[#241178] mb-1">
-                    Título
+                <label for="content" class="block text-sm font-semibold text-[#272800] mb-1">
+                    Contenido
                 </label>
-                <input type="text" id="title" name="title"
-                       placeholder="Ej. Convocatoria Becas 2025"
-                       class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
+                <textarea id="content" name="content" rows="4"
+                    class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
+                    placeholder="Redacta el contenido completo de la publicación">{{ old('content') }}</textarea>
             </div>
 
-            <!-- 📄 Descripción breve -->
-            <div>
-                <label for="description" class="block text-sm font-semibold text-[#241178] mb-1">
-                    Descripción breve
-                </label>
-                <textarea id="description" name="description" rows="3"
-                          placeholder="Resumen o propósito de la publicación"
-                          class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]"></textarea>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <flux:input name="publication_date" :label="__('Fecha de publicación')" type="date"
+                    value="{{ old('publication_date') }}" />
+
+                <flux:input name="expiration_date" :label="__('Fecha de vigencia (opcional)')" type="date"
+                    value="{{ old('expiration_date') }}" />
             </div>
 
-            <!-- 📅 Fechas -->
-            <div class="grid sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <flux:select name="type" :label="__('Tipo de publicación')" required>
+                    <option value="announcement" {{ old('type') === 'announcement' ? 'selected' : '' }}>Convocatoria
+                    </option>
+                    <option value="communication" {{ old('type') === 'communication' ? 'selected' : '' }}>Comunicado
+                    </option>
+                    <option value="event" {{ old('type') === 'event' ? 'selected' : '' }}>Evento</option>
+                </flux:select>
+
+                <flux:select name="status" :label="__('Estado')" required>
+                    <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Publicada</option>
+                    <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>Borrador</option>
+                </flux:select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                    <label for="publication_date" class="block text-sm font-semibold text-[#241178] mb-1">
-                        Fecha de publicación
+                    <label for="attachment" class="block text-sm font-semibold text-[#272800] mb-1">
+                        Archivo adjunto (opcional)
                     </label>
-                    <input type="date" id="publication_date" name="publication_date"
-                           class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
+                    <input id="attachment" name="attachment" type="file"
+                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm text-black">
                 </div>
 
                 <div>
-                    <label for="expiration_date" class="block text-sm font-semibold text-[#241178] mb-1">
-                        Fecha de vigencia (opcional)
+                    <label for="image" class="block text-sm font-semibold text-[#272800] mb-1">
+                        Imagen de portada (opcional)
                     </label>
-                    <input type="date" id="expiration_date" name="expiration_date"
-                           class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
+                    <input id="image" name="image" type="file"
+                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm text-black">
                 </div>
             </div>
 
-            <!-- 📂 Categoría -->
-            <div>
-                <label for="category" class="block text-sm font-semibold text-[#241178] mb-1">
-                    Categoría
-                </label>
-                <select id="category" name="category"
-                        class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#DC6601]">
-                    <option value="">Seleccione una categoría</option>
-                    <option value="noticia">Noticia general</option>
-                    <option value="convocatoria">Convocatoria</option>
-                    <option value="aviso">Aviso urgente</option>
-                </select>
-            </div>
-
-            <!-- 📎 Archivo adjunto -->
-            <div>
-                <label for="attachment" class="block text-sm font-semibold text-[#241178] mb-1">
-                    Archivo adjunto (opcional)
-                </label>
-                <input type="file" id="attachment" name="attachment"
-                       class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm text-[#241178]" />
-            </div>
-
-            <!-- 🖼️ Imagen de portada -->
-            <div>
-                <label for="cover_image" class="block text-sm font-semibold text-[#241178] mb-1">
-                    Imagen de portada (opcional)
-                </label>
-                <input type="file" id="cover_image" name="cover_image"
-                       class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm text-[#241178]" />
-            </div>
-
-            <!-- 🟢 Estado -->
-            <div>
-                <label for="status" class="block text-sm font-semibold text-[#241178] mb-1">
-                    Estado
-                </label>
-                <select id="status" name="status"
-                        class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#DC6601]">
-                    <option value="Publicada">Publicada</option>
-                    <option value="Borrador">Borrador</option>
-                    <option value="Archivada">Archivada</option>
-                </select>
-            </div>
-
-            <!-- 🔘 Botones -->
-            <div class="flex justify-end gap-4 pt-4 border-t border-[#E5E5E5]">
-                <a href="{{ route('union.news.index') }}"
-                   class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-[#241178] font-semibold px-4 py-2 rounded-lg transition">
-                    <x-heroicon-o-x-mark class="w-5 h-5" />
+            <div class="flex flex-col sm:flex-row justify-end gap-4 pt-4 border-t border-zinc-200 mt-4">
+                <flux:button icon="x-circle" icon-variant="outline" variant="ghost" :href="route('union.news.index')"
+                    class="!bg-zinc-200 hover:!bg-zinc-300 !text-zinc-700 px-6 py-2 font-semibold rounded-lg transition">
                     Cancelar
-                </a>
-                <button type="submit"
-                        class="inline-flex items-center gap-2 bg-[#DC6601] hover:bg-[#241178] text-white font-semibold px-4 py-2 rounded-lg transition">
-                    <x-heroicon-o-check-circle class="w-5 h-5" />
+                </flux:button>
+
+                <flux:button icon="check-circle" icon-variant="outline" variant="primary" type="submit"
+                    class="!bg-blue-600 hover:!bg-blue-700 !text-white font-semibold rounded-lg transition">
                     Guardar publicación
-                </button>
+                </flux:button>
             </div>
+
         </form>
     </div>
+
 </x-layouts.app>

@@ -126,4 +126,58 @@ class ProcedureRequest extends Model
     {
         return $this->status === self::STATUS_REJECTED;
     }
+    /**
+     * Obtener el paso actual.
+     */
+    public function currentStep()
+    {
+        return $this->procedure->steps
+            ->where('order', $this->current_step)
+            ->first();
+    }
+
+    /**
+     * Obtener siguiente paso (si existe).
+     */
+    public function nextStep()
+    {
+        return $this->procedure->steps
+            ->where('order', $this->current_step + 1)
+            ->first();
+    }
+
+    /**
+     * Avanzar al siguiente paso o finalizar.
+     */
+    public function advance()
+    {
+        $step = $this->currentStep();
+
+        if (!$step) {
+            return;
+        }
+
+        if ($step->next_step_if_fail) {
+            $this->current_step = $step->next_step_if_fail;
+        } else {
+            $this->current_step++;
+        }
+
+        if ($this->current_step > $this->procedure->steps->max('order')) {
+            $this->status = self::STATUS_COMPLETED;
+        } else {
+            $this->status = self::STATUS_IN_PROGRESS;
+        }
+
+        $this->save();
+    }
+
+    /**
+     * Rechazar paso / solicitud.
+     */
+    public function failStep()
+    {
+        $this->status = self::STATUS_REJECTED;
+        $this->save();
+    }
 }

@@ -35,8 +35,7 @@ use App\Http\Controllers\AdminConfigurationController;
 |
 */
 
-Route::middleware(['auth', 'isAdmin'])->group(function () 
-{
+Route::middleware(['auth', 'isAdmin'])->group(function () {
 
     // Rutas de Gestión de Usuarios
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -47,10 +46,22 @@ Route::middleware(['auth', 'isAdmin'])->group(function ()
     Route::patch('/users/{user}/toggle', [UserController::class, 'toggle'])->name('users.toggle');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
+    Route::get('/admin/reminders', [AdminConfigurationController::class, 'reminders'])
+        ->name('admin.reminders');
+
+    Route::post('/admin/reminders/update', [AdminConfigurationController::class, 'updateReminders'])
+        ->name('admin.reminders.update');
+    Route::delete('/admin/logs/clear', [AdminConfigurationController::class, 'clearLogs'])
+        ->name('admin.configuration.logs.clear');
+
+    Route::get('/admin/logs/export-word', [AdminConfigurationController::class, 'exportWord'])
+        ->name('admin.configuration.logs.exportWord');
+
+
+
     // Rutas de Configuración del Administrador
     Route::get('/admin/configuration', [AdminConfigurationController::class, 'index'])->name('admin.configuration');
     Route::put('/admin/configuration', [AdminConfigurationController::class, 'update'])->name('admin.configuration.update');
     Route::post('/admin/configuration/backup', [AdminConfigurationController::class, 'backup'])->name('admin.configuration.backup');
     Route::get('/admin/configuration/logs', [AdminConfigurationController::class, 'logs'])->name('admin.configuration.logs');
-
 });

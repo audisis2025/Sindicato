@@ -39,11 +39,11 @@ class ProcedureStep extends Model // [cite: 298-301, 512, 532-536]
         'order',
         'step_name',
         'step_description',
-        'estimated_days',
         'next_step_if_fail',
         'requires_file',
         'file_path',
     ];
+
 
     protected $casts = [
         'requires_file' => 'boolean',

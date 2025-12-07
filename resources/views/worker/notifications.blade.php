@@ -1,127 +1,114 @@
-<x-layouts.app :title="__('Notificaciones')">
+{{-- 
+* Nombre de la vista           : notifications.blade.php
+* Descripción de la vista      : Panel de notificaciones internas del usuario trabajador.
+* Fecha de creación            : 25/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 25/11/2025
+* Autorizó                     : Líder Técnico
+* Versión                      : 1.1
+* Fecha de mantenimiento       : 27/11/2025
+* Folio de mantenimiento       : N/A
+* Tipo de mantenimiento        : Correctivo y perfectivo
+* Descripción del mantenimiento: Homologación de tabla, botones e iconos según Manual PRO-Laravel V3.4.
+* Responsable                  : Iker Piza
+* Revisor                      : QA SINDISOFT
+--}}
 
-    {{-- FLATPICKR --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+<x-layouts.app :title="__('Mis notificaciones')">
 
-    <div class="w-full flex flex-col items-center min-h-[80vh] bg-white text-black p-6">
+    <div class="flex flex-col gap-6 p-6 w-full max-w-6xl mx-auto">
 
-        <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601] mb-6">
-            Notificaciones
-        </h1>
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-[#DE6601]">
+                Mis notificaciones
+            </h1>
 
-        {{-- FILTROS --}}
-        <form method="GET" action="{{ route('worker.notifications.index') }}"
-            class="w-full max-w-3xl bg-white border border-[#D9D9D9] rounded-xl shadow-md p-5 mb-8">
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-                <div class="flex flex-col">
-                    <label class="text-sm font-semibold text-[#241178]">Desde</label>
-                    <input type="text" name="date_from" id="date_from" value="{{ request('date_from') }}"
-                        class="border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#DC6601]">
-                </div>
-
-                <div class="flex flex-col">
-                    <label class="text-sm font-semibold text-[#241178]">Hasta</label>
-                    <input type="text" name="date_to" id="date_to" value="{{ request('date_to') }}"
-                        class="border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#DC6601]">
-                </div>
-
-                <div class="flex items-center gap-2 mt-6">
-                    <input type="checkbox" name="unread" id="unread" value="1"
-                        {{ request('unread') ? 'checked' : '' }}>
-                    <label for="unread" class="text-sm font-semibold text-[#241178]">
-                        Solo no leídas
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="flex justify-end mt-4 gap-3">
-                <a href="{{ route('worker.notifications.index') }}"
-                    class="px-4 py-2 bg-[#241178]/10 text-[#241178] hover:bg-[#241178]/20 font-semibold rounded-lg transition">
-                    Limpiar
-                </a>
-
-                <button type="submit"
-                    class="px-4 py-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold rounded-lg transition">
-                    Filtrar
-                </button>
-            </div>
-
-        </form>
-
-        {{-- BOTÓN MARCAR TODAS --}}
-        @if ($notifications_list->count() > 0)
-            <form method="POST" action="{{ route('worker.notifications.readAll') }}" class="mb-5">
-                @csrf
-                <button type="submit"
-                    class="px-4 py-2 bg-[#241178] hover:bg-[#1e0f6b] text-white font-semibold rounded-lg transition">
-                    Marcar todas como leídas
-                </button>
-            </form>
-        @endif
-
-        {{-- LISTADO --}}
-        <div class="w-full max-w-3xl space-y-4">
-            @forelse ($notifications_list as $n)
-                @php
-                    $bgClass = $n->status === 'unread' ? 'bg-[#FFF6EE]' : 'bg-white';
-                    $borderClass = $n->status === 'unread' ? 'border-[#DC6601]' : 'border-[#D9D9D9]';
-                @endphp
-
-                <div class="rounded-2xl shadow-sm p-5 border {{ $bgClass }} {{ $borderClass }}">
-
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-[Poppins] font-semibold text-[#241178]">
-                            {{ $n->title }}
-                        </h2>
-
-                        @if ($n->status === 'unread')
-                            <form method="POST" action="{{ route('worker.notifications.read', $n->id) }}">
-                                @csrf
-                                <button type="submit"
-                                    class="text-sm text-[#DC6601] hover:text-[#EE0000] font-semibold">
-                                    Marcar como leída
-                                </button>
-                            </form>
-                        @endif
-                    </div>
-
-                    <p class="text-gray-700 text-sm mt-2 mb-2">{{ $n->message }}</p>
-
-                    <p class="text-xs text-gray-500 text-right">
-                        {{ $n->created_at->format('d/m/Y H:i') }}
-                    </p>
-                </div>
-
-            @empty
-                <p class="text-center text-gray-500">No hay notificaciones con estos filtros.</p>
-            @endforelse
+            <flux:button icon="arrow-long-left" icon-variant="outline" variant="ghost" :href="route('worker.index')"
+                class="px-4 py-2 !bg-transparent hover:!bg-zinc-100 !text-[#241178] font-semibold rounded-lg">
+                Volver al panel
+            </flux:button>
         </div>
 
+        <div class="overflow-x-auto bg-white border border-[#D9D9D9] rounded-xl shadow-sm">
+            @if ($notifications_list->count() > 0)
+                <table class="min-w-full divide-y divide-zinc-200 text-sm font-[Inter]">
+                    <thead class="bg-zinc-100">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold text-black">
+                                Título
+                            </th>
+                            <th class="px-4 py-3 text-left font-semibold text-black">
+                                Mensaje
+                            </th>
+                            <th class="px-4 py-3 text-center font-semibold text-black">
+                                Estado
+                            </th>
+                            <th class="px-4 py-3 text-center font-semibold text-black">
+                                Acciones
+                            </th>
+                        </tr>
+                    </thead>
 
-        <div class="mt-10">
-            <a href="{{ route('worker.index') }}"
-                class="px-6 py-2 bg-[#241178]/10 text-[#241178] hover:bg-[#241178]/20 font-semibold rounded-lg transition">
-                ← Volver al panel
-            </a>
+                    <tbody class="divide-y divide-zinc-200 bg-white">
+                        @foreach ($notifications_list as $notification)
+                            @php
+                                $isUnread =
+                                    $notification->status === 'unread' || is_null($notification->read_at ?? null);
+                            @endphp
+
+                            <tr class="hover:bg-zinc-50 transition">
+                                <td class="px-4 py-3 text-sm font-semibold text-black">
+                                    {{ $notification->title ?? 'Notificación' }}
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-black/80">
+                                    {{ $notification->message ?? '-' }}
+                                </td>
+
+                                <td class="px-4 py-3 text-center text-sm">
+                                    @if ($isUnread)
+                                        <span class="text-orange-600 font-semibold">
+                                            No leída
+                                        </span>
+                                    @else
+                                        <span class="text-green-700 font-semibold">
+                                            Leída
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="px-4 py-3 text-center text-sm">
+                                    @if ($isUnread)
+                                        <form method="POST"
+                                            action="{{ route('worker.notifications.read', $notification->id) }}"
+                                            class="inline-flex">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <flux:button size="xs" icon="check" icon-variant="outline"
+                                                variant="primary" type="submit"
+                                                class="!bg-green-600 hover:!bg-green-700 !text-white font-semibold">
+                                                Marcar como leída
+                                            </flux:button>
+                                        </form>
+                                    @else
+                                        <span class="text-gray-400 text-xs">
+                                            Sin acciones
+                                        </span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p class="text-center py-4 text-gray-500 text-sm">
+                    No tienes notificaciones por el momento.
+                </p>
+            @endif
+
         </div>
+
     </div>
-
-    {{-- SCRIPT FLATPICKR --}}
-    <script>
-        flatpickr.localize(flatpickr.l10ns.es);
-
-        const baseConfig = {
-            dateFormat: "Y-m-d",
-            allowInput: true
-        };
-
-        flatpickr("#date_from", baseConfig);
-        flatpickr("#date_to", baseConfig);
-    </script>
 
 </x-layouts.app>

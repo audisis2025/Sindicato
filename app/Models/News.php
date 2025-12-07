@@ -27,11 +27,23 @@ class News extends Model
     protected $fillable = [
         'title',
         'content',
-        'type',          // convocatoria | comunicado | evento
-        'status',        // draft | published
-        'image_path',    // portada
-        'file_path',     // archivo PDF
+        'type',
+        'status',
+        'image_path',
+        'file_path',
+        'publication_date',
+        'expiration_date',
         'user_id',
+    ];
+    public function getPublicationDateFormattedAttribute()
+    {
+        return $this->publication_date
+            ? $this->publication_date->format('d/m/Y')
+            : null;
+    }
+    protected $casts = [
+        'publication_date' => 'date',
+        'expiration_date' => 'date',
     ];
 
     /**

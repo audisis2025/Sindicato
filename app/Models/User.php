@@ -16,10 +16,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 // Importar relaciones faltantes
 use App\Models\ProcedureRequest;
-use App\Models\Notification;
 use App\Models\ActivityLog;
+use App\Models\SystemNotification;
+
 
 class User extends Authenticatable
 {
@@ -79,18 +81,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Relación: notificaciones.
-     */
-    public function notifications(): HasMany
-    {
-        return $this->hasMany(Notification::class);
-    }
-
-    /**
      * Relación: logs de actividad.
      */
     public function activityLogs(): HasMany
     {
         return $this->hasMany(ActivityLog::class);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordByRole($token));
+    }
+
+    public function systemNotifications(): HasMany
+    {
+        return $this->hasMany(SystemNotification::class, 'user_id');
     }
 }

@@ -21,9 +21,11 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::orderBy('id', 'desc')->get();
-        return view('union.news.index', compact('news'));
+        $news_list = News::orderBy('id', 'desc')->get();
+
+        return view('union.news.index', compact('news_list'));
     }
+
 
     /**
      * Formulario de creación.
@@ -42,13 +44,9 @@ class NewsController extends Controller
         $validated = $request->validate([
             'title'           => 'required|string|max:255',
             'content'         => 'nullable|string',
-            'type'            => 'required|in:convocatoria,comunicado,evento',
+            'type' => 'required|in:announcement,communication,event',
             'status'          => 'required|in:draft,published',
-
-            // 🖼 Imagen de portada
             'image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-
-            // 📄 Archivo PDF opcional
             'attachment'      => 'nullable|file|mimes:pdf|max:8192',
         ]);
 
@@ -72,6 +70,8 @@ class NewsController extends Controller
             'type'        => $validated['type'],
             'status'      => $validated['status'],
             'image_path'  => $imagePath,
+            'publication_date'  => $request->publication_date,
+            'expiration_date'   => $request->expiration_date,
             'file_path'   => $filePath,
             'user_id'     => Auth::id(),
         ]);
@@ -102,9 +102,8 @@ class NewsController extends Controller
         $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'content'     => 'nullable|string',
-            'type'        => 'required|in:convocatoria,comunicado,evento',
+            'type' => 'required|in:announcement,communication,event',
             'status'      => 'required|in:draft,published',
-
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'attachment'  => 'nullable|file|mimes:pdf|max:8192',
         ]);
@@ -130,6 +129,8 @@ class NewsController extends Controller
             'content' => $validated['content'] ?? null,
             'type'    => $validated['type'],
             'status'  => $validated['status'],
+            'publication_date'  => $request->publication_date,
+            'expiration_date'   => $request->expiration_date,
         ]);
 
         app(SystemLogger::class)->log(

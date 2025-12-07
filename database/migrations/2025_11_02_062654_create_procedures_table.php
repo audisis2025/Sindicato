@@ -33,21 +33,14 @@ return new class extends Migration
         Schema::create('procedures', function (Blueprint $table) {
             $table->id();
 
-            // --- CAMPOS AÑADIDOS ---
-            // Nombre del trámite (ej. "Solicitud de vacaciones")
             $table->string('name', 255);
             
-            // Descripción o instrucciones del trámite
             $table->text('description')->nullable();
 
-            // Estado del trámite (si está visible o no para los usuarios)
+
             $table->enum('status', ['active', 'inactive', 'archived'])
                   ->default('active');
             
-            // Se puede añadir un foreignId para el 'dueño' o 'categoría' si se necesita
-            // $table->foreignId('category_id')->nullable()->constrained('procedure_categories');
-
-            // --- FIN DE CAMPOS AÑADIDOS ---
 
             $table->timestamps();
         });

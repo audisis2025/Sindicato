@@ -146,7 +146,7 @@ class AdminConfigurationController extends Controller // [cite: 887-890]
             'ip_address' => $request->ip()
         ]);
 
-        return back()->with('status', '💾 Respaldo generado correctamente: ' . $filename);
+        return back()->with('status', 'Respaldo generado correctamente: ' . $filename);
     }
 
     /**
@@ -154,68 +154,166 @@ class AdminConfigurationController extends Controller // [cite: 887-890]
      *
      * @return \Illuminate\View\View
      */
-    // quita cualquier referencia a SystemLog
-
     public function logs(Request $request): View
     {
-        $logPath = storage_path('logs/configuracion_sistema.log');
+        $query = ActivityLog::query();
 
-        $logs = file_exists($logPath)
-            ? file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)
-            : [];
+        // CONVERSIÓN DE FORMATO dd/mm/aaaa → Y-m-d
+        $dateFrom = null;
+        $dateTo   = null;
 
-        $from = $request->input('date_from');
-        $to = $request->input('date_to');
-        $keyword = $request->input('keyword');
+        if ($request->filled('date_from')) {
+            try {
+                $dateFrom = Carbon::createFromFormat('d/m/Y', $request->date_from)->format('Y-m-d');
+            } catch (\Exception $e) {
+            }
+        }
 
-        // Aplicar filtros si existen
-        if ($keyword || $from || $to) {
-            $logs = array_filter($logs, function ($line) use ($from, $to, $keyword) {
-                $lineValid = true;
+        if ($request->filled('date_to')) {
+            try {
+                $dateTo = Carbon::createFromFormat('d/m/Y', $request->date_to)->format('Y-m-d');
+            } catch (\Exception $e) {
+            }
+        }
 
-                // 1. Filtro por Palabra Clave
-                if ($keyword && !Str::contains(strtolower($line), strtolower($keyword))) {
-                    $lineValid = false;
-                }
+        // FILTRO POR FECHA INICIO
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
 
-                // 2. Filtro por Fecha
-                if ($lineValid && ($from || $to)) {
-                    preg_match('/\[(.*?)\]/', $line, $matches);
-                    $logDateStr = $matches[1] ?? null;
+        // FILTRO POR FECHA FIN
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
 
-                    if (!$logDateStr) {
-                        $lineValid = false;
-                    } else {
-                        $logDate = Carbon::parse($logDateStr)->startOfDay();
-
-                        // Rango de fechas
-                        if ($from && $to) {
-                            $startDate = Carbon::parse($from)->startOfDay();
-                            $endDate = Carbon::parse($to)->endOfDay();
-
-                            if (!$logDate->isBetween($startDate, $endDate)) {
-                                $lineValid = false;
-                            }
-                        }
-
-                        // Solo una fecha (solo "desde")
-                        else if ($from && !$to) {
-                            $searchDate = Carbon::parse($from)->startOfDay();
-
-                            if (!$logDate->isSameDay($searchDate)) {
-                                $lineValid = false;
-                            }
-                        }
-                    }
-                }
-
-                return $lineValid;
+        // FILTRO POR PALABRA CLAVE (Buscar en módulo y acción)
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('module',  'LIKE', "%{$keyword}%")
+                    ->orWhere('action', 'LIKE', "%{$keyword}%");
             });
         }
 
-        // Invertir para mostrar los más nuevos primero
-        $system_logs = array_reverse($logs);
+        $logs = $query->orderBy('created_at', 'desc')->get();
 
-        return view('admin.logs', compact('system_logs'));
+        return view('admin.logs', compact('logs'));
+    }
+
+
+
+
+    /**
+     * Muestra la configuración de recordatorios (RF-04).
+     *
+     * @return \Illuminate\View\View
+     */
+    public function reminders(): View
+    {
+        $config = \App\Models\ReminderSetting::first();
+
+        if (!$config) {
+            // Crear registro inicial si no existe
+            $config = \App\Models\ReminderSetting::create([
+                'enabled' => 0,
+                'channel' => 'email',
+                'interval_days' => 2,
+                'base_message' => 'Tienes un paso pendiente en tu trámite.'
+            ]);
+        }
+
+        // Reglas dummy (hasta que hagas su propia tabla)
+        $rules = collect([
+            (object)['id' => 1, 'label' => 'Recordar pasos pendientes', 'value' => 'Cada 2 días'],
+            (object)['id' => 2, 'label' => 'Aviso previo a fecha límite', 'value' => '3 días antes'],
+        ]);
+
+        return view('admin.reminders', compact('config', 'rules'));
+    }
+
+
+
+    /**
+     * Guarda la configuración de recordatorios (RF-04).
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateReminders(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'enabled'       => 'required|in:0,1',
+            'channel'       => 'required|in:email,inapp',
+            'interval_days' => 'required|integer|min:1|max:30',
+            'base_message'  => 'required|string|max:500',
+        ]);
+
+        $config = \App\Models\ReminderSetting::first();
+
+        if (!$config) {
+            $config = new \App\Models\ReminderSetting();
+        }
+
+        $config->update($validated);
+
+        ActivityLog::create([
+            'user_id' => Auth::id(),
+            'module'  => 'Configuración',
+            'action'  => 'Actualizó configuración de recordatorios',
+            'ip_address' => $request->ip()
+        ]);
+
+        return redirect()
+            ->route('admin.reminders')
+            ->with('success', 'Configuración de recordatorios actualizada correctamente.');
+    }
+    public function clearLogs()
+    {
+        ActivityLog::truncate();
+
+        return back()->with('status', 'Bitácora eliminada correctamente.');
+    }
+    public function exportWord()
+    {
+        $logs = ActivityLog::orderBy('created_at', 'desc')->get();
+
+        $filename = "Bitacora_Sistema_" . now()->format('Ymd_His') . ".doc";
+
+        // Encabezado inicial del documento
+        $content  = "<h2>Bitácora del Sistema</h2>";
+        $content .= "<p>Generado el: " . now()->timezone('America/Mexico_City')->format('d/m/Y H:i:s') . "</p>";
+        $content .= "<hr>";
+
+        // Tabla
+        $content .= "
+        <table border='1' cellspacing='0' cellpadding='5' width='100%'>
+            <thead>
+                <tr style='background:#eeeeee; font-weight:bold;'>
+                    <th>Fecha / Hora</th>
+                    <th>Módulo</th>
+                    <th>Acción</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+    ";
+
+        foreach ($logs as $log) {
+            $content .= "
+            <tr>
+                <td>" . $log->created_at->timezone('America/Mexico_City')->format('d/m/Y H:i:s') . "</td>
+                <td>" . ($log->module ?? '-') . "</td>
+                <td>" . ($log->action ?? '-') . "</td>
+                <td>" . ($log->user->name ?? 'Sistema') . "</td>
+            </tr>
+        ";
+        }
+
+        $content .= "</tbody></table>";
+
+        // Headers para Word
+        return response($content)
+            ->header('Content-Type', 'application/msword')
+            ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
     }
 }

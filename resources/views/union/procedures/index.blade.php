@@ -1,116 +1,133 @@
-{{-- ===========================================================
- Nombre de la clase: procedures-index.blade.php
- Descripción: Vista para listar y administrar los trámites creados por el Sindicato.
- Fecha de creación: 03/11/2025
- Elaboró: Iker Piza
- Fecha de liberación: 03/11/2025
- Autorizó: Líder Técnico
- Versión: 1.1
- Tipo de mantenimiento: Correctivo.
- Descripción del mantenimiento: Se actualizan campos conforme al modelo Procedure (name, steps_count, opening_date, etc.) y al estándar PRO-Laravel V3.4.
- Responsable: Iker Piza
- Revisor: QA SINDISOFT
-=========================================================== --}}
+{{-- 
+* Nombre de la vista           : procedures-index.blade.php
+* Descripción de la vista      : Módulo de gestión de trámites creados por el Sindicato. Incluye listado y acciones CRUD.
+* Fecha de creación            : 03/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 03/11/2025
+* Autorizó                     : Líder Técnico
+* Versión                      : 1.1
+* Fecha de mantenimiento       : 27/11/2025
+* Folio de mantenimiento       : N/A
+* Tipo de mantenimiento        : Correctivo y perfectivo
+* Descripción del mantenimiento: Homologación según sección 8.8 del Manual PRO-Laravel V3.4.
+* Responsable                  : Iker Piza
+* Revisor                      : QA SINDISOFT
+--}}
 
 <x-layouts.app :title="__('Gestión de trámites')">
-    <div class="flex flex-col gap-6 p-6 w-full">
 
-        <!-- 🔸 Título y botón de alta -->
-        <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601]">
+    <div class="p-6 w-full max-w-6xl mx-auto space-y-8">
+
+        <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-bold text-[#DE6601]">
                 Gestión de Trámites
             </h1>
 
-            <a href="{{ route('union.procedures.create') }}"
-               class="inline-flex items-center gap-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold px-4 py-2 rounded-lg transition">
-               <x-heroicon-o-plus class="w-5 h-5" />
-                Crear nuevo trámite
-            </a>
+            <flux:button icon="plus" variant="primary" :href="route('union.procedures.create')"
+                class="!bg-blue-600 hover:!bg-blue-700 !text-white">
+                Crear trámite
+            </flux:button>
         </div>
 
-        <!-- 📋 Tabla de trámites -->
-        <div class="overflow-x-auto bg-white border border-[#D9D9D9] rounded-2xl shadow-md">
-            <table class="w-full border-collapse text-sm font-[Inter]">
-                <thead class="bg-[#241178] text-white">
-                    <tr>
-                        <th class="p-2 text-left">Nombre del trámite</th>
-                        <th class="p-2 text-left">Número de pasos</th>
-                        <th class="p-2 text-left">Tiempo estimado</th>
-                        <th class="p-2 text-left">Flujo alterno</th>
-                        <th class="p-2 text-left">Fechas</th>
-                        <th class="p-2 text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($procedures as $procedure)
-                        <tr class="border-t border-[#272800]/10 hover:bg-[#F9F9F9] transition">
+        <div class="border border-zinc-200 rounded-xl shadow-sm overflow-x-auto max-h-[400px]">
+            <div class="min-w-full inline-block align-middle">
 
-                            <!-- Nombre -->
-                            <td class="p-2 max-w-[200px] truncate">
-                                {{ $procedure->name }}
-                            </td>
-
-                            <!-- Número de pasos -->
-                            <td class="p-2">
-                                {{ $procedure->steps_count ?? '—' }}
-                            </td>
-
-                            <!-- Tiempo estimado -->
-                            <td class="p-2">
-                                {{ $procedure->estimated_days ? $procedure->estimated_days . ' días' : '—' }}
-                            </td>
-
-                            <!-- Flujo alterno -->
-                            <td class="p-2">
-                                {{ $procedure->has_alternate_flow ? 'Sí' : 'No' }}
-                            </td>
-
-                            <!-- Fechas -->
-                            <td class="p-2 text-sm">
-                                Apertura: <b>{{ $procedure->opening_date ?? '—' }}</b><br>
-                                Cierre: <b>{{ $procedure->closing_date ?? '—' }}</b>
-                            </td>
-
-                            <!-- Acciones -->
-                            <td class="p-2 flex flex-wrap gap-2 justify-center">
-
-                                <!-- Ver -->
-                                <a href="{{ route('union.procedures.show', $procedure->id) }}"
-                                   class="bg-[#241178] hover:bg-[#3828a8] text-white px-3 py-1 rounded-md text-sm transition">
-                                    Ver
-                                </a>
-
-                                <!-- Editar -->
-                                <a href="{{ route('union.procedures.edit', $procedure->id) }}"
-                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                    Editar
-                                </a>
-
-                                <!-- Eliminar -->
-                                <form action="{{ route('union.procedures.destroy', $procedure->id) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('⚠️ ¿Seguro que deseas eliminar este trámite?')">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                        Eliminar
-                                    </button>
-                                </form>
-
-                            </td>
-                        </tr>
-                    @empty
+                <table class="min-w-full divide-y divide-zinc-200 table-auto">
+                    <thead class="bg-zinc-100">
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-gray-500">
-                                No hay trámites registrados.
-                            </td>
+                            <th class="px-4 py-3 font-semibold text-black">Nombre del trámite</th>
+                            <th class="px-4 py-3 font-semibold text-black">Número de pasos</th>
+                            <th class="px-4 py-3 font-semibold text-black">Tiempo estimado</th>
+                            <th class="px-4 py-3 font-semibold text-black">Flujo alterno</th>
+                            <th class="px-4 py-3 font-semibold text-black">Fechas</th>
+                            <th class="px-4 py-3 font-semibold text-black">Acciones</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+
+
+                    <tbody class="divide-y divide-zinc-200 bg-white">
+
+                        @forelse ($procedures as $procedure)
+                            <tr class="hover:bg-zinc-50 transition">
+
+                                <td class="px-4 py-3 text-sm text-black text-center">
+                                    {{ $procedure->name }}
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-black text-center">
+                                    {{ $procedure->steps_count ?? '—' }}
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-black text-center">
+                                    {{ $procedure->estimated_days ? $procedure->estimated_days . ' días' : '—' }}
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-black text-center">
+                                    {{ $procedure->has_alternate_flow ? 'Sí' : 'No' }}
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-black text-center">
+                                    Apertura:
+                                    <span class="font-semibold">{{ $procedure->opening_date ?? '—' }}</span><br>
+                                    Cierre:
+                                    <span class="font-semibold">{{ $procedure->closing_date ?? '—' }}</span>
+                                </td>
+
+                                <td class="px-4 py-3 text-sm text-center">
+                                    <div class="flex gap-3 overflow-x-auto whitespace-nowrap px-2 py-1">
+                                        <flux:button size="xs" icon="eye" variant="filled"
+                                            :href="route('union.procedures.show', $procedure->id)"
+                                            class="!bg-gray-200 hover:!bg-gray-300 text-black">
+                                            Ver
+                                        </flux:button>
+
+                                        <flux:button size="xs" icon="pencil-square" variant="primary"
+                                            :href="route('union.procedures.edit', $procedure->id)"
+                                            class="!bg-gray-500 hover:!bg-gray-600 !text-white">
+                                            Editar
+                                        </flux:button>
+
+                                        <form method="POST"
+                                            action="{{ route('union.procedures.toggle', $procedure->id) }}">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <flux:button size="xs"
+                                                class="!text-white {{ $procedure->status === 'active' ? '!bg-red-600 hover:!bg-red-700' : '!bg-green-600 hover:!bg-green-700' }}"
+                                                icon="{{ $procedure->status === 'active' ? 'x-circle' : 'check-circle' }}"
+                                                icon-variant="outline" type="submit">
+                                                {{ $procedure->status === 'active' ? 'Desactivar' : 'Activar' }}
+                                            </flux:button>
+                                        </form>
+
+                                        <form method="POST"
+                                            action="{{ route('union.procedures.destroy', $procedure->id) }}"
+                                            onsubmit="return confirm('¿Seguro que deseas eliminar este trámite?');">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <flux:button size="xs" icon="trash"
+                                                class="!bg-red-600 hover:!bg-red-700 !text-white" type="submit">
+                                                Eliminar
+                                            </flux:button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-4 py-6 text-center text-sm text-zinc-500">
+                                    No hay trámites registrados.
+                                </td>
+                            </tr>
+                        @endforelse
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
 </x-layouts.app>

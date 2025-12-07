@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::table('procedure_documents', function (Blueprint $table) {
 
-            // Nueva columna para enlazar archivo ↔ paso
             $table->foreignId('procedure_step_id')
                   ->nullable()
                   ->after('procedure_request_id')
@@ -22,7 +21,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('procedure_documents', function (Blueprint $table) {
-            // Eliminar la FK y columna
             $table->dropForeign(['procedure_step_id']);
             $table->dropColumn('procedure_step_id');
         });

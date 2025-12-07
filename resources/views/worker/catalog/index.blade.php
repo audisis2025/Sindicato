@@ -1,75 +1,189 @@
 <x-layouts.app :title="__('Catálogo de Trámites')">
 
-    <div class="w-full flex flex-col items-center min-h-[80vh] bg-white text-black p-6">
+    <div class="p-6 w-full max-w-6xl mx-auto space-y-8">
 
-        <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601] mb-4">
-            Catálogo de Trámites
-        </h1>
+        {{-- TÍTULO --}}
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <h1 class="text-3xl font-bold text-[#DE6601] font-[Poppins]">
+                Catálogo de Trámites
+            </h1>
+        </div>
 
+        {{-- FILTROS --}}
         <form method="GET" action="{{ route('worker.catalog.index') }}"
-              class="w-full max-w-4xl mb-8 bg-white border border-[#D9D9D9] rounded-xl shadow-sm p-4 flex flex-wrap gap-4">
+            class="flex flex-wrap gap-4 items-end bg-white p-4 border border-zinc-200 rounded-xl shadow-sm">
 
+            {{-- Texto --}}
             <div class="flex flex-col">
-                <label class="text-sm font-semibold text-[#241178]">Buscar</label>
-                <input type="text" name="keyword" value="{{ request('keyword') }}"
-                       placeholder="Nombre o descripción..."
-                       class="border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#DC6601] outline-none">
+                <label class="text-sm font-semibold text-[#272800]">Buscar</label>
+                <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="Nombre o descripción..."
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
             </div>
 
+            {{-- Pasos --}}
             <div class="flex flex-col">
-                <label class="text-sm font-semibold text-[#241178]">Mínimo de pasos</label>
+                <label class="text-sm font-semibold text-[#272800]">Mínimo de pasos</label>
                 <input type="number" name="steps_min" min="1" value="{{ request('steps_min') }}"
-                       class="border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#DC6601] outline-none">
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
             </div>
 
-            <button class="bg-[#241178] hover:bg-[#1A0D5A] text-white font-semibold px-4 py-2 rounded-lg transition h-10 mt-auto">
-                Filtrar
-            </button>
+            {{-- Categoría --}}
+            <div class="flex flex-col">
+                <label class="text-sm font-semibold text-[#272800]">Categoría</label>
+                <select name="type"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+                    <option value="">Todas</option>
+                    <option value="announcement" {{ request('type')=='announcement' ? 'selected':'' }}>Convocatoria</option>
+                    <option value="communication" {{ request('type')=='communication' ? 'selected':'' }}>Comunicado</option>
+                    <option value="event" {{ request('type')=='event' ? 'selected':'' }}>Evento</option>
+                </select>
+            </div>
 
-            <a href="{{ route('worker.catalog.index') }}"
-               class="bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold px-4 py-2 rounded-lg transition h-10 mt-auto">
+            {{-- Desde --}}
+            <div class="flex flex-col">
+                <label class="text-sm font-semibold text-[#272800]">Desde</label>
+                <input type="date" name="from_date" value="{{ request('from_date') }}"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            </div>
+
+            {{-- Hasta --}}
+            <div class="flex flex-col">
+                <label class="text-sm font-semibold text-[#272800]">Hasta (opcional)</label>
+                <input type="date" name="to_date" value="{{ request('to_date') }}"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            </div>
+
+            {{-- Buscar --}}
+            <flux:button icon="magnifying-glass" icon-variant="outline" variant="primary"
+                type="submit"
+                class="h-10 px-4 !bg-gray-500 hover:!bg-gray-600 !text-white">
+                Buscar
+            </flux:button>
+
+            {{-- Limpiar --}}
+            <flux:button icon="arrow-path" icon-variant="outline" variant="primary"
+                :href="route('worker.catalog.index')"
+                class="h-10 px-4 !bg-blue-500 hover:!bg-blue-600 !text-white">
                 Limpiar
-            </a>
+            </flux:button>
+
         </form>
 
-        <div class="w-full max-w-4xl grid gap-6">
+        {{-- TRÁMITES --}}
+        <h2 class="text-2xl font-bold text-[#241178] font-[Poppins] mt-4">
+            Trámites Disponibles
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
             @forelse ($procedures as $proc)
+                <div class="border border-zinc-200 bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition">
 
-                <div class="border border-[#D9D9D9] bg-white rounded-2xl shadow-sm p-6 transition hover:shadow-lg">
-
-                    <h2 class="text-xl font-[Poppins] font-bold text-[#241178] mb-1">
+                    <h2 class="text-xl font-semibold text-[#241178] font-[Poppins] mb-1 truncate">
                         {{ $proc->name }}
                     </h2>
 
-                    <p class="text-gray-600 text-sm">
-                        Pasos: <strong>{{ $proc->steps_count }}</strong>
-                    </p>
-
-                    <p class="text-black text-sm mt-3">
+                    <p class="text-sm text-zinc-600 line-clamp-3">
                         {{ $proc->description ?? 'Sin descripción disponible.' }}
                     </p>
 
-                    <div class="mt-4 flex gap-3">
-                        <a href="{{ route('worker.catalog.detail', $proc->id) }}"
-                           class="bg-[#241178] hover:bg-[#1A0D5A] text-white px-4 py-2 rounded-lg text-sm font-semibold">
-                            Ver requisitos
-                        </a>
+                    <p class="mt-3 text-sm text-[#272800]">
+                        <strong>Pasos:</strong> {{ $proc->steps_count }}
+                    </p>
 
-                        <form action="{{ route('worker.procedures.start', $proc->id) }}" method="POST">
+                    <div class="flex gap-2 mt-4">
+
+                        {{-- Ver --}}
+                        <flux:button size="sm" icon="eye" icon-variant="outline" variant="filled"
+                            :href="route('worker.catalog.detail', $proc->id)" class="flex-1">
+                            Ver
+                        </flux:button>
+
+                        {{-- Iniciar --}}
+                        <form class="flex-1" method="POST" action="{{ route('worker.procedures.start', $proc->id) }}">
                             @csrf
-                            <button class="bg-[#DC6601] hover:bg-[#EE0000] text-white px-4 py-2 rounded-lg text-sm font-semibold">
-                                Iniciar trámite
-                            </button>
+                            <flux:button size="sm" icon="plus" icon-variant="outline" variant="primary" type="submit"
+                                class="w-full !bg-blue-600 hover:!bg-blue-700 !text-white">
+                                Iniciar
+                            </flux:button>
                         </form>
+
+                    </div>
+
+                </div>
+            @empty
+                <p class="text-center text-zinc-500 col-span-full py-6">
+                    No hay trámites disponibles.
+                </p>
+            @endforelse
+
+        </div>
+
+        {{-- PUBLICACIONES --}}
+        <h2 class="text-2xl font-bold text-[#241178] font-[Poppins] mt-10">
+            Publicaciones del Sindicato
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            @forelse ($news as $item)
+                <div class="border border-zinc-200 bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition">
+
+                    {{-- TÍTULO --}}
+                    <h3 class="text-xl font-semibold text-[#DE6601] font-[Poppins] mb-2 truncate">
+                        {{ $item->title }}
+                    </h3>
+
+                    {{-- CONTENIDO --}}
+                    <p class="text-sm text-zinc-600 line-clamp-3">
+                        {{ $item->content }}
+                    </p>
+
+                    {{-- FECHAS --}}
+                    <p class="mt-3 text-xs text-[#272800]">
+                        <strong>Publicada:</strong>
+                        {{ \Carbon\Carbon::parse($item->publication_date)->format('d/m/Y') }}
+                    </p>
+
+                    @if ($item->expiration_date)
+                        <p class="text-xs text-red-600">
+                            <strong>Vigencia:</strong>
+                            {{ \Carbon\Carbon::parse($item->expiration_date)->format('d/m/Y') }}
+                        </p>
+                    @endif
+
+                    {{-- TIPO --}}
+                    @if ($item->type)
+                        <span class="inline-block mt-2 px-2 py-1 text-xs rounded-full bg-zinc-100 text-[#241178] font-semibold">
+                            {{ ucfirst($item->type) }}
+                        </span>
+                    @endif
+
+                    {{-- ARCHIVOS --}}
+                    <div class="flex gap-2 mt-4">
+
+                        @if ($item->attachment)
+                            <flux:button size="sm" icon="arrow-down-tray" icon-variant="outline" variant="filled"
+                                :href="asset('storage/' . $item->attachment)" class="flex-1">
+                                Descargar archivo
+                            </flux:button>
+                        @endif
+
+                        @if ($item->image)
+                            <flux:button size="sm" icon="eye" icon-variant="outline" variant="filled"
+                                :href="asset('storage/' . $item->image)" target="_blank" class="flex-1">
+                                Ver imagen
+                            </flux:button>
+                        @endif
+
                     </div>
 
                 </div>
 
             @empty
-
-                <p class="text-center text-gray-500">No hay trámites disponibles.</p>
-
+                <p class="text-center text-zinc-500 col-span-full py-6">
+                    No hay publicaciones disponibles.
+                </p>
             @endforelse
 
         </div>

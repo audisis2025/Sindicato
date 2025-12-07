@@ -53,7 +53,7 @@ class Procedure extends Model
         'closing_date',     // 'fecha_cierre'
         'estimated_days',   // 'tiempo_estimado_dias'
         'has_alternate_flow', // 'tiene_flujo_alterno'
-        'status',           // 'estado' (añadido desde la migración)
+        'status',          
     ];
 
     /**

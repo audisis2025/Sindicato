@@ -1,83 +1,125 @@
-{{-- ===========================================================
- Nombre de la clase: forgot-password.blade.php
- Descripción: Vista para recuperación de contraseña en el sistema SINDISOFT.
- Fecha de creación: 01/11/2025
- Elaboró: Iker Piza
- Fecha de liberación: 01/11/2025
- Autorizó: Líder Técnico
- Versión: 1.1
- Tipo de mantenimiento: Homogeneización visual completa con login y portada.
- Descripción del mantenimiento: Se aplicaron fuentes Poppins + Inter, paleta oficial (figura 37) y formato institucional.
- Responsable: Iker Piza
- Revisor: QA SINDISOFT
-=========================================================== --}}
+<?php
+/*
+* Nombre de la clase         : forgot-password.blade.php
+* Descripción de la clase    : Vista Livewire Volt para recuperación de contraseña en SINDISOFT.
+* Fecha de creación          : 01/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 01/11/2025
+* Autorizó                   : Líder Técnico
+* Versión                    : 1.2
+* Fecha de mantenimiento     : 26/11/2025
+* Folio de mantenimiento     : N/A
+* Tipo de mantenimiento      : Correctivo y perfectivo
+* Descripción del mantenimiento : Homogeneización completa con el login (botones, colores, tipografías, SweetAlert).
+* Responsable                : Iker Piza
+* Revisor                    : QA SINDISOFT
+*/
 
-<!DOCTYPE html>
-<html lang="es">
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
+use Livewire\Volt\Component;
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar contraseña - SINDISOFT</title>
-    @vite('resources/css/app.css')
-</head>
+new #[Layout('components.layouts.auth')] class extends Component
+{
+    public string $email = '';
 
-<body class="bg-[#FFFFFF] font-sans text-[#000000]">
-    <div class="min-h-screen flex flex-col justify-center items-center">
+    public function sendPasswordResetLink(): void
+    {
+        $this->validate([
+            'email' => ['required', 'string', 'email'],
+        ]);
 
-        <!-- Contenedor principal -->
-        <div class="bg-[#FFFFFF] shadow-lg rounded-2xl p-10 text-center border border-[#272800]/20 w-full max-w-md">
-            <!-- Logo -->
-            <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
-                class="mx-auto w-32 mb-4 rounded-full border border-[#272800]/30 shadow-sm bg-white">
+        $status = Password::sendResetLink($this->only('email'));
 
-            <!-- Título -->
-            <h1 class="text-3xl font-title font-bold text-[#DC6601] mb-2">
-                ¿Olvidaste tu contraseña?
-            </h1>
-            <p class="text-[#241178] font-sans text-sm mb-6">
-                Ingresa tu correo electrónico y recibirás un enlace para restablecerla.
-            </p>
+        if ($status === Password::RESET_LINK_SENT) {
+            $this->dispatch(
+                'show-swal',
+                icon: 'success',
+                title: 'Enlace enviado',
+                text: __($status)
+            );
+        } else {
+            $this->dispatch(
+                'show-swal',
+                icon: 'error',
+                title: 'Error',
+                text: __($status)
+            );
+        }
+    }
 
-            <!-- Estado de sesión -->
-            <x-auth-session-status class="text-center text-sm text-[#241178] mb-3" :status="session('status')" />
+    public function exception($e, $stopPropagation): void
+    {
+        if ($e instanceof ValidationException) {
 
-            <!-- Formulario -->
-            <form method="POST" action="{{ route('password.email') }}" class="text-left font-sans">
-                @csrf
+            $first = collect($e->errors())->flatten()->first();
 
-                <!-- Correo electrónico -->
-                <div class="mb-5">
-                    <label for="email" class="block text-[#000000] font-semibold mb-1">Correo electrónico</label>
-                    <input id="email" name="email" type="email" required autofocus
-                        placeholder="correo@ejemplo.com" autocomplete="off" autocorrect="off" autocapitalize="none"
-                        spellcheck="false"
-                        class="w-full border border-[#272800] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC6601]" />
-                </div>
+            $this->dispatch(
+                'show-swal',
+                icon: 'error',
+                title: 'Error',
+                text: $first
+            );
 
-                <!-- Botón -->
-                <button type="submit"
-                    class="w-full font-title bg-[#DC6601] hover:bg-[#EE0000] text-[#FFFFFF] font-semibold py-2 rounded-lg transition">
-                    Enviar enlace de restablecimiento
-                </button>
-            </form>
+            $this->resetErrorBag();
+            $stopPropagation();
+        }
+    }
+};
+?>
 
-            <!-- Enlace para volver -->
-            <div class="mt-6 text-center text-sm">
-                <span class="text-[#000000]">¿Recordaste tu contraseña?</span>
-                <a href="{{ route('login') }}"
-                    class="font-title text-[#241178] hover:text-[#EE0000] font-medium ml-1 transition">
-                    Iniciar sesión
-                </a>
-            </div>
-        </div>
+<div class="flex flex-col gap-6">
 
-        <!-- Pie institucional -->
-        <footer class="mt-10 text-center text-xs font-sans text-[#000000]/80">
-            © {{ date('Y') }} Sindicato Nacional de Trabajadores de la Educación – Sección 61<br>
-            Sistema SINDISOFT | Desarrollado bajo estándares PRO-Laravel V3.2
-        </footer>
+    <x-auth-header
+        :title="__('Recuperar contraseña')"
+        :description="__('Ingresa tu correo institucional para recibir el enlace de restablecimiento')"
+    />
+
+    <form wire:submit="sendPasswordResetLink" class="flex flex-col gap-6">
+
+        <flux:input
+            wire:model="email"
+            :label="__('Correo electrónico')"
+            type="email"
+            placeholder="correo@ejemplo.com"
+            required
+            autofocus
+        />
+
+        <flux:button
+            type="submit"
+            variant="primary"
+            icon="paper-airplane"
+            icon-variant="outline"
+            class="w-full !bg-[#DE6601] hover:!bg-[#C95500] text-white font-semibold"
+        >
+            {{ __('Enviar enlace') }}
+        </flux:button>
+
+    </form>
+
+    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-black/60 dark:text-white/60">
+        <span>{{ __('¿Recordaste tu contraseña?') }}</span>
+        <flux:link
+            :href="route('login')"
+            wire:navigate
+            class="text-[#241178] hover:text-[#EE0000] font-semibold"
+        >
+            {{ __('Iniciar sesión') }}
+        </flux:link>
     </div>
-</body>
 
-</html>
+    @script
+        <script>
+            $wire.on('show-swal', (data) => {
+                Swal.fire({
+                    icon: data.icon,
+                    title: data.title,
+                    text: data.text,
+                    confirmButtonColor: '#DE6601',
+                });
+            });
+        </script>
+    @endscript
+</div>

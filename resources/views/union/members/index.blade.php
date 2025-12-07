@@ -1,44 +1,63 @@
-{{-- ===========================================================
- Nombre de la clase: members-index.blade.php
- Descripción: Vista para listar y administrar trabajadores registrados.
- Versión: 1.3 (Con filtros por nombre y género)
-=========================================================== --}}
+{{-- 
+* Nombre de la vista           : members-index.blade.php
+* Descripción de la vista      : Vista para listar y administrar trabajadores registrados del Sindicato.
+* Fecha de creación            : 04/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 04/11/2025
+* Autorizó                     : Líder Técnico
+* Versión                      : 1.4
+* Fecha de mantenimiento       : 27/11/2025
+* Folio de mantenimiento       : N/A
+* Tipo de mantenimiento        : Correctivo y perfectivo
+* Descripción del mantenimiento: Homologación total según Manual PRO-Laravel V3.4 (botones, colores, alerts e iconografía).
+* Responsable                  : Iker Piza
+* Revisor                      : QA SINDISOFT
+--}}
 
 <x-layouts.app :title="__('Trabajadores registrados')">
-    <div class="flex flex-col gap-6 p-6 w-full">
 
-        <!-- 🔸 Título y botón de alta -->
+    <div class="p-6 w-full max-w-6xl mx-auto space-y-8">
+
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601]">
+            <h1 class="text-3xl font-bold text-[#DE6601]">
                 Gestión de Trabajadores
             </h1>
 
-            <a href="{{ route('union.members.create') }}"
-                class="inline-flex items-center gap-2 bg-[#DC6601] hover:bg-[#EE0000] text-white font-semibold px-4 py-2 rounded-lg transition">
-                <x-heroicon-o-plus class="w-5 h-5" />
+            <flux:button
+                icon="plus"
+                icon-variant="outline"
+                variant="primary"
+                class="!bg-blue-600 hover:!bg-blue-700 !text-white"
+                :href="route('union.members.create')"
+            >
                 Registrar nuevo trabajador
-            </a>
+            </flux:button>
         </div>
 
-        <!-- 🔎 Filtros -->
-        <form method="GET" action="{{ route('union.members.index') }}"
-              class="bg-white border border-[#D9D9D9] p-4 rounded-2xl shadow-md font-[Inter] grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-            <!-- Filtro por nombre -->
-            <div>
-                <label class="block font-semibold text-[#272800] mb-1">Nombre</label>
-                <input type="text" name="name" value="{{ request('name') }}"
-                       placeholder="Buscar por nombre..."
-                       class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 
-                              focus:ring-2 focus:ring-[#DC6601] outline-none">
+        <form
+            method="GET"
+            action="{{ route('union.members.index') }}"
+            class="flex flex-wrap gap-4 items-end bg-white p-4 border border-zinc-200 rounded-xl shadow-sm"
+        >
+            <div class="flex flex-col">
+                <label for="name" class="text-sm font-semibold text-[#272800]">Nombre</label>
+                <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    value="{{ request('name') }}"
+                    placeholder="Buscar por nombre..."
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
+                >
             </div>
 
-            <!-- Filtro por género -->
-            <div>
-                <label class="block font-semibold text-[#272800] mb-1">Género</label>
-                <select name="gender"
-                        class="w-full border border-[#D9D9D9] rounded-lg px-3 py-2 
-                               focus:ring-2 focus:ring-[#DC6601] outline-none">
+            <div class="flex flex-col">
+                <label for="gender" class="text-sm font-semibold text-[#272800]">Género</label>
+                <select
+                    id="gender"
+                    name="gender"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none"
+                >
                     <option value="">Todos</option>
                     <option value="H"  {{ request('gender') === 'H' ? 'selected' : '' }}>Hombre</option>
                     <option value="M"  {{ request('gender') === 'M' ? 'selected' : '' }}>Mujer</option>
@@ -47,44 +66,63 @@
                 </select>
             </div>
 
-            <!-- Botón -->
-            <div class="flex items-end">
-                <button class="w-full sm:w-auto px-4 py-2 bg-[#241178] hover:bg-[#3828a8] 
-                               text-white font-semibold rounded-lg transition">
-                    Filtrar
-                </button>
-            </div>
+            <flux:button
+                icon="magnifying-glass"
+                icon-variant="outline"
+                variant="primary"
+                type="submit"
+                class="h-10 px-4 !bg-gray-500 hover:!bg-gray-600 !text-white"
+            >
+                Filtrar
+            </flux:button>
+
+            <flux:button
+                icon="arrow-path"
+                icon-variant="outline"
+                variant="primary"
+                :href="route('union.members.index')"
+                class="h-10 px-4 !bg-blue-500 hover:!bg-blue-600 !text-white"
+            >
+                Limpiar
+            </flux:button>
         </form>
 
-        <!-- 📋 Tabla -->
-        <div class="overflow-x-auto bg-white border border-[#D9D9D9] rounded-2xl shadow-md">
-            <table class="w-full border-collapse text-sm font-[Inter]">
-                <thead class="bg-[#241178] text-white">
+        <div class="overflow-x-auto border border-zinc-200 rounded-xl shadow-sm bg-white">
+            <table class="min-w-full divide-y divide-zinc-200 text-sm">
+                <thead class="bg-zinc-100">
                     <tr>
-                        <th class="p-2 text-left">Nombre</th>
-                        <th class="p-2 text-left">Correo</th>
-                        <th class="p-2 text-left">CURP</th>
-                        <th class="p-2 text-left">RFC</th>
-                        <th class="p-2 text-left">Sexo</th>
-                        <th class="p-2 text-left">Clave presupuestal</th>
-                        <th class="p-2 text-center">Estado</th>
-                        <th class="p-2 text-center">Acciones</th>
+                        <th class="px-4 py-3 text-left font-semibold text-black">Nombre</th>
+                        <th class="px-4 py-3 text-left font-semibold text-black">Correo</th>
+                        <th class="px-4 py-3 text-left font-semibold text-black">CURP</th>
+                        <th class="px-4 py-3 text-left font-semibold text-black">RFC</th>
+                        <th class="px-4 py-3 text-left font-semibold text-black">Sexo</th>
+                        <th class="px-4 py-3 text-left font-semibold text-black">Clave presupuestal</th>
+                        <th class="px-4 py-3 text-center font-semibold text-black">Estado</th>
+                        <th class="px-4 py-3 text-center font-semibold text-black">Acciones</th>
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody class="divide-y divide-zinc-200 bg-white">
                     @forelse ($workers as $worker)
-                        <tr class="border-t border-[#272800]/10 hover:bg-[#F9F9F9] transition">
+                        <tr class="hover:bg-zinc-50 transition">
 
-                            <td class="p-2 max-w-[140px] truncate" title="{{ $worker->name }}">
+                            <td class="px-4 py-3 max-w-[180px] truncate text-black" title="{{ $worker->name }}">
                                 {{ $worker->name ?? '—' }}
                             </td>
 
-                            <td class="p-2">{{ $worker->email ?? '—' }}</td>
-                            <td class="p-2">{{ $worker->curp ?? '—' }}</td>
-                            <td class="p-2">{{ $worker->rfc ?? '—' }}</td>
+                            <td class="px-4 py-3 text-black">
+                                {{ $worker->email ?? '—' }}
+                            </td>
 
-                            <td class="p-2">
+                            <td class="px-4 py-3 text-black">
+                                {{ $worker->curp ?? '—' }}
+                            </td>
+
+                            <td class="px-4 py-3 text-black">
+                                {{ $worker->rfc ?? '—' }}
+                            </td>
+
+                            <td class="px-4 py-3 text-black">
                                 @switch($worker->gender)
                                     @case('H') Hombre @break
                                     @case('M') Mujer @break
@@ -94,38 +132,65 @@
                                 @endswitch
                             </td>
 
-                            <td class="p-2">{{ $worker->budget_key ?? '—' }}</td>
+                            <td class="px-4 py-3 text-black">
+                                {{ $worker->budget_key ?? '—' }}
+                            </td>
 
-                            <td class="p-2 text-center">
+                            <td class="px-4 py-3 text-center font-semibold">
                                 @if ($worker->active)
-                                    <span class="text-green-600 font-semibold">Activo</span>
+                                    <span class="text-green-700 flex items-center justify-center gap-1">
+                                        <x-heroicon-o-check class="w-4 h-4" />
+                                        Activo
+                                    </span>
                                 @else
-                                    <span class="text-red-600 font-semibold">Inactivo</span>
+                                    <span class="text-red-600 flex items-center justify-center gap-1">
+                                        <x-heroicon-o-x-circle class="w-4 h-4" />
+                                        Inactivo
+                                    </span>
                                 @endif
                             </td>
 
-                            <!-- Acciones -->
-                            <td class="p-2 flex flex-wrap gap-2 justify-center">
-                                <a href="{{ route('union.members.edit', $worker->id) }}"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                    Editar
-                                </a>
+                            <td class="px-4 py-3">
+                                <div class="flex gap-2 justify-center flex-nowrap min-w-[140px]">
 
-                                <form action="{{ route('union.members.destroy', $worker->id) }}" method="POST"
-                                      onsubmit="return confirm('⚠️ ¿Seguro que deseas eliminar este trabajador?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition">
-                                        Eliminar
-                                    </button>
-                                </form>
+                                    <flux:button
+                                        size="xs"
+                                        icon="pencil-square"
+                                        icon-variant="outline"
+                                        variant="primary"
+                                        :href="route('union.members.edit', $worker->id)"
+                                        class="!bg-gray-500 hover:!bg-gray-600 !text-white"
+                                    >
+                                        Editar
+                                    </flux:button>
+
+                                    <form
+                                        action="{{ route('union.members.destroy', $worker->id) }}"
+                                        method="POST"
+                                        class="delete-form"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <flux:button
+                                            size="xs"
+                                            icon="trash"
+                                            icon-variant="outline"
+                                            variant="danger"
+                                            type="button"
+                                            class="delete-btn !bg-red-600 hover:!bg-red-700 !text-white"
+                                        >
+                                            Eliminar
+                                        </flux:button>
+                                    </form>
+
+                                </div>
                             </td>
 
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-gray-500">
+                            <td colspan="8" class="px-4 py-6 text-center text-sm text-zinc-500">
                                 No hay trabajadores registrados.
                             </td>
                         </tr>
@@ -136,4 +201,29 @@
         </div>
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const form = this.closest("form");
+
+                Swal.fire({
+                    title: "¿Eliminar trabajador?",
+                    text: "Esta acción no se puede deshacer.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Eliminar",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#dc2626",
+                    cancelButtonColor: "#6b7280",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+
 </x-layouts.app>

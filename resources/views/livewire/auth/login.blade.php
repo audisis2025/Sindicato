@@ -1,4 +1,19 @@
 <?php
+/*
+* Nombre de la clase         : login.blade.php
+* Descripción de la clase    : Vista Livewire Volt para inicio de sesión de usuarios.
+* Fecha de creación          : 01/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 01/11/2025
+* Autorizó                   : Líder Técnico
+* Versión                    : 2.0
+* Fecha de mantenimiento     : 25/11/2025
+* Folio de mantenimiento     : N/A
+* Tipo de mantenimiento      : Correctivo y perfectivo
+* Descripción del mantenimiento : Ajuste de validaciones, mensajes SweetAlert, homogeneización de botón e iconos.
+* Responsable                : Iker Piza
+* Revisor                    : QA SINDISOFT
+*/
 
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
@@ -32,10 +47,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        // SWEETALERT DE ÉXITO
         $this->dispatch('show-swal', icon: 'success', title: 'Bienvenido', text: 'Inicio de sesión correcto.');
 
-        // Redirección general al dashboard
         $this->redirectIntended(default: route('dashboard'), navigate: true);
     }
 
@@ -46,7 +59,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'password' => $this->password,
         ]);
 
-        if (! $user || ! Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) {
+        if (!$user || !Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -76,7 +89,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
             $first = collect($e->errors())->flatten()->first();
 
-            // SWEETALERT DE ERROR
             $this->dispatch('show-swal', icon: 'error', title: 'Error', text: $first);
 
             $this->resetErrorBag();
@@ -89,18 +101,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
         return Str::lower($this->email).'|'.request()->ip();
     }
 };
-
 ?>
-
-{{-- ===============================================
-     PLANTILLA DE LOGIN SINDISOFT + FLUX UI
-================================================== --}}
 
 <div class="flex flex-col gap-6">
 
     <x-auth-header
-        :title="__('Bienvenido a SINDISOFT')"
-        :description="__('Ingresa tu correo institucional y contraseña para continuar')"
+        :title="__('Ingresar a tu cuenta')"
+        :description="__('Ingresa tu correo electronico y contraseña a continuación para iniciar sesión ')"
     />
 
     <form wire:submit="login" class="flex flex-col gap-6">
@@ -113,15 +120,19 @@ new #[Layout('components.layouts.auth')] class extends Component {
             required
             autofocus
         />
-
         <flux:input
             wire:model="password"
             :label="__('Contraseña')"
             type="password"
             placeholder="********"
             required
-            viewable
         />
+
+        <div class="text-right -mt-2">
+            <flux:link :href="route('password.request')" wire:navigate class="text-sm text-zinc-600 dark:text-neutral-300">
+                {{ __('¿Olvidaste tu contraseña?') }}
+            </flux:link>
+        </div>
 
         <flux:checkbox
             wire:model="remember"
@@ -138,12 +149,6 @@ new #[Layout('components.layouts.auth')] class extends Component {
             {{ __('Iniciar sesión') }}
         </flux:button>
     </form>
-
-    <div class="text-center text-sm text-zinc-600 dark:text-neutral-300">
-        <flux:link :href="route('password.request')" wire:navigate>
-            {{ __('¿Olvidaste tu contraseña?') }}
-        </flux:link>
-    </div>
 
     @script
         <script>

@@ -8,10 +8,9 @@ use App\Models\Procedure;
 use App\Models\ProcedureRequest;
 use App\Models\ProcedureStep;
 use App\Models\ProcedureDocument;
-use App\Models\News;
-use App\Models\Notification;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Models\News;
 
 class WorkerProcedureController extends Controller
 {
@@ -27,7 +26,6 @@ class WorkerProcedureController extends Controller
     {
         $userId = Auth::id();
 
-        // Trámites activos (solo estos estados)
         $active = ['initiated', 'in_progress', 'pending_union', 'pending_worker'];
 
         $activeRequests = ProcedureRequest::with('procedure')
@@ -36,16 +34,13 @@ class WorkerProcedureController extends Controller
             ->latest()
             ->get();
 
-        // Trámites finalizados
-        $finished = ['completed', 'rejected', 'cancelled'];
-
         $finishedRequests = ProcedureRequest::with('procedure')
             ->where('user_id', $userId)
-            ->whereIn('status', $finished)
+            ->whereIn('status', ['completed', 'rejected', 'cancelled'])
             ->latest()
             ->get();
 
-        // Trámites disponibles (solo si NO hay activo del mismo)
+        // Procedimientos disponibles (si no tiene uno activo del mismo tipo)
         $availableProcedures = Procedure::whereNotIn('id', function ($query) use ($userId, $active) {
             $query->select('procedure_id')
                 ->from('procedure_requests')
@@ -65,27 +60,59 @@ class WorkerProcedureController extends Controller
     /* ============================================================
        INICIAR TRÁMITE
        ============================================================ */
+    // public function start(string $id): RedirectResponse
+    // {
+    //     $userId = Auth::id();
+    //     $procedure = Procedure::findOrFail($id);
+
+    //     $active = ['initiated', 'in_progress', 'pending_union', 'pending_worker'];
+
+    //     $exists = ProcedureRequest::where('user_id', $userId)
+    //         ->where('procedure_id', $id)
+    //         ->whereIn('status', $active)
+    //         ->exists();
+
+    //     if ($exists) {
+    //         return back()->with('error', '⚠️ Ya tienes un trámite activo de este tipo.');
+    //     }
+
+    //     $newRequest = ProcedureRequest::create([
+    //         'user_id'        => $userId,
+    //         'procedure_id'   => $procedure->id,
+    //         'current_step'   => 1,
+    //         'status'         => 'initiated',   // El trabajador inicia
+    //     ]);
+
+    //     return redirect()
+    //         ->route('worker.procedures.show', $newRequest->id)
+    //         ->with('success', '🚀 Trámite iniciado correctamente.');
+    // }
     public function start(string $id): RedirectResponse
     {
         $userId = Auth::id();
-        $procedure = Procedure::findOrFail($id);
 
-        $active = ['initiated', 'in_progress', 'pending_union', 'pending_worker'];
+        $blocked = [
+            'initiated',
+            'in_progress',
+            'pending_union',
+            'pending_worker',
+            'completed',
+        ];
 
         $exists = ProcedureRequest::where('user_id', $userId)
             ->where('procedure_id', $id)
-            ->whereIn('status', $active)
+            ->whereIn('status', $blocked)
             ->exists();
 
         if ($exists) {
-            return back()->with('error', '⚠️ Ya tienes un trámite activo de este tipo.');
+            return back()->with('error', '⚠️ Ya registraste este trámite y no puedes iniciarlo nuevamente.');
         }
 
         $newRequest = ProcedureRequest::create([
-            'user_id' => $userId,
-            'procedure_id' => $procedure->id,
+            'user_id'      => $userId,
+            'procedure_id' => $id,
             'current_step' => 1,
-            'status' => 'initiated', // INICIADO
+            'status'       => 'initiated',
         ]);
 
         return redirect()
@@ -93,8 +120,9 @@ class WorkerProcedureController extends Controller
             ->with('success', '🚀 Trámite iniciado correctamente.');
     }
 
+
     /* ============================================================
-       MOSTRAR TRÁMITE EN PROCESO
+       MOSTRAR TRÁMITE AL TRABAJADOR
        ============================================================ */
     public function show(string $id): View
     {
@@ -109,13 +137,13 @@ class WorkerProcedureController extends Controller
     }
 
     /* ============================================================
-       SUBIR ARCHIVO (TRABAJADOR → SINDICATO)
+       SUBIR ARCHIVO DEL PASO
        ============================================================ */
     public function upload(Request $req, string $requestId): RedirectResponse
     {
         $validated = $req->validate([
-            'file' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:10240',
-            'step_id' => 'required|integer|exists:procedure_steps,id',
+            'file'     => 'required|file|mimes:pdf,doc,docx,jpg,png|max:10240',
+            'step_id'  => 'required|integer|exists:procedure_steps,id',
         ]);
 
         $procedureRequest = ProcedureRequest::where('id', $requestId)
@@ -127,66 +155,30 @@ class WorkerProcedureController extends Controller
 
         ProcedureDocument::create([
             'procedure_request_id' => $procedureRequest->id,
-            'procedure_step_id' => $validated['step_id'],
-            'file_name' => $file->getClientOriginalName(),
-            'file_path' => $path,
-            'type' => $file->getClientOriginalExtension(),
-            'year' => now()->year
+            'procedure_step_id'    => $validated['step_id'],
+            'file_name'            => $file->getClientOriginalName(),
+            'file_path'            => $path,
+            'type'                 => $file->getClientOriginalExtension(),
+            'year'                 => now()->year
         ]);
 
         // Estado correcto según RF-04
         $procedureRequest->update([
-            'status' => 'pending_union', // El sindicato debe revisarlo
+            'status' => 'pending_union', // Espera revisión del sindicato
         ]);
 
         return back()->with('success', '📤 Archivo enviado al sindicato.');
     }
 
-    /* ============================================================
-       COMPLETAR PASO (VERIFICAR ARCHIVO SI ES REQUERIDO)
-       ============================================================ */
-    public function completeStep(string $requestId, string $stepId): RedirectResponse
-    {
-        $request = ProcedureRequest::with(['procedure.steps', 'documents'])->findOrFail($requestId);
-        $step = ProcedureStep::findOrFail($stepId);
-
-        if ($request->current_step != $step->order) {
-            return back()->with('error', 'Debes completar los pasos en orden.');
-        }
-
-        if ($step->requires_file) {
-            $hasFile = $request->documents()
-                ->where('procedure_step_id', $step->id)
-                ->exists();
-
-            if (!$hasFile) {
-                return back()->with('error', 'Debes subir el archivo requerido.');
-            }
-        }
-
-        $request->current_step += 1;
-
-        if ($request->current_step > $request->procedure->steps_count) {
-            $request->status = 'completed';
-        } else {
-            $request->status = 'in_progress';
-        }
-
-        $request->save();
-
-        return back()->with('success', '✔ Paso completado.');
-    }
 
     /* ============================================================
        CANCELAR TRÁMITE
        ============================================================ */
     public function cancel(string $id): RedirectResponse
     {
-        $active = ['initiated', 'in_progress', 'pending_union', 'pending_worker'];
-
         $req = ProcedureRequest::where('id', $id)
             ->where('user_id', Auth::id())
-            ->whereIn('status', $active)
+            ->whereIn('status', ['initiated', 'in_progress', 'pending_union', 'pending_worker'])
             ->firstOrFail();
 
         $req->update(['status' => 'cancelled']);
@@ -194,98 +186,72 @@ class WorkerProcedureController extends Controller
         return redirect()->route('worker.index')
             ->with('success', '❌ Trámite cancelado.');
     }
-
     /* ============================================================
-       NOTICIAS DEL SINDICATO
-       ============================================================ */
-    public function showNews(Request $request): View
+   ENVIAR PASO AL SINDICATO (SIN ARCHIVO)
+   RF-14 (trabajador envía paso para revisión)
+   ============================================================ */
+    public function sendStep(string $requestId, string $stepId): RedirectResponse
     {
-        $query = News::where('status', 'published');
-
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        if ($request->filled('keyword')) {
-            $keyword = $request->keyword;
-            $query->where(function ($q) use ($keyword) {
-                $q->where('title', 'like', "%$keyword%")
-                    ->orWhere('content', 'like', "%$keyword%");
-            });
-        }
-
-        $newsList = $query->latest()->get();
-
-        return view('worker.news', [
-            'news_list' => $newsList
-        ]);
-    }
-
-    /* ============================================================
-       NOTIFICACIONES
-       ============================================================ */
-    public function showNotifications(Request $request): View
-    {
-        $query = Notification::where('user_id', Auth::id());
-
-        if ($request->boolean('unread')) {
-            $query->where('status', 'unread');
-        }
-
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        return view('worker.notifications', [
-            'notifications_list' => $query->orderBy('created_at', 'desc')->get()
-        ]);
-    }
-
-    public function markAllAsRead(): RedirectResponse
-    {
-        Notification::where('user_id', Auth::id())
-            ->where('status', 'unread')
-            ->update(['status' => 'read']);
-
-        return back()->with('success', 'Todas las notificaciones fueron marcadas como leídas.');
-    }
-
-    public function markAsRead(string $id): RedirectResponse
-    {
-        $notification = Notification::where('id', $id)
+        $request = ProcedureRequest::with(['procedure.steps', 'documents'])
+            ->where('id', $requestId)
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        $notification->update(['status' => 'read']);
+        $step = ProcedureStep::findOrFail($stepId);
 
-        return back()->with('success', 'Notificación marcada como leída.');
+        // Validar que sea el paso actual
+        if ($request->current_step != $step->order) {
+            return back()->with('error', 'Debes completar los pasos en orden.');
+        }
+
+        // Si requiere archivo, no puede usar este método
+        if ($step->requires_file) {
+            return back()->with('error', 'Este paso requiere subir un archivo primero.');
+        }
+
+        // Estado: ahora espera al sindicato
+        $request->update([
+            'status' => 'pending_union'
+        ]);
+
+        return back()->with('success', '📨 Paso enviado al sindicato para revisión.');
     }
-    public function catalog(Request $request)
+    /* ============================================================
+       CATÁLOGO DE PROCEDIMIENTOS DISPONIBLES PARA EL TRABAJADOR
+       ============================================================ */
+    public function catalog(): View
     {
-        $keyword   = $request->input('keyword');
-        $steps_min = $request->input('steps_min');
+        $userId = Auth::id();
 
-        $procedures = \App\Models\Procedure::withCount('steps')
-            ->when($keyword, function ($q) use ($keyword) {
-                $q->where('name', 'LIKE', "%$keyword%")
-                    ->orWhere('description', 'LIKE', "%$keyword%");
-            })
-            ->when($steps_min, function ($q) use ($steps_min) {
-                $q->having('steps_count', '>=', $steps_min);
-            })
+        $active = ['initiated', 'in_progress', 'pending_union', 'pending_worker'];
+
+        // Trámites disponibles
+        $procedures = Procedure::whereNotIn('id', function ($q) use ($userId, $active) {
+            $q->select('procedure_id')
+                ->from('procedure_requests')
+                ->where('user_id', $userId)
+                ->whereIn('status', $active);
+        })
+            ->withCount('steps')
+            ->orderBy('name')
             ->get();
 
-        return view('worker.catalog.index', compact('procedures'));
+        $news = News::where('status', 'published')
+            ->orderBy('publication_date', 'desc')
+            ->get();
+
+        return view('worker.catalog.index', [
+            'procedures' => $procedures,
+            'news'       => $news,
+        ]);
     }
-
-    public function catalogDetail($id)
+    public function catalogDetail(string $id): View
     {
-        $procedure = \App\Models\Procedure::with('steps')->findOrFail($id);
+        $procedure = Procedure::with('steps')
+            ->findOrFail($id);
 
-        return view('worker.catalog.detail', compact('procedure'));
+        return view('worker.catalog.detail', [
+            'procedure' => $procedure
+        ]);
     }
 }

@@ -14,115 +14,146 @@ class WorkerRequestController extends Controller
 {
     public function __construct()
     {
+        // Controlador exclusivo del rol trabajador
         $this->middleware(['auth', 'isUnion']);
     }
 
     /**
-     * Listado de solicitudes hechas por trabajadores (RF-13 / RF-14)
+     * Panel del trabajador:
+     * Trámites activos, historial y trámites disponibles.
      */
-    public function index(): View
+    public function dashboard(): View
     {
-        $requests = ProcedureRequest::with(['user', 'procedure'])
+        $user = Auth::user();
+
+        $active = ProcedureRequest::with('procedure')
+            ->where('user_id', $user->id)
+            ->whereNotIn('status', ['completed', 'rejected', 'cancelled'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('union.requests.index', compact('requests'));
+        $finished = ProcedureRequest::with('procedure')
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['completed', 'rejected', 'cancelled'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $available = \App\Models\Procedure::orderBy('name')->get();
+
+        return view('worker.dashboard', [
+            'active_requests'   => $active,
+            'finished_requests' => $finished,
+            'available_procedures' => $available
+        ]);
     }
 
     /**
-     * Mostrar detalle para revisión sindical
+     * Iniciar un trámite.
+     */
+    public function start(Request $request, string $procedureId): RedirectResponse
+    {
+        $user = Auth::id();
+
+        $exists = ProcedureRequest::where('user_id', $user)
+            ->where('procedure_id', $procedureId)
+            ->whereNotIn('status', ['completed', 'rejected'])
+            ->first();
+
+        if ($exists) {
+            return back()->with('error', 'Ya existe un trámite activo de este tipo.');
+        }
+
+        ProcedureRequest::create([
+            'user_id' => $user,
+            'procedure_id' => $procedureId,
+            'current_step' => 1,
+            'status' => 'initiated'
+        ]);
+
+        return back()->with('success', 'Trámite iniciado correctamente.');
+    }
+
+    /**
+     * Ver detalle de la solicitud desde el rol trabajador.
      */
     public function show(string $id): View
     {
-        $request = ProcedureRequest::with(['user', 'procedure.steps', 'documents'])
+        $userId = Auth::id();
+
+        $request = ProcedureRequest::with(['procedure.steps', 'documents'])
+            ->where('user_id', $userId)
             ->findOrFail($id);
 
-        return view('union.requests.show', compact('request'));
+        return view('worker.requests.show', [
+            'request' => $request
+        ]);
     }
 
     /**
-     * RF-13  
-     * El sindicato notifica un error al trabajador.
-     * Cambia el estado → pending_worker
+     * El trabajador corrige un paso (RF-13).
+     * Sube archivos, corrige campos y envía nuevamente.
      */
-    public function notifyError(Request $httpRequest, string $id): RedirectResponse
+    public function correctStep(Request $httpRequest, string $id, int $order): RedirectResponse
     {
         $validated = $httpRequest->validate([
-            'error_message' => 'required|string|max:500',
+            'file' => 'nullable|file|mimes:pdf,jpg,png,docx|max:8192',
+            'comment' => 'nullable|string|max:500'
         ]);
 
-        $request = ProcedureRequest::findOrFail($id);
+        $request = ProcedureRequest::with('procedure.steps')
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
 
-        // Notificación al trabajador
-        Notification::create([
-            'user_id' => $request->user_id,
-            'title' => 'Corrección requerida en tu trámite',
-            'message' => $validated['error_message'],
-            'type' => 'error',
-            'status' => 'unread',
-        ]);
+        $step = $request->procedure->steps
+            ->where('order', $order)
+            ->first();
 
-        // Registrar bitácora
+        if (!$step) {
+            return back()->with('error', 'Paso no válido.');
+        }
+
+        if (!empty($validated['file'])) {
+            $path = $validated['file']->store('worker_corrections', 'public');
+
+            $request->documents()->create([
+                'step_order' => $order,
+                'file_path' => $path
+            ]);
+        }
+
         ActivityLog::create([
             'user_id' => Auth::id(),
-            'module' => 'Solicitudes',
-            'action' => "Notificó error en trámite #{$request->id}",
+            'module' => 'Trámites',
+            'action' => "Corrección enviada en paso {$order} del trámite {$request->id}",
             'ip_address' => $httpRequest->ip()
         ]);
 
-        // Cambio de estado oficial RF-04
+        // El trámite vuelve al sindicato para revisión
         $request->update([
-            'status' => 'pending_worker'
+            'status' => 'pending_union'
         ]);
 
-        return back()->with('success', '⚠️ Se notificó el error al trabajador.');
+        return back()->with('success', 'Corrección enviada correctamente.');
     }
 
     /**
-     * RF-14  
-     * El sindicato aprueba un paso enviado por el trabajador.
-     * Cambia estado → in_progress o → completed si terminó
-     */
-    public function approveStep(string $id): RedirectResponse
-    {
-        $request = ProcedureRequest::with('procedure')->findOrFail($id);
-
-        if (in_array($request->status, ['completed', 'rejected', 'cancelled'])) {
-            return back()->with('error', 'El trámite ya está finalizado.');
-        }
-
-        // Avanzar paso
-        $request->current_step += 1;
-
-        if ($request->current_step > $request->procedure->steps_count) {
-            // Fin del trámite
-            $request->status = 'completed';
-        } else {
-            // Estado continúa en progreso
-            $request->status = 'in_progress';
-        }
-
-        $request->save();
-
-        return back()->with('success', '✅ Paso aprobado correctamente.');
-    }
-
-    /**
-     * RF-14  
-     * Finalizar trámite como completado o rechazado.
+     * Finalizar un trámite desde el trabajador.
+     * Solo se usa si el trámite permite autocompletado.
      */
     public function finalize(string $id, string $status): RedirectResponse
     {
-        $valid = ['completed', 'rejected'];
+        $valid = ['completed', 'cancelled'];
 
         if (!in_array($status, $valid)) {
             abort(400, 'Estado no permitido.');
         }
 
-        $request = ProcedureRequest::findOrFail($id);
+        $request = ProcedureRequest::where('user_id', Auth::id())
+            ->findOrFail($id);
+
         $request->update(['status' => $status]);
 
-        return redirect()->route('union.requests.index')
-            ->with('success', "🏁 El trámite fue marcado como {$status}.");
+        return redirect()->route('worker.dashboard')
+            ->with('success', 'Trámite finalizado correctamente.');
     }
 }

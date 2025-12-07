@@ -1,52 +1,189 @@
-<x-layouts.auth>
-    <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Reset password')" :description="__('Please enter your new password below')" />
+<?php
+/*
+* Nombre de la clase         : reset-password.blade.php
+* Descripción de la clase    : Vista Livewire Volt para restablecimiento de contraseña en SINDISOFT.
+* Fecha de creación          : 01/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 01/11/2025
+* Autorizó                   : Líder Técnico
+* Versión                    : 1.2
+* Fecha de mantenimiento     : 26/11/2025
+* Folio de mantenimiento     : N/A
+* Tipo de mantenimiento      : Correctivo y perfectivo
+* Descripción del mantenimiento : Homogeneización visual completa con login y forgot-password, SweetAlert y colores institucionales.
+* Responsable                : Iker Piza
+* Revisor                    : QA SINDISOFT
+*/
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Locked;
+use Livewire\Volt\Component;
 
-        <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-6">
-            @csrf
-            <!-- Token -->
-            <input type="hidden" name="token" value="{{ request()->route('token') }}">
+new #[Layout('components.layouts.auth')] class extends Component {
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                value="{{ request('email') }}"
-                :label="__('Email')"
-                type="email"
-                required
-                autocomplete="email"
-            />
+    #[Locked]
+    public string $token = '';
 
-            <!-- Password -->
-            <flux:input
-                name="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="__('Password')"
-                viewable
-            />
+    public string $email = '';
+    public string $password = '';
+    public string $password_confirmation = '';
 
-            <!-- Confirm Password -->
-            <flux:input
-                name="password_confirmation"
-                :label="__('Confirm password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="__('Confirm password')"
-                viewable
-            />
+    public function mount(string $token): void
+    {
+        $this->token = $token;
+        $this->email = request()->string('email');
+    }
 
-            <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
-                    {{ __('Reset password') }}
-                </flux:button>
-            </div>
-        </form>
+    public function resetPassword(): void
+    {
+        $this->validate([
+            'token'    => ['required'],
+            'email'    => ['required','string','email'],
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                Rules\Password::defaults()
+            ],
+        ]);
+
+        $status = Password::reset(
+            $this->only('email','password','password_confirmation','token'),
+            function ($user)
+            {
+                $user->forceFill([
+                    'password'       => Hash::make($this->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            $this->dispatch(
+                'show-swal',
+                icon: 'error',
+                title: 'Error',
+                text: __($status)
+            );
+            return;
+        }
+
+        $this->dispatch(
+            'password-reset-success',
+            text: __($status)
+        );
+    }
+
+    public function exception($e, $stopPropagation): void
+    {
+        if ($e instanceof ValidationException) {
+
+            $first = collect($e->errors())->flatten()->first();
+
+            $this->dispatch(
+                'show-swal',
+                icon: 'error',
+                title: 'Error',
+                text: $first
+            );
+
+            $this->resetErrorBag();
+            $stopPropagation();
+        }
+    }
+};
+?>
+
+<div class="flex flex-col gap-6">
+
+    <x-auth-header
+        :title="__('Restablecer contraseña')"
+        :description="__('Ingresa tu nueva contraseña para continuar')"
+    />
+
+    <form wire:submit="resetPassword" class="flex flex-col gap-6">
+
+        <flux:input
+            wire:model="email"
+            :label="__('Correo electrónico')"
+            type="email"
+            required
+            autocomplete="email"
+        />
+
+        <flux:input
+            wire:model="password"
+            :label="__('Nueva contraseña')"
+            type="password"
+            placeholder="********"
+            required
+            autocomplete="new-password"
+            viewable
+        />
+
+        <flux:input
+            wire:model="password_confirmation"
+            :label="__('Confirmar contraseña')"
+            type="password"
+            placeholder="********"
+            required
+            autocomplete="new-password"
+            viewable
+        />
+
+        <flux:button
+            type="submit"
+            variant="primary"
+            icon="key"
+            icon-variant="outline"
+            class="w-full !bg-[#DE6601] hover:!bg-[#C95500] text-white font-semibold"
+            data-test="reset-password-button"
+        >
+            {{ __('Restablecer contraseña') }}
+        </flux:button>
+
+    </form>
+
+    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-black/60 dark:text-white/60 mt-1">
+        <span>{{ __('¿Recordaste tu contraseña?') }}</span>
+        <flux:link
+            :href="route('login')"
+            wire:navigate
+            class="text-[#241178] hover:text-[#EE0000] font-semibold"
+        >
+            {{ __('Iniciar sesión') }}
+        </flux:link>
     </div>
-</x-layouts.auth>
+
+    @script
+        <script>
+            $wire.on('show-swal', (data) => {
+                Swal.fire({
+                    icon: data.icon,
+                    title: data.title,
+                    text: data.text,
+                    confirmButtonColor: '#DE6601',
+                });
+            });
+
+            $wire.on('password-reset-success', (data) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Contraseña actualizada',
+                    text: data.text,
+                    confirmButtonColor: '#DE6601',
+                }).then(() => {
+                    window.location.href = "{{ route('login') }}";
+                });
+            });
+        </script>
+    @endscript
+</div>

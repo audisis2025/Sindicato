@@ -1,132 +1,153 @@
-{{-- ===========================================================
- Nombre de la vista: request-show.blade.php
- Descripción: Detalle completo de una solicitud de trámite.
- Versión: 2.0 (Compatibilidad RF-04)
-=========================================================== --}}
+<x-layouts.app :title="__('Detalle del trámite')">
 
-<x-layouts.app :title="__('Detalle del trámite solicitado')">
+    <div class="w-full max-w-5xl mx-auto p-6 flex flex-col gap-6">
 
-    <div class="w-full flex flex-col items-center justify-center min-h-[80vh] bg-[#FFFFFF] p-6">
+        <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-bold text-[#DE6601]">
+                Detalle del trámite
+            </h1>
 
-        <!-- Encabezado -->
-        <h1 class="text-3xl font-[Poppins] font-bold text-[#DC6601] mb-2">
-            Detalle del Trámite Solicitado
-        </h1>
-        <p class="text-[#241178] font-[Inter] mb-8 text-center">
-            Consulta la información completa del trámite y su progreso.
-        </p>
-
-        <!-- Contenedor principal -->
-        <div class="w-full max-w-3xl bg-white border border-[#D9D9D9] shadow-md rounded-2xl p-8 font-[Inter] space-y-6">
-
-            <!-- Información general -->
-            <div class="border-b border-[#EAEAEA] pb-4 mb-4">
-                <h2 class="text-2xl font-[Poppins] font-bold text-[#241178] mb-2">
-                    {{ $solicitud->procedure->name }}
-                </h2>
-
-                <p class="text-gray-700 text-sm mb-3">
-                    {{ $solicitud->procedure->description }}
-                </p>
-
-                <p class="text-sm text-[#272800]">
-                    <strong>Fecha de solicitud:</strong>
-                    {{ $solicitud->created_at->format('d/m/Y H:i') }}
-                </p>
-
-                @php
-                    // Mapper RF-04 → estilos
-                    $statusColors = [
-                        'initiated'        => 'text-blue-600',
-                        'in_progress'      => 'text-orange-600',
-                        'pending_worker'   => 'text-yellow-600',
-                        'pending_union'    => 'text-purple-600',
-                        'completed'        => 'text-green-600',
-                        'cancelled'        => 'text-gray-500',
-                        'rejected'         => 'text-red-600',
-                    ];
-
-                    $statusLabels = [
-                        'initiated'        => 'Iniciado',
-                        'in_progress'      => 'En proceso',
-                        'pending_worker'   => 'Pendiente de acción del trabajador',
-                        'pending_union'    => 'Pendiente sindicato',
-                        'completed'        => 'Finalizado',
-                        'cancelled'        => 'Cancelado',
-                        'rejected'         => 'Rechazado',
-                    ];
-
-                    $color = $statusColors[$solicitud->status] ?? 'text-[#DC6601]';
-                    $label = $statusLabels[$solicitud->status] ?? 'Pendiente';
-                @endphp
-
-                <p class="text-sm text-[#272800]">
-                    <strong>Estado actual:</strong>
-                    <span class="{{ $color }} font-semibold">
-                        {{ $label }}
-                    </span>
-                </p>
-
-                <p class="text-sm text-[#272800]">
-                    <strong>Paso actual:</strong>
-                    {{ $solicitud->current_step }} de {{ $solicitud->procedure->steps_count }}
-                </p>
-            </div>
-
-            <!-- Barra de progreso -->
-            @php
-                $total = $solicitud->procedure->steps_count;
-                $progress = $total > 0 ? ($solicitud->current_step / $total) * 100 : 0;
-            @endphp
-
-            <div class="w-full bg-[#EAEAEA] rounded-full h-3 overflow-hidden mb-6">
-                <div class="bg-[#DC6601] h-3 rounded-full transition-all duration-500"
-                     style="width: {{ $progress }}%">
-                </div>
-            </div>
-
-            <!-- Pasos -->
-            <h3 class="text-xl font-semibold text-[#DC6601] mb-4 font-[Poppins]">
-                Pasos del trámite
-            </h3>
-
-            @foreach ($solicitud->procedure->steps as $index => $paso)
-                @php
-                    $num = $index + 1;
-                    $completed = $num < $solicitud->current_step || $solicitud->status === 'completed';
-                @endphp
-
-                <div class="border border-[#D9D9D9] rounded-lg p-5 mb-5 shadow-sm bg-white">
-                    <h4 class="text-[#241178] font-semibold text-lg mb-1">
-                        Paso {{ $num }}: {{ $paso->step_name }}
-                        @if ($completed)
-                            <span class="text-green-600 text-sm font-semibold">(Completado)</span>
-                        @elseif($num == $solicitud->current_step)
-                            <span class="text-[#DC6601] text-sm font-semibold">(En progreso)</span>
-                        @endif
-                    </h4>
-
-                    <p class="text-gray-600 text-sm mb-2">
-                        {{ $paso->step_description }}
-                    </p>
-
-                    @if ($paso->file_path)
-                        <a href="{{ asset('storage/' . $paso->file_path) }}"
-                           class="text-[#DC6601] hover:underline text-sm font-semibold">
-                            Descargar formato
-                        </a>
-                    @endif
-                </div>
-            @endforeach
-
-            <!-- Regresar -->
-            <div class="flex justify-end pt-4 border-t border-[#EAEAEA]">
-                <a href="{{ route('worker.index') }}"
-                   class="px-6 py-2 bg-[#241178]/10 text-[#241178] hover:bg-[#241178]/20 font-semibold rounded-lg transition">
-                    ← Volver al panel
-                </a>
-            </div>
+            <flux:button
+                icon="arrow-long-left"
+                icon-variant="outline"
+                variant="ghost"
+                :href="route('worker.dashboard')"
+                class="px-4 py-2 !bg-transparent hover:!bg-zinc-100 !text-[#241178] font-semibold rounded-lg"
+            >
+                Volver
+            </flux:button>
         </div>
+
+        @php
+            $mapping = [
+                'initiated'        => ['Iniciado', 'text-blue-600'],
+                'in_progress'      => ['En proceso', 'text-[#DC6601]'],
+                'pending_worker'   => ['Pendiente de acción del trabajador', 'text-amber-600'],
+                'pending_union'    => ['Pendiente del sindicato', 'text-purple-600'],
+                'completed'        => ['Finalizado', 'text-green-600'],
+                'cancelled'        => ['Cancelado', 'text-gray-600'],
+                'rejected'         => ['Rechazado', 'text-red-600'],
+            ];
+
+            [$estadoTexto, $color] = $mapping[$request->status] ?? ['Desconocido', 'text-gray-500'];
+        @endphp
+
+        <div class="bg-white border border-[#D9D9D9] rounded-xl shadow-sm p-6 font-[Inter]">
+
+            <div class="border-b border-gray-200 pb-4 mb-4 space-y-1">
+                <p class="text-sm text-black">
+                    <span class="font-semibold">Trámite:</span>
+                    {{ $request->procedure->name }}
+                </p>
+                <p class="text-sm text-black">
+                    <span class="font-semibold">Estado:</span>
+                    <span class="{{ $color }} font-semibold">{{ $estadoTexto }}</span>
+                </p>
+                <p class="text-sm text-black">
+                    <span class="font-semibold">Fecha de inicio:</span>
+                    {{ optional($request->created_at)->format('d/m/Y H:i') }}
+                </p>
+            </div>
+
+            <h2 class="text-xl font-semibold text-[#241178] mb-3">
+                Pasos del trámite
+            </h2>
+
+            <ol class="space-y-4">
+                @foreach ($request->procedure->steps as $step)
+                    @php
+                        $isCurrent = $request->current_step == $step->order;
+                        $isCompleted = $request->current_step > $step->order;
+                    @endphp
+
+                    <li class="border border-gray-200 rounded-xl p-4 shadow-sm bg-white">
+
+                        <div class="flex flex-col gap-3">
+
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h3 class="font-semibold text-[#241178]">
+                                        {{ $step->step_name }}
+                                    </h3>
+                                    <p class="text-gray-700 text-sm mt-1">
+                                        {{ $step->step_description }}
+                                    </p>
+                                </div>
+
+                                @if ($step->file_path)
+                                    <flux:button
+                                        size="xs"
+                                        icon="arrow-down-tray"
+                                        variant="filled"
+                                        :href="asset('storage/' . $step->file_path)"
+                                        class="!bg-blue-600 hover:!bg-blue-700 !text-white"
+                                    >
+                                        Descargar formato
+                                    </flux:button>
+                                @endif
+                            </div>
+
+                            <p class="text-sm">
+                                <span class="font-semibold">Estado:</span>
+                                <span class="{{ $isCompleted ? 'text-green-600' : ($isCurrent ? 'text-[#DC6601]' : 'text-gray-600') }} font-semibold">
+                                    {{ $isCompleted ? 'Completado' : ($isCurrent ? 'En revisión' : 'Pendiente') }}
+                                </span>
+                            </p>
+
+                            @if ($isCurrent && $request->status === 'pending_worker')
+                                <div class="mt-3 p-4 border border-amber-300 bg-amber-50 rounded-lg">
+                                    <p class="font-semibold text-amber-700 mb-2">
+                                        Corrección requerida
+                                    </p>
+
+                                    <form method="POST"
+                                          action="{{ route('worker.requests.correct-step', [$request->id, $step->order]) }}"
+                                          enctype="multipart/form-data"
+                                          class="space-y-4">
+
+                                        @csrf
+
+                                        @if ($step->requires_file)
+                                            <div>
+                                                <label class="block text-sm font-semibold text-black mb-1">
+                                                    Subir archivo corregido
+                                                </label>
+                                                <input type="file"
+                                                       name="file"
+                                                       class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm">
+                                            </div>
+                                        @endif
+
+                                        <div>
+                                            <label class="block text-sm font-semibold text-black mb-1">
+                                                Observaciones o correcciones
+                                            </label>
+                                            <textarea
+                                                name="comments"
+                                                rows="3"
+                                                class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm"
+                                                placeholder="Describe la corrección realizada"></textarea>
+                                        </div>
+
+                                        <flux:button
+                                            icon="check"
+                                            icon-variant="outline"
+                                            variant="primary"
+                                            type="submit"
+                                            class="!bg-blue-600 hover:!bg-blue-700 !text-white font-semibold rounded-lg">
+                                            Enviar corrección
+                                        </flux:button>
+                                    </form>
+                                </div>
+                            @endif
+                        </div>
+
+                    </li>
+                @endforeach
+            </ol>
+
+        </div>
+
     </div>
 
 </x-layouts.app>

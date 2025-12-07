@@ -13,21 +13,17 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
 
-            // --- CAMPOS TRADUCIDOS ---
-            $table->string('title', 255); // Antes 'titulo'
-            $table->text('message'); // Antes 'mensaje'
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->onDelete('cascade');
 
-            // Enum y valores traducidos
+            $table->string('title', 255);
+            $table->text('message');
             $table->enum('type', ['info', 'error', 'correction'])
-                  ->default('info'); // Antes 'tipo' y 'aviso'
-
-            // Enum y valores traducidos
+                ->default('info');
             $table->enum('status', ['unread', 'read'])
-                  ->default('unread'); // Antes 'estado', 'no_leida', 'leida'
-            // --- FIN ---
-
+                ->default('unread');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
