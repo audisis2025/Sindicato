@@ -1,14 +1,19 @@
 <?php
-
 /*
 * ===========================================================
-* Nombre de la clase: ActivityLog.php
-* Descripción de la clase: Modelo Eloquent para la tabla 'activity_logs'.
+* Nombre de la clase: ActivityLog
+* Descripción de la clase: Modelo Eloquent que registra las acciones realizadas por los usuarios dentro del sistema.
 * Fecha de creación: 10/11/2025
 * Elaboró: [Tu Nombre]
 * Fecha de liberación: 10/11/2025
 * Autorizó: Líder Técnico
 * Versión: 1.0
+* Fecha de mantenimiento: [DD/MM/AAAA]
+* Folio de mantenimiento: [Folio]
+* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
+* Descripción del mantenimiento: [Descripción breve del cambio]
+* Responsable: [Tu Nombre]
+* Revisor: [Nombre del revisor]
 * ===========================================================
 */
 
@@ -22,18 +27,9 @@ class ActivityLog extends Model
 {
     use HasFactory;
 
-    /**
-     * Define la tabla asociada con el modelo.
-     *
-     * @var string
-     */
+ 
     protected $table = 'activity_logs';
 
-    /**
-     * Los atributos que se pueden asignar masivamente.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'user_id',
         'action',
@@ -41,9 +37,6 @@ class ActivityLog extends Model
         'ip_address',
     ];
 
-    /**
-     * Obtiene el usuario que realizó la acción.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

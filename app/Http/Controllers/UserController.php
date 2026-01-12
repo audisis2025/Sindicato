@@ -1,4 +1,24 @@
 <?php
+/*
+* ===========================================================
+* Nombre de la clase: UserController
+* Descripción de la clase: Gestión administrativa de usuarios,
+* incluyendo creación, edición, eliminación y activación.
+* Fecha de creación: 05/11/2025
+* Elaboró: [Tu Nombre]
+* Fecha de liberación: 10/11/2025
+* Autorizó: Líder Técnico
+* Versión: 2.0
+*
+* Fecha de mantenimiento: [DD/MM/AAAA]
+* Folio de mantenimiento: [Folio]
+* Tipo de mantenimiento: Correctivo y Perfectivo
+* Descripción del mantenimiento: Revisión de roles, 
+* validaciones y estandarización del controlador.
+* Responsable: [Tu Nombre]
+* Revisor: QA SINDISOFT
+* ===========================================================
+*/
 
 namespace App\Http\Controllers;
 
@@ -11,125 +31,115 @@ use App\Services\SystemLogger;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('isAdmin');
-    }
+	public function __construct()
+	{
+		$this->middleware('auth');
+		$this->middleware('isAdmin');
+	}
 
-    /**
-     * Listado de usuarios
-     */
-    public function index(Request $request): View
-    {
-        $query = User::query();
+	public function index(Request $request): View
+	{
+		$query = User::query();
 
-        if ($request->filled('role')) {
-            $query->where('role', $request->role);
-        }
+		if ($request->filled('role'))
+		{
+			$query->where('role', $request->role);
+		}
 
-        $users = $query->orderBy('id', 'desc')->get();
+		$users = $query->orderBy('id', 'desc')->get();
 
-        return view('admin.users.index', compact('users'));
-    }
+		return view('admin.users.index', compact('users'));
+	}
 
-    /**
-     * Formulario crear usuario
-     */
-    public function create(): View
-    {
-        return view('admin.users.create');
-    }
+	public function create(): View
+	{
+		return view('admin.users.create');
+	}
 
-    /**
-     * Guardar usuario
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        $validatedData = $request->validate([
-            'name'       => 'required|string|max:100',
-            'email'      => 'required|email|max:100|unique:users,email',
-            'password'   => 'required|string|min:8',
-            'role'       => 'required|in:union,worker',
-            'curp'       => 'nullable|string|max:18',
-            'rfc'        => 'nullable|string|max:13',
-            'gender' => 'nullable|in:H,M,ND,X',
-            'budget_key' => 'nullable|string|max:50',
-        ]);
+	public function store(Request $request): RedirectResponse
+	{
+		$validatedData = $request->validate([
+			'name' => 'required|string|max:100',
+			'email' => 'required|email|max:100|unique:users,email',
+			'password' => 'required|string|min:8',
+			'role' => 'required|in:union,worker',
+			'curp' => 'nullable|string|max:18',
+			'rfc' => 'nullable|string|max:13',
+			'gender' => 'nullable|in:H,M,ND,X',
+			'budget_key' => 'nullable|string|max:50',
+		]);
 
-        $user = User::create([
-            'name'       => $validatedData['name'],
-            'email'      => $validatedData['email'],
-            'password'   => Hash::make($validatedData['password']),
-            'role'       => $validatedData['role'],
-            'curp'       => $validatedData['curp'] ?? null,
-            'rfc'        => $validatedData['rfc'] ?? null,
-            'gender'     => $validatedData['gender'] ?? null,
-            'budget_key' => $validatedData['budget_key'] ?? null,
-            'active'     => true,
-        ]);
+		$user = User::create([
+			'name' => $validatedData['name'],
+			'email' => $validatedData['email'],
+			'password' => Hash::make($validatedData['password']),
+			'role' => $validatedData['role'],
+			'curp' => $validatedData['curp'] ?? null,
+			'rfc' => $validatedData['rfc'] ?? null,
+			'gender' => $validatedData['gender'] ?? null,
+			'budget_key' => $validatedData['budget_key'] ?? null,
+			'active' => true,
+		]);
 
-        // Ya no existe username
-        app(SystemLogger::class)->log('Crear usuario', "El administrador creó al usuario ID: {$user->id}");
+		app(SystemLogger::class)->log(
+			'Crear usuario',
+			"El administrador creó al usuario ID: {$user->id}"
+		);
 
-        return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
-    }
+		return redirect()->route('users.index')
+			->with('success', 'Usuario creado correctamente.');
+	}
 
-    /**
-     * Editar usuario
-     */
-    public function edit(User $user): View
-    {
-        return view('admin.users.edit', compact('user'));
-    }
+	public function edit(User $user): View
+	{
+		return view('admin.users.edit', compact('user'));
+	}
 
-    /**
-     * Actualizar usuario
-     */
-    public function update(Request $request, User $user): RedirectResponse
-    {
-        $validatedData = $request->validate([
-            'name'       => 'required|string|max:100',
-            'email'      => 'required|email|max:100|unique:users,email,' . $user->id,
-            'role'       => 'required|in:union,worker',
-            'curp'       => 'nullable|string|max:18',
-            'rfc'        => 'nullable|string|max:13',
-            'gender' => 'nullable|in:H,M,ND,X',
-            'budget_key' => 'nullable|string|max:50',
-            'active'     => 'required|boolean',
-        ]);
+	public function update(Request $request, User $user): RedirectResponse
+	{
+		$validatedData = $request->validate([
+			'name' => 'required|string|max:100',
+			'email' => 'required|email|max:100|unique:users,email,' . $user->id,
+			'role' => 'required|in:union,worker',
+			'curp' => 'nullable|string|max:18',
+			'rfc' => 'nullable|string|max:13',
+			'gender' => 'nullable|in:H,M,ND,X',
+			'budget_key' => 'nullable|string|max:50',
+			'active' => 'required|boolean',
+		]);
 
-        $user->update($validatedData);
+		$user->update($validatedData);
 
-        app(SystemLogger::class)->log('Actualizar usuario', "El administrador actualizó al usuario ID: {$user->id}");
+		app(SystemLogger::class)->log(
+			'Actualizar usuario',
+			"El administrador actualizó al usuario ID: {$user->id}"
+		);
 
-        return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
-    }
+		return redirect()->route('users.index')
+			->with('success', 'Usuario actualizado correctamente.');
+	}
 
-    /**
-     * Eliminar usuario
-     */
-    public function destroy(User $user): RedirectResponse
-    {
-        $id = $user->id;
+	public function destroy(User $user): RedirectResponse
+	{
+		$id = $user->id;
 
-        $user->delete();
+		$user->delete();
 
-        app(SystemLogger::class)->log('Eliminar usuario', "El administrador eliminó al usuario ID: {$id}");
+		app(SystemLogger::class)->log(
+			'Eliminar usuario',
+			"El administrador eliminó al usuario ID: {$id}"
+		);
 
-        return back()->with('success', 'Usuario eliminado correctamente.');
-    }
+		return back()->with('success', 'Usuario eliminado correctamente.');
+	}
 
-    /**
-     * Activar / desactivar usuario
-     */
-    public function toggle($id)
-    {
-        $user = User::findOrFail($id);
+	public function toggle($id): RedirectResponse
+	{
+		$user = User::findOrFail($id);
 
-        $user->active = !$user->active;
-        $user->save();
+		$user->active = !$user->active;
+		$user->save();
 
-        return back()->with('success', 'Estado del usuario actualizado correctamente.');
-    }
+		return back()->with('success', 'Estado del usuario actualizado correctamente.');
+	}
 }

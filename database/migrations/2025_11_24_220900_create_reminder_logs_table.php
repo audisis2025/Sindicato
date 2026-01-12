@@ -11,15 +11,14 @@ return new class extends Migration
         Schema::create('reminder_logs', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id');        // trabajador
-            $table->unsignedBigInteger('procedure_id');   // trámite
-            $table->string('channel');                    // email | inapp
-            $table->text('message');                      // mensaje enviado
-            $table->date('sent_at');                      // fecha del envío
+            $table->unsignedBigInteger('user_id');      
+            $table->unsignedBigInteger('procedure_id');   
+            $table->string('channel');                   
+            $table->text('message');                     
+            $table->date('sent_at');                     
 
             $table->timestamps();
 
-            // Relaciones
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('procedure_id')->references('id')->on('procedure_requests')->cascadeOnDelete();
         });

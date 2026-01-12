@@ -41,180 +41,132 @@
         };
     @endphp
 
-    <flux:sidebar
-        class="w-full lg:w-64 min-h-[60vh] lg:min-h-screen border-b lg:border-e border-[#D9D9D9]
-               bg-white shadow-md text-black flex flex-col justify-between px-4 py-5 lg:py-6 transition-all">
+    <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-        <div>
-            <a href="{{ route('dashboard') }}"
-                class="flex items-center justify-center lg:justify-start space-x-3 mb-6 px-2">
-                <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="Logo SINDISOFT"
-                    class="w-10 h-10 rounded-lg border border-[#272800]/30 shadow-sm">
-                <span class="font-bold text-[#DE6601] text-lg tracking-wide">
-                    SINDISOFT
-                </span>
-            </a>
+        <a href="{{ route($rutaInicio) }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse">
+            <img src="{{ asset('assets/img/logo_sindisoft.png') }}" alt="SINDISOFT" class="h-8 w-8 rounded-lg" />
+            <span class="font-semibold text-custom-orange">
+                Sindisoft
+            </span>
+        </a>
 
-            <div class="text-sm">
-                <p class="text-[#272800] font-semibold mb-3 tracking-wider uppercase text-center lg:text-left">
-                    Menú principal
-                </p>
+        <flux:navlist variant="outline">
 
-                <nav class="space-y-2 text-center lg:text-left">
+            <flux:navlist.group :heading="__('Menú')" class="grid">
 
-                    <a href="{{ route($rutaInicio) }}"
-                        class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                        {{ request()->routeIs($rutaInicio)
-                            ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                            : 'text-[#241178] hover:text-[#DE6601]' }}">
-                        <x-heroicon-o-home class="w-5 h-5" />
-                        <span>Inicio</span>
-                    </a>
+                <flux:navlist.item icon="home" :href="route($rutaInicio)" :current="request()->routeIs($rutaInicio)">
+                    Inicio
+                </flux:navlist.item>
 
-                    @if ($rol === 'administrador')
-                        <a href="{{ route('users.index') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('users.index')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-users class="w-5 h-5" />
-                            <span>Gestión de usuarios</span>
-                        </a>
+                @if ($rol === 'administrador')
+                    <flux:navlist.item icon="users" :href="route('users.index')"
+                        :current="request()->routeIs('users.*')">
+                        Gestión de usuarios
+                    </flux:navlist.item>
 
-                        <a href="{{ route('users.create') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('users.create')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-user-plus class="w-5 h-5" />
-                            <span>Dar de alta usuario</span>
-                        </a>
+                    <flux:navlist.item icon="user-plus" :href="route('users.create')"
+                        :current="request()->routeIs('users.create')">
+                        Dar de alta usuario
+                    </flux:navlist.item>
 
-                        <a href="{{ route('admin.reminders') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('admin.reminders')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-bell-alert class="w-5 h-5" />
-                            <span>Recordatorios del sistema</span>
-                        </a>
+                    <flux:navlist.item icon="bell-alert" :href="route('admin.reminders')"
+                        :current="request()->routeIs('admin.reminders')">
+                        Recordatorios del sistema
+                    </flux:navlist.item>
 
-                        <a href="{{ route('admin.configuration.logs') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('admin.configuration.logs')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-clipboard-document-list class="w-5 h-5" />
-                            <span>Bitácora del sistema</span>
-                        </a>
-                    @endif
+                    <flux:navlist.item icon="clipboard-document-list" :href="route('admin.configuration.logs')"
+                        :current="request()->routeIs('admin.configuration.logs')">
+                        Bitácora del sistema
+                    </flux:navlist.item>
+                @endif
 
-                    @if ($rol === 'sindicato')
-                        <a href="{{ route('union.procedures.index') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('union.procedures.*')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-document-text class="w-5 h-5" />
-                            <span>Gestión de trámites</span>
-                        </a>
+                @if ($rol === 'sindicato')
+                    <flux:navlist.item icon="document-text" :href="route('union.procedures.index')"
+                        :current="request()->routeIs('union.procedures.*')">
+                        Gestión de trámites
+                    </flux:navlist.item>
 
-                        <a href="{{ route('union.members.index') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('union.members.*')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-users class="w-5 h-5" />
-                            <span>Trabajadores registrados</span>
-                        </a>
+                    <flux:navlist.item icon="users" :href="route('union.members.index')"
+                        :current="request()->routeIs('union.members.*')">
+                        Trabajadores registrados
+                    </flux:navlist.item>
 
-                        <a href="{{ route('union.requests.index') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('union.workers.requests.*')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-inbox-stack class="w-5 h-5" />
-                            <span>Solicitudes de trabajadores</span>
-                        </a>
+                    <flux:navlist.item icon="inbox-stack" :href="route('union.requests.index')"
+                        :current="request()->routeIs('union.requests.*')">
+                        Solicitudes de trabajadores
+                    </flux:navlist.item>
 
-                        <a href="{{ route('union.reports.index') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('union.reports.*')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-chart-bar class="w-5 h-5" />
-                            <span>Reportes y consultas</span>
-                        </a>
+                    <flux:navlist.item icon="chart-bar" :href="route('union.reports.index')"
+                        :current="request()->routeIs('union.reports.*')">
+                        Reportes y consultas
+                    </flux:navlist.item>
 
-                        <a href="{{ route('union.news.index') }}"
-                            class="flex items-center gap-3 px-2 py-2 rounded-lg transition
-                            {{ request()->routeIs('union.news.*')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-megaphone class="w-5 h-5" />
-                            <span>Noticias y convocatorias</span>
-                        </a>
-                    @endif
+                    <flux:navlist.item icon="megaphone" :href="route('union.news.index')"
+                        :current="request()->routeIs('union.news.*')">
+                        Noticias y convocatorias
+                    </flux:navlist.item>
+                @endif
 
-                    @if ($rol === 'trabajador')
-                        <a href="{{ route('worker.index') }}"
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg transition
-                            {{ request()->routeIs('worker.index')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-clipboard-document-list class="w-5 h-5" />
-                            <span>Mis trámites</span>
-                        </a>
+                @if ($rol === 'trabajador')
+                    <flux:navlist.item icon="clipboard-document-list" :href="route('worker.index')"
+                        :current="request()->routeIs('worker.index')">
+                        Mis trámites
+                    </flux:navlist.item>
 
-                        <a href="{{ route('worker.notifications.index') }}"
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg transition
-                            {{ request()->routeIs('worker.notifications.*')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-bell class="w-5 h-5" />
-                            <span>Notificaciones</span>
-                        </a>
+                    <flux:navlist.item icon="bell" :href="route('worker.notifications.index')"
+                        :current="request()->routeIs('worker.notifications.*')">
+                        Notificaciones
+                    </flux:navlist.item>
 
-                        <a href="{{ route('worker.news.index') }}"
-                            class="flex items-center gap-3 px-3 py-2 rounded-lg transition
-                            {{ request()->routeIs('worker.news.*')
-                                ? 'bg-[#DE6601]/10 text-[#DE6601] font-semibold'
-                                : 'text-[#241178] hover:text-[#DE6601]' }}">
-                            <x-heroicon-o-megaphone class="w-5 h-5" />
-                            <span>Convocatorias y anuncios</span>
-                        </a>
-                    @endif
+                    <flux:navlist.item icon="megaphone" :href="route('worker.news.index')"
+                        :current="request()->routeIs('worker.news.*')">
+                        Convocatorias y anuncios
+                    </flux:navlist.item>
+                @endif
 
-                </nav>
-            </div>
-        </div>
+            </flux:navlist.group>
+        </flux:navlist>
 
-        <div class="border-t border-[#D9D9D9]/50 pt-4 mt-4">
-            <div class="flex flex-col lg:flex-row lg:items-center gap-3 px-2 text-center lg:text-left">
-                <div
-                    class="flex h-10 w-10 items-center justify-center mx-auto lg:mx-0 rounded-lg bg-[#DE6601]/10 text-[#DE6601] font-semibold">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                </div>
-                <div>
-                    <p class="text-sm font-semibold text-black leading-tight">
-                        {{ auth()->user()->name }}
-                    </p>
-                    <p class="text-xs text-[#241178] leading-tight">
-                        {{ auth()->user()->email ?? 'Sin correo' }}
-                    </p>
-                </div>
-            </div>
+        <flux:spacer />
 
-            <form method="POST" action="{{ route('logout') }}" class="mt-3 px-2 text-center lg:text-left">
-                @csrf
-                <button type="submit"
-                    class="flex justify-center lg:justify-start items-center gap-2 text-[#EE0000] hover:text-[#DE6601]
-                           font-semibold text-sm transition">
-                    <x-heroicon-o-arrow-right-start-on-rectangle class="w-5 h-5" />
-                    Cerrar sesión
-                </button>
-            </form>
-        </div>
+        <flux:dropdown class="hidden lg:block" position="bottom" align="start">
+            <flux:profile :name="auth()->user()->name" :initials="strtoupper(substr(auth()->user()->name, 0, 2))"
+                icon:trailing="chevrons-up-down" />
+
+            <flux:menu class="w-[220px]">
+
+                <flux:menu.radio.group>
+                    <div class="p-0 text-sm font-normal">
+                        <div class="flex items-center gap-2 px-1 py-1.5">
+                            <span
+                                class="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200 dark:bg-neutral-700">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                            </span>
+
+                            <div class="grid flex-1 leading-tight">
+                                <span class="truncate font-semibold">
+                                    {{ auth()->user()->name }}
+                                </span>
+                                <span class="truncate text-xs">
+                                    {{ auth()->user()->email }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </flux:menu.radio.group>
+
+                <flux:menu.separator />
+
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
+                        Cerrar sesión
+                    </flux:menu.item>
+                </form>
+
+            </flux:menu>
+        </flux:dropdown>
     </flux:sidebar>
 
     <flux:header

@@ -32,14 +32,16 @@ new #[Layout('components.layouts.auth')] class extends Component
 
         $status = Password::sendResetLink($this->only('email'));
 
-        if ($status === Password::RESET_LINK_SENT) {
+        if ($status === Password::RESET_LINK_SENT) 
+        {
             $this->dispatch(
                 'show-swal',
                 icon: 'success',
                 title: 'Enlace enviado',
                 text: __($status)
             );
-        } else {
+        } else 
+        {
             $this->dispatch(
                 'show-swal',
                 icon: 'error',
@@ -51,7 +53,8 @@ new #[Layout('components.layouts.auth')] class extends Component
 
     public function exception($e, $stopPropagation): void
     {
-        if ($e instanceof ValidationException) {
+        if ($e instanceof ValidationException) 
+        {
 
             $first = collect($e->errors())->flatten()->first();
 
@@ -73,7 +76,7 @@ new #[Layout('components.layouts.auth')] class extends Component
 
     <x-auth-header
         :title="__('Recuperar contraseña')"
-        :description="__('Ingresa tu correo institucional para recibir el enlace de restablecimiento')"
+        :description="__('Ingresa tu correo electrónico para recibir un enlace de restablecimiento de contraseña')"
     />
 
     <form wire:submit="sendPasswordResetLink" class="flex flex-col gap-6">
@@ -82,9 +85,10 @@ new #[Layout('components.layouts.auth')] class extends Component
             wire:model="email"
             :label="__('Correo electrónico')"
             type="email"
-            placeholder="correo@ejemplo.com"
             required
             autofocus
+            autocomplete="email"
+            placeholder="email@gmail.com"
         />
 
         <flux:button
@@ -92,7 +96,8 @@ new #[Layout('components.layouts.auth')] class extends Component
             variant="primary"
             icon="paper-airplane"
             icon-variant="outline"
-            class="w-full !bg-[#DE6601] hover:!bg-[#C95500] text-white font-semibold"
+            class="w-full bg-black hover:bg-custom-gray text-white"
+            data-test="email-password-reset-link-button"
         >
             {{ __('Enviar enlace') }}
         </flux:button>
@@ -100,11 +105,11 @@ new #[Layout('components.layouts.auth')] class extends Component
     </form>
 
     <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-black/60 dark:text-white/60">
-        <span>{{ __('¿Recordaste tu contraseña?') }}</span>
+        <span>{{ __('O, regresa a') }}</span>
         <flux:link
             :href="route('login')"
             wire:navigate
-            class="text-[#241178] hover:text-[#EE0000] font-semibold"
+            class="text-custom-blue hover:text-custom-blue-dark"
         >
             {{ __('Iniciar sesión') }}
         </flux:link>
@@ -112,14 +117,20 @@ new #[Layout('components.layouts.auth')] class extends Component
 
     @script
         <script>
-            $wire.on('show-swal', (data) => {
-                Swal.fire({
-                    icon: data.icon,
-                    title: data.title,
-                    text: data.text,
-                    confirmButtonColor: '#DE6601',
-                });
-            });
+            $wire.on(
+                'show-swal',
+                (data) =>
+                {
+                    Swal.fire(
+                    {
+                        icon: data.icon,
+                        title: data.title,
+                        text: data.text,
+                        confirmButtonColor: '#494949'
+                    });
+                }
+            );
         </script>
     @endscript
+
 </div>

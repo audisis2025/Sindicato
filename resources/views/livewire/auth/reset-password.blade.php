@@ -66,7 +66,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
             }
         );
 
-        if ($status !== Password::PASSWORD_RESET) {
+        if ($status !== Password::PASSWORD_RESET) 
+        {
             $this->dispatch(
                 'show-swal',
                 icon: 'error',
@@ -84,7 +85,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     public function exception($e, $stopPropagation): void
     {
-        if ($e instanceof ValidationException) {
+        if ($e instanceof ValidationException) 
+        {
 
             $first = collect($e->errors())->flatten()->first();
 
@@ -101,12 +103,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
     }
 };
 ?>
-
 <div class="flex flex-col gap-6">
 
     <x-auth-header
         :title="__('Restablecer contraseña')"
-        :description="__('Ingresa tu nueva contraseña para continuar')"
+        :description="__('Por favor, ingresa tu nueva contraseña')"
     />
 
     <form wire:submit="resetPassword" class="flex flex-col gap-6">
@@ -121,11 +122,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         <flux:input
             wire:model="password"
-            :label="__('Nueva contraseña')"
+            :label="__('Contraseña')"
             type="password"
-            placeholder="********"
             required
             autocomplete="new-password"
+            :placeholder="__('Contraseña')"
             viewable
         />
 
@@ -133,31 +134,33 @@ new #[Layout('components.layouts.auth')] class extends Component {
             wire:model="password_confirmation"
             :label="__('Confirmar contraseña')"
             type="password"
-            placeholder="********"
             required
             autocomplete="new-password"
+            :placeholder="__('Confirmar contraseña')"
             viewable
         />
 
-        <flux:button
-            type="submit"
-            variant="primary"
-            icon="key"
-            icon-variant="outline"
-            class="w-full !bg-[#DE6601] hover:!bg-[#C95500] text-white font-semibold"
-            data-test="reset-password-button"
-        >
-            {{ __('Restablecer contraseña') }}
-        </flux:button>
+        <div class="flex items-center justify-end">
+            <flux:button
+                type="submit"
+                variant="primary"
+                icon="key"
+                icon-variant="outline"
+                class="w-full bg-black hover:bg-custom-gray text-white"
+                data-test="reset-password-button"
+            >
+                {{ __('Restablecer contraseña') }}
+            </flux:button>
+        </div>
 
     </form>
 
-    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-black/60 dark:text-white/60 mt-1">
-        <span>{{ __('¿Recordaste tu contraseña?') }}</span>
+    <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-black/60 dark:text-white/60 mt-2">
+        <span>{{ __('¿Ya recordaste tu contraseña?') }}</span>
         <flux:link
             :href="route('login')"
             wire:navigate
-            class="text-[#241178] hover:text-[#EE0000] font-semibold"
+            class="text-custom-blue hover:text-custom-blue-dark"
         >
             {{ __('Iniciar sesión') }}
         </flux:link>
@@ -165,25 +168,40 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     @script
         <script>
-            $wire.on('show-swal', (data) => {
-                Swal.fire({
-                    icon: data.icon,
-                    title: data.title,
-                    text: data.text,
-                    confirmButtonColor: '#DE6601',
-                });
-            });
+            $wire.on(
+                'show-swal',
+                (data) =>
+                {
+                    Swal.fire(
+                    {
+                        icon: data.icon,
+                        title: data.title,
+                        text: data.text,
+                        confirmButtonColor: '#494949'
+                    });
+                }
+            );
 
-            $wire.on('password-reset-success', (data) => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Contraseña actualizada',
-                    text: data.text,
-                    confirmButtonColor: '#DE6601',
-                }).then(() => {
-                    window.location.href = "{{ route('login') }}";
-                });
-            });
+            $wire.on(
+                'password-reset-success',
+                (data) =>
+                {
+                    Swal.fire(
+                    {
+                        icon: 'success',
+                        title: 'Contraseña actualizada',
+                        text: data.text,
+                        confirmButtonColor: '#494949'
+                    })
+                    .then(
+                        () =>
+                        {
+                            window.location.href = "{{ route('login') }}";
+                        }
+                    );
+                }
+            );
         </script>
     @endscript
+
 </div>

@@ -6,10 +6,7 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-    /**
-     * Middlewares globales del sistema SINDISOFT
-     * Se ejecutan en todas las solicitudes.
-     */
+
     protected $middleware = [
         // Seguridad y saneamiento básico
         \App\Http\Middleware\TrustProxies::class,
@@ -20,9 +17,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
-    /**
-     * Middlewares asignados a grupos (web y api)
-     */
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -39,9 +33,6 @@ class Kernel extends HttpKernel
         ],
     ];
 
-    /**
-     * Middlewares individuales (pueden aplicarse en rutas específicas)
-     */
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

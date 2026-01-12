@@ -23,7 +23,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        // Revertir al enum anterior (por si hicieras rollback)
         DB::statement("
             ALTER TABLE procedure_requests 
             MODIFY status ENUM(

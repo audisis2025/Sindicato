@@ -1,19 +1,19 @@
 <?php
 /*
-* Nombre de la clase         : login.blade.php
-* Descripción de la clase    : Vista Livewire Volt para inicio de sesión de usuarios.
-* Fecha de creación          : 01/11/2025
-* Elaboró                    : Iker Piza
-* Fecha de liberación        : 01/11/2025
-* Autorizó                   : Líder Técnico
-* Versión                    : 2.0
-* Fecha de mantenimiento     : 25/11/2025
-* Folio de mantenimiento     : N/A
-* Tipo de mantenimiento      : Correctivo y perfectivo
-* Descripción del mantenimiento : Ajuste de validaciones, mensajes SweetAlert, homogeneización de botón e iconos.
-* Responsable                : Iker Piza
-* Revisor                    : QA SINDISOFT
-*/
+ * Nombre de la clase         : login.blade.php
+ * Descripción de la clase    : Vista Livewire Volt para inicio de sesión de usuarios.
+ * Fecha de creación          : 01/11/2025
+ * Elaboró                    : Iker Piza
+ * Fecha de liberación        : 01/11/2025
+ * Autorizó                   : Líder Técnico
+ * Versión                    : 2.0
+ * Fecha de mantenimiento     : 25/11/2025
+ * Folio de mantenimiento     : N/A
+ * Tipo de mantenimiento      : Correctivo y perfectivo
+ * Descripción del mantenimiento : Ajuste de validaciones, mensajes SweetAlert, homogeneización visual.
+ * Responsable                : Iker Piza
+ * Revisor                    : QA SINDISOFT
+ */
 
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
@@ -27,7 +27,6 @@ use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.auth')] class extends Component {
-
     #[Validate('required|string|email')]
     public string $email = '';
 
@@ -59,7 +58,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'password' => $this->password,
         ]);
 
-        if (!$user || !Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) {
+        if (!$user || !Auth::getProvider()->validateCredentials($user, ['password' => $this->password])) 
+        {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -72,7 +72,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     protected function ensureIsNotRateLimited(): void
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) 
+        {
             return;
         }
 
@@ -85,8 +86,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     public function exception($e, $stopPropagation): void
     {
-        if ($e instanceof ValidationException) {
-
+        if ($e instanceof ValidationException) 
+        {
             $first = collect($e->errors())->flatten()->first();
 
             $this->dispatch('show-swal', icon: 'error', title: 'Error', text: $first);
@@ -98,67 +99,57 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     protected function throttleKey(): string
     {
-        return Str::lower($this->email).'|'.request()->ip();
+        return Str::lower($this->email) . '|' . request()->ip();
     }
 };
 ?>
 
 <div class="flex flex-col gap-6">
 
-    <x-auth-header
-        :title="__('Ingresar a tu cuenta')"
-        :description="__('Ingresa tu correo electronico y contraseña a continuación para iniciar sesión ')"
-    />
+    <x-auth-header :title="__('Ingresar a tu cuenta')" :description="__('Ingresa tu correo electrónico y contraseña a continuación para iniciar sesión')" />
 
     <form wire:submit="login" class="flex flex-col gap-6">
 
-        <flux:input
-            wire:model="email"
-            :label="__('Correo electrónico')"
-            type="email"
-            placeholder="correo@ejemplo.com"
-            required
-            autofocus
-        />
-        <flux:input
-            wire:model="password"
-            :label="__('Contraseña')"
-            type="password"
-            placeholder="********"
-            required
-        />
+        <flux:input wire:model="email" :label="__('Correo electrónico')" type="email" required autofocus
+            autocomplete="email" placeholder="email@gmail.com" />
 
-        <div class="text-right -mt-2">
-            <flux:link :href="route('password.request')" wire:navigate class="text-sm text-zinc-600 dark:text-neutral-300">
+        <div class="relative">
+            <flux:input wire:model="password" :label="__('Contraseña')" type="password" required
+                autocomplete="current-password" :placeholder="__('Contraseña')" viewable />
+
+            <flux:link :href="route('password.request')" wire:navigate
+                class="absolute top-0 end-0 text-sm text-custom-blue hover:text-custom-blue-dark">
                 {{ __('¿Olvidaste tu contraseña?') }}
             </flux:link>
         </div>
 
-        <flux:checkbox
-            wire:model="remember"
-            :label="__('Recordarme')"
-        />
+        <flux:checkbox wire:model="remember" :label="__('Recordarme')" />
 
-        <flux:button
-            type="submit"
-            variant="primary"
-            class="w-full !bg-[#DE6601] hover:!bg-[#C95500] text-white font-semibold"
-            icon="arrow-right-start-on-rectangle"
-            icon-variant="outline"
-        >
-            {{ __('Iniciar sesión') }}
-        </flux:button>
+        <div class="flex items-center justify-end">
+            <flux:button icon="user-circle" icon-variant="outline" variant="primary" type="submit"
+                class="w-full bg-black hover:bg-custom-gray text-white">
+                {{ __('Iniciar sesión') }}
+            </flux:button>
+        </div>
+
     </form>
 
     @script
-        <script>
-            $wire.on('show-swal', (data) => {
-                Swal.fire({
+    <script>
+        $wire.on(
+            'show-swal',
+            (data) =>
+            {
+                Swal.fire(
+                {
                     icon: data.icon,
                     title: data.title,
                     text: data.text,
+                    confirmButtonColor: '#494949'
                 });
-            });
-        </script>
-    @endscript
+            }
+        );
+    </script>
+@endscript
+
 </div>

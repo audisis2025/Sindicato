@@ -9,10 +9,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            // Asegurar email obligatorio y único
             $table->string('email')->nullable(false)->unique()->change();
 
-            // Opcional: eliminar username si ya no lo usarás
             $table->dropColumn('username');
         });
     }

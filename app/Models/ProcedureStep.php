@@ -1,14 +1,22 @@
 <?php
 /*
 * ===========================================================
-* Nombre de la clase: ProcedureStep.php
-* Descripción de la clase: Modelo Eloquent para la tabla 'procedure_steps'.
-* Representa un paso individual dentro de una plantilla de trámite.
+* Nombre de la clase: ProcedureStep
+* Descripción de la clase: Modelo Eloquent para la tabla 
+* 'procedure_steps', representa un paso individual dentro 
+* de un trámite.
 * Fecha de creación: 10/11/2025
 * Elaboró: [Tu Nombre]
 * Fecha de liberación: 10/11/2025
 * Autorizó: Líder Técnico
 * Versión: 1.0
+*
+* Fecha de mantenimiento: [DD/MM/AAAA]
+* Folio de mantenimiento: [Folio]
+* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
+* Descripción del mantenimiento: [Descripción breve del cambio]
+* Responsable: [Tu Nombre]
+* Revisor: [Revisor]
 * ===========================================================
 */
 
@@ -18,39 +26,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProcedureStep extends Model // [cite: 298-301, 512, 532-536]
+class ProcedureStep extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    /**
-     * Define la tabla asociada con el modelo.
-     *
-     * @var string
-     */
-    protected $table = 'procedure_steps';
+	protected $table = 'procedure_steps';
 
-    /**
-     * Los atributos que se pueden asignar masivamente.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'procedure_id',
-        'order',
-        'step_name',
-        'step_description',
-        'next_step_if_fail',
-        'requires_file',
-        'file_path',
-    ];
+	protected $fillable = [
+		'procedure_id',
+		'order',
+		'step_name',
+		'step_description',
+		'next_step_if_fail',
+		'requires_file',
+		'file_path',
+	];
 
+	protected $casts = [
+		'requires_file' => 'boolean',
+	];
 
-    protected $casts = [
-        'requires_file' => 'boolean',
-    ];
-
-    public function procedure()
-    {
-        return $this->belongsTo(Procedure::class);
-    }
+	public function procedure(): BelongsTo
+	{
+		return $this->belongsTo(Procedure::class);
+	}
 }
