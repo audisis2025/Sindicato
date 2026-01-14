@@ -73,6 +73,10 @@ class SystemNotification extends Model
 		'message',
 		'type',
 		'status',
+		'read_at',
+	];
+	protected $casts = [
+		'read_at' => 'datetime',
 	];
 
 	public function user(): BelongsTo
@@ -87,20 +91,21 @@ class SystemNotification extends Model
 
 	public function markAsRead(): void
 	{
-		$this->update(['status' => self::STATUS_READ]);
+		$this->update([
+			'status' => self::STATUS_READ,
+			'read_at' => now(),
+		]);
 	}
+
 
 	protected static function booted()
 	{
-		static::creating(function ($model)
-		{
-			if (!in_array($model->type, self::allowedTypes()))
-			{
+		static::creating(function ($model) {
+			if (!in_array($model->type, self::allowedTypes())) {
 				throw new InvalidArgumentException("Tipo de notificación inválido: {$model->type}");
 			}
 
-			if (!in_array($model->status, self::allowedStatuses()))
-			{
+			if (!in_array($model->status, self::allowedStatuses())) {
 				throw new InvalidArgumentException("Estado inválido: {$model->status}");
 			}
 		});

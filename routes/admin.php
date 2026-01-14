@@ -22,22 +22,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-// Corregido: El namespace correcto es \Admin, según tu archivo de controladores.
 use App\Http\Controllers\AdminConfigurationController;
-
-/*
-|--------------------------------------------------------------------------
-| Rutas de Administrador
-|--------------------------------------------------------------------------
-|
-| Estas rutas son cargadas por el RouteServiceProvider.
-| Ya incluyen el middleware 'web'.
-|
-*/
+use App\Http\Controllers\AdminProfileController;
 
 Route::middleware(['auth', 'isAdmin'])->group(function () {
 
-    // Rutas de Gestión de Usuarios
+    Route::get('/admin-profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
+    Route::put('/admin-profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -51,17 +43,22 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
 
     Route::post('/admin/reminders/update', [AdminConfigurationController::class, 'updateReminders'])
         ->name('admin.reminders.update');
+
     Route::delete('/admin/logs/clear', [AdminConfigurationController::class, 'clearLogs'])
         ->name('admin.configuration.logs.clear');
 
     Route::get('/admin/logs/export-word', [AdminConfigurationController::class, 'exportWord'])
         ->name('admin.configuration.logs.exportWord');
 
+    Route::get('/admin/configuration', [AdminConfigurationController::class, 'index'])
+        ->name('admin.configuration');
 
+    Route::put('/admin/configuration', [AdminConfigurationController::class, 'update'])
+        ->name('admin.configuration.update');
 
-    // Rutas de Configuración del Administrador
-    Route::get('/admin/configuration', [AdminConfigurationController::class, 'index'])->name('admin.configuration');
-    Route::put('/admin/configuration', [AdminConfigurationController::class, 'update'])->name('admin.configuration.update');
-    Route::post('/admin/configuration/backup', [AdminConfigurationController::class, 'backup'])->name('admin.configuration.backup');
-    Route::get('/admin/configuration/logs', [AdminConfigurationController::class, 'logs'])->name('admin.configuration.logs');
+    Route::post('/admin/configuration/backup', [AdminConfigurationController::class, 'backup'])
+        ->name('admin.configuration.backup');
+
+    Route::get('/admin/configuration/logs', [AdminConfigurationController::class, 'logs'])
+        ->name('admin.configuration.logs');
 });

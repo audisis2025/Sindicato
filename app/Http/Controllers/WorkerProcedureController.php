@@ -1,24 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: WorkerProcedureController
-* Descripción de la clase: Controla la gestión de trámites 
-* para el rol trabajador, incluyendo inicio, envío de pasos 
-* y cancelación.
-* Fecha de creación: 09/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 12/11/2025
-* Autorizó: Líder Técnico
-* Versión: 1.0
-*
-* Fecha de mantenimiento: 11/12/2025
-* Folio de mantenimiento: COR-003
-* Tipo de mantenimiento: Correctivo
-* Descripción del mantenimiento: Limpieza de comentarios, 
-* estandarización de métodos y aplicación de Type Hinting.
-* Responsable: [Tu Nombre]
-* Revisor: QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : WorkerProcedureController.php
+* Descripción de la clase      : Controlador encargado de la gestión de trámites del trabajador: listado de solicitudes activas/finalizadas, inicio de trámites, visualización de pasos, envío de pasos, carga de documentos, cancelación y consulta del catálogo.
+* Fecha de creación            : 25/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.2
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Http\Controllers;

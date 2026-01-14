@@ -1,24 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: UnionRequestController
-* Descripción de la clase: Controla la revisión sindical de 
-* solicitudes de trámites, incluyendo aprobación, rechazo, 
-* notificaciones y flujo alterno.
-* Fecha de creación: 07/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 12/11/2025
-* Autorizó: Líder Técnico
-* Versión: 3.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: Correctivo y Perfectivo
-* Descripción del mantenimiento: Ajuste de flujos alternos,
-* estandarización de estados y limpieza de validaciones.
-* Responsable: [Tu Nombre]
-* Revisor: QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : UnionRequestController.php
+* Descripción de la clase      : Controlador encargado de la gestión de solicitudes de trámites por parte del sindicato: listado, visualización, aprobación/rechazo de pasos, notificación de errores y finalización.
+* Fecha de creación            : 18/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.2
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Http\Controllers;
@@ -30,6 +24,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\UnionRequests\UnionRequestIndexRequest;
+use App\Http\Requests\UnionRequests\UnionApproveStepRequest;
+use App\Http\Requests\UnionRequests\UnionNotifyErrorRequest;
 
 class UnionRequestController extends Controller
 {
@@ -38,14 +35,41 @@ class UnionRequestController extends Controller
 		$this->middleware(['auth', 'isUnion']);
 	}
 
-	public function index(): View
+	
+	public function index(UnionRequestIndexRequest $request): View
 	{
-		$requests = ProcedureRequest::with(['user', 'procedure'])
-			->orderBy('created_at', 'desc')
-			->get();
+		$data = $request->validated();
+
+		$query = ProcedureRequest::with(['user', 'procedure'])
+			->orderBy('created_at', 'desc');
+
+		if (!empty($data['status']))
+		{
+			$query->where('status', $data['status']);
+		}
+
+		if (!empty($data['keyword']))
+		{
+			$kw = $data['keyword'];
+
+			$query->where(function ($q) use ($kw)
+			{
+				$q->whereHas('user', function ($u) use ($kw)
+				{
+					$u->where('name', 'like', "%{$kw}%");
+				})
+				->orWhereHas('procedure', function ($p) use ($kw)
+				{
+					$p->where('name', 'like', "%{$kw}%");
+				});
+			});
+		}
+
+		$requests = $query->get();
 
 		return view('union.requests.index', compact('requests'));
 	}
+
 
 	public function show(string $id): View
 	{
@@ -59,7 +83,7 @@ class UnionRequestController extends Controller
 		return view('union.requests.show', compact('requestData'));
 	}
 
-	public function approveStep(Request $httpRequest, string $requestId, int $order): RedirectResponse
+	public function approveStep(UnionApproveStepRequest $httpRequest, string $requestId, int $order): RedirectResponse
 	{
 		$validated = $httpRequest->validate([
 			'result' => 'required|in:approve,reject',
@@ -174,7 +198,7 @@ class UnionRequestController extends Controller
 		return back()->with('error', 'El trámite fue rechazado por errores en este paso.');
 	}
 
-	public function notifyError(Request $httpRequest, string $requestId, int $order): RedirectResponse
+	public function notifyError(UnionNotifyErrorRequest $httpRequest, string $requestId, int $order): RedirectResponse
 	{
 		$validated = $httpRequest->validate([
 			'error_message' => 'required|string|max:500',

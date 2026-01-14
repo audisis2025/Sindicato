@@ -23,6 +23,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 
 class News extends Model
 {
@@ -58,4 +60,18 @@ class News extends Model
 	{
 		return $this->belongsTo(User::class, 'user_id');
 	}
+
+
+	public function scopeVisibleForWorker(Builder $query): Builder
+	{
+		$today = Carbon::today('America/Mexico_City')->toDateString();
+
+		return $query->where('status', 'published')
+			->whereDate('publication_date', '<=', $today)
+			->where(function ($q) use ($today) {
+				$q->whereNull('expiration_date')
+				->orWhereDate('expiration_date', '>=', $today);
+			});
+	}
+
 }

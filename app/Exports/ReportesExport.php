@@ -1,17 +1,5 @@
 <?php
 
-/**
- * ===========================================================
- * Nombre de la clase: ReportesExport
- * Descripción: Exporta tablas sindicales (por pestaña) a Excel
- * conforme al estándar PRO-Laravel V3.2.
- * Fecha de creación original: 04/11/2025
- * Mantenimiento: Refactor total para exportación dinámica por pestaña.
- * Versión: 3.0 (24/11/2025)
- * Responsable: Iker Piza
- * Revisor: QA SINDISOFT
- * ===========================================================
- */
 
 namespace App\Exports;
 
@@ -24,17 +12,11 @@ class ReportesExport implements FromArray, WithHeadings
 {
     protected string $tab;
 
-    /**
-     * Recibe el nombre de la pestaña activa.
-     */
     public function __construct(string $tab)
     {
         $this->tab = $tab;
     }
 
-    /**
-     * ENCABEZADOS SEGÚN PESTAÑA
-     */
     public function headings(): array
     {
         switch ($this->tab) {
@@ -54,16 +36,10 @@ class ReportesExport implements FromArray, WithHeadings
         }
     }
 
-    /**
-     * FILAS SEGÚN PESTAÑA
-     */
     public function array(): array
     {
         switch ($this->tab) {
 
-            /* ===========================================================
-               TAB: GÉNERO (H, M, ND, X)
-            =========================================================== */
             case 'gender':
                 return [
                     ['Hombres',     User::where('gender', 'H')->count()],
@@ -72,18 +48,12 @@ class ReportesExport implements FromArray, WithHeadings
                     ['No dice',     User::where('gender', 'X')->count()],
                 ];
 
-            /* ===========================================================
-               TAB: ESTADOS
-            =========================================================== */
             case 'status':
                 return [
                     ['Completados', ProcedureRequest::where('status', 'completed')->count()],
                     ['Pendientes',  ProcedureRequest::where('status', 'pending')->count()],
                 ];
 
-            /* ===========================================================
-               TAB: TIPOS DE TRÁMITE
-            =========================================================== */
             case 'types':
                 $stats = ProcedureRequest::with('procedure')->get()
                     ->groupBy(fn($r) => $r->procedure->name ?? 'Sin Trámite')
@@ -95,9 +65,6 @@ class ReportesExport implements FromArray, WithHeadings
                 }
                 return $rows;
 
-            /* ===========================================================
-               TAB: TABLA COMPLETA
-            =========================================================== */
             case 'table':
             default:
                 $requests = ProcedureRequest::with(['user', 'procedure'])->get();

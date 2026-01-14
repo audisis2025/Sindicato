@@ -1,15 +1,15 @@
 {{-- 
-* Nombre de la vista           : requests-index.blade.php
+* Nombre de la vista           : index.blade.php
 * Descripción de la vista      : Listado de solicitudes de trabajadores para revisión y gestión.
 * Fecha de creación            : 27/11/2025
 * Elaboró                      : Iker Piza
 * Fecha de liberación          : 27/11/2025
 * Autorizó                     : Líder Técnico
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 27/11/2025
+* Versión                      : 1.3
+* Fecha de mantenimiento       : 13/01/2026
 * Folio de mantenimiento       : N/A
 * Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación completa de tabla, botones y colores según Manual PRO-Laravel V3.4.
+* Descripción del mantenimiento: Homologación según Manual PRO-Laravel (Buscar/Actualizar, tabla y botón Ver).
 * Responsable                  : Iker Piza
 * Revisor                      : QA SINDISOFT
 --}}
@@ -18,16 +18,62 @@
 
     <div class="flex flex-col gap-6 p-6 w-full max-w-6xl mx-auto">
 
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <h1 class="text-3xl font-bold text-[#DE6601]">
                 Solicitudes de trabajadores
             </h1>
+
+            <flux:button icon="arrow-long-left" icon-variant="outline" variant="ghost" :href="url()->previous()">
+                Regresar
+            </flux:button>
         </div>
+
+        <form method="GET" action="{{ route('union.requests.index') }}" class="flex flex-wrap gap-4 items-end">
+
+            <div class="flex flex-col">
+                <label for="keyword" class="text-sm font-semibold text-[#272800]">Buscar</label>
+                <input id="keyword" type="text" name="keyword" value="{{ request('keyword') }}"
+                    placeholder="Trabajador o trámite..." maxlength="120"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="status" class="text-sm font-semibold text-[#272800]">Estado</label>
+                <select id="status" name="status"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
+                    <option value="">Todos</option>
+                    <option value="started" {{ request('status') === 'started' ? 'selected' : '' }}>Iniciado</option>
+                    <option value="pending_worker" {{ request('status') === 'pending_worker' ? 'selected' : '' }}>
+                        Pendiente trabajador</option>
+                    <option value="pending_union" {{ request('status') === 'pending_union' ? 'selected' : '' }}>
+                        Pendiente sindicato</option>
+                    <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>En proceso
+                    </option>
+                    <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Finalizado
+                    </option>
+                    <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Cancelado
+                    </option>
+                    <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rechazado</option>
+                    <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pendiente</option>
+                </select>
+            </div>
+
+            <flux:button icon="magnifying-glass" variant="primary" type="submit"
+                class="h-10 px-4 !bg-gray-500 hover:!bg-gray-600 !text-white">
+                Buscar
+            </flux:button>
+
+            <flux:button icon="arrow-path" variant="primary" :href="route('union.requests.index')"
+                class="h-10 px-4 !bg-green-600 hover:!bg-green-700 !text-white">
+                Actualizar
+            </flux:button>
+
+        </form>
 
         <div class="overflow-x-auto bg-white border border-[#D9D9D9] rounded-xl shadow-sm">
 
             @if ($requests->count() > 0)
-                <table class="min-w-full divide-y divide-zinc-200 text-sm font-[Inter]">
+                <table class="min-w-full divide-y divide-zinc-200 text-sm">
 
                     <thead class="bg-zinc-100">
                         <tr>
@@ -41,19 +87,17 @@
                     </thead>
 
                     <tbody class="divide-y divide-zinc-200 bg-white">
-
                         @foreach ($requests as $i => $req)
-
                             @php
                                 $mapping = [
-                                    'started'          => ['Iniciado', 'text-blue-600'],
-                                    'pending_worker'   => ['Pendiente trabajador', 'text-amber-600'],
-                                    'pending_union'    => ['Pendiente sindicato', 'text-purple-600'],
-                                    'in_progress'      => ['En proceso', 'text-sky-600'],
-                                    'completed'        => ['Finalizado', 'text-green-600'],
-                                    'cancelled'        => ['Cancelado', 'text-gray-600'],
-                                    'rejected'         => ['Rechazado', 'text-red-600'],
-                                    'pending'          => ['Pendiente', 'text-amber-600'],
+                                    'started' => ['Iniciado', 'text-blue-600'],
+                                    'pending_worker' => ['Pendiente trabajador', 'text-amber-600'],
+                                    'pending_union' => ['Pendiente sindicato', 'text-purple-600'],
+                                    'in_progress' => ['En proceso', 'text-sky-600'],
+                                    'completed' => ['Finalizado', 'text-green-600'],
+                                    'cancelled' => ['Cancelado', 'text-gray-600'],
+                                    'rejected' => ['Rechazado', 'text-red-600'],
+                                    'pending' => ['Pendiente', 'text-amber-600'],
                                 ];
                                 [$estadoTexto, $color] = $mapping[$req->status] ?? ['Desconocido', 'text-gray-500'];
                             @endphp
@@ -81,32 +125,22 @@
                                 </td>
 
                                 <td class="px-4 py-3 text-center">
-
-                                    <flux:button
-                                        size="xs"
-                                        icon="eye"
-                                        variant="filled"
+                                    <flux:button size="xs" icon="eye" variant="filled"
                                         :href="route('union.requests.show', $req->id)"
-                                        class="!bg-blue-600 hover:!bg-blue-700 !text-white"
-                                    >
+                                        class="!bg-gray-500 hover:!bg-gray-600 !text-white">
                                         Ver detalle
                                     </flux:button>
-
                                 </td>
 
                             </tr>
-
                         @endforeach
-
                     </tbody>
 
                 </table>
             @else
-
                 <p class="text-center py-4 text-gray-500 text-sm">
                     No hay solicitudes registradas.
                 </p>
-
             @endif
 
         </div>

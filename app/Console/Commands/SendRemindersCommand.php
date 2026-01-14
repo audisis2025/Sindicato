@@ -41,7 +41,6 @@ class SendRemindersCommand extends Command
 
         $hoy = Carbon::today();
 
-        // Buscar trámites próximos a vencer
         $tramites = ProcedureRequest::where('status', 'pendiente')
             ->whereDate('deadline', '<=', $hoy->copy()->addDays($settings->interval_days))
             ->get();
@@ -52,9 +51,8 @@ class SendRemindersCommand extends Command
             if (!$worker) continue;
 
             $message = $settings->base_message;
-            $channel = $settings->channel; // email | inapp
+            $channel = $settings->channel;
 
-            // Evitar duplicados en el mismo día
             $yaEnviado = ReminderLog::where('user_id', $worker->id)
                 ->where('procedure_id', $t->id)
                 ->where('sent_at', $hoy->toDateString())
@@ -62,7 +60,6 @@ class SendRemindersCommand extends Command
 
             if ($yaEnviado) continue;
 
-            // ENVIAR POR CORREO
             if ($channel === 'email' && $worker->email) {
                 Mail::raw($message, function ($msg) use ($worker) {
                     $msg->to($worker->email)
@@ -70,7 +67,6 @@ class SendRemindersCommand extends Command
                 });
             }
 
-            // NOTIFICACIÓN INTERNA
             if ($channel === 'inapp') {
                 Notification::send(
                     $worker,
@@ -78,7 +74,6 @@ class SendRemindersCommand extends Command
                 );
             }
 
-            // REGISTRAR ENVÍO
             ReminderLog::create([
                 'user_id'     => $worker->id,
                 'procedure_id'=> $t->id,

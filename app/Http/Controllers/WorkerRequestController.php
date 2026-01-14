@@ -1,25 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: WorkerRequestController
-* Descripción de la clase: Controla la gestión de solicitudes 
-* de trámites para el rol trabajador, incluyendo inicio, 
-* vista de detalle, corrección de pasos y finalización.
-* Fecha de creación: 10/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 12/11/2025
-* Autorizó: Líder Técnico
-* Versión: 1.0
-*
-* Fecha de mantenimiento: 11/12/2025
-* Folio de mantenimiento: COR-004
-* Tipo de mantenimiento: Correctivo
-* Descripción del mantenimiento: Limpieza de comentarios, 
-* estandarización de middleware, corrección de flujo RF-13 
-* y aplicación de Type Hinting según PRO-Laravel V4.0.
-* Responsable: [Tu Nombre]
-* Revisor: QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : WorkerRequestController.php
+* Descripción de la clase      : Controlador encargado de la gestión de solicitudes de trámites del trabajador: dashboard, inicio de trámites, visualización, envío de correcciones por paso y finalización/cancelación.
+* Fecha de creación            : 27/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.1
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Http\Controllers;

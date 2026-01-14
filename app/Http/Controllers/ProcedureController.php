@@ -1,25 +1,19 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: ProcedureController
-* Descripción de la clase: Gestiona el CRUD de trámites, pasos,
-* validación de flujos, solicitudes asociadas y acciones del
-* sindicato sobre los procedimientos.
-* Fecha de creación: 06/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 3.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve del cambio]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : ProcedureController.php
+* Descripción de la clase      : Controlador encargado de la gestión de trámites del sindicato: creación, edición, flujo de pasos, activación/desactivación, eliminación y administración de solicitudes.
+* Fecha de creación            : 15/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.3
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;

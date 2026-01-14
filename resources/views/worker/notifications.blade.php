@@ -13,88 +13,71 @@
 * Responsable                  : Iker Piza
 * Revisor                      : QA SINDISOFT
 --}}
-
 <x-layouts.app :title="__('Mis notificaciones')">
 
     <div class="flex flex-col gap-6 p-6 w-full max-w-6xl mx-auto">
 
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <h1 class="text-3xl font-bold text-[#DE6601]">
                 Mis notificaciones
             </h1>
 
-            <flux:button icon="arrow-long-left" icon-variant="outline" variant="ghost" :href="route('worker.index')"
-                class="px-4 py-2 !bg-transparent hover:!bg-zinc-100 !text-[#241178] font-semibold rounded-lg">
-                Volver al panel
+            <flux:button icon="arrow-long-left" icon-variant="outline" variant="ghost" :href="route('worker.index')">
+                Regresar
             </flux:button>
         </div>
 
         <div class="overflow-x-auto bg-white border border-[#D9D9D9] rounded-xl shadow-sm">
+
             @if ($notifications_list->count() > 0)
-                <table class="min-w-full divide-y divide-zinc-200 text-sm font-[Inter]">
+                <table class="min-w-full divide-y divide-zinc-200 text-sm">
                     <thead class="bg-zinc-100">
                         <tr>
-                            <th class="px-4 py-3 text-left font-semibold text-black">
-                                Título
-                            </th>
-                            <th class="px-4 py-3 text-left font-semibold text-black">
-                                Mensaje
-                            </th>
-                            <th class="px-4 py-3 text-center font-semibold text-black">
-                                Estado
-                            </th>
-                            <th class="px-4 py-3 text-center font-semibold text-black">
-                                Acciones
-                            </th>
+                            <th class="px-4 py-3 text-left font-semibold text-black">Título</th>
+                            <th class="px-4 py-3 text-left font-semibold text-black">Mensaje</th>
+                            <th class="px-4 py-3 text-center font-semibold text-black">Estado</th>
+                            <th class="px-4 py-3 text-center font-semibold text-black">Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody class="divide-y divide-zinc-200 bg-white">
                         @foreach ($notifications_list as $notification)
                             @php
-                                $isUnread =
-                                    $notification->status === 'unread' || is_null($notification->read_at ?? null);
+                                $isUnread = $notification->status === 'unread' || is_null($notification->read_at);
                             @endphp
 
                             <tr class="hover:bg-zinc-50 transition">
-                                <td class="px-4 py-3 text-sm font-semibold text-black">
+                                <td class="px-4 py-3 font-semibold text-black">
                                     {{ $notification->title ?? 'Notificación' }}
                                 </td>
 
-                                <td class="px-4 py-3 text-sm text-black/80">
+                                <td class="px-4 py-3 text-black/80">
                                     {{ $notification->message ?? '-' }}
                                 </td>
 
-                                <td class="px-4 py-3 text-center text-sm">
+                                <td class="px-4 py-3 text-center">
                                     @if ($isUnread)
-                                        <span class="text-orange-600 font-semibold">
-                                            No leída
-                                        </span>
+                                        <span class="text-amber-600 font-semibold">No leída</span>
                                     @else
-                                        <span class="text-green-700 font-semibold">
-                                            Leída
-                                        </span>
+                                        <span class="text-green-700 font-semibold">Leída</span>
                                     @endif
                                 </td>
 
-                                <td class="px-4 py-3 text-center text-sm">
+                                <td class="px-4 py-3 text-center">
                                     @if ($isUnread)
                                         <form method="POST"
-                                            action="{{ route('worker.notifications.read', $notification->id) }}"
-                                            class="inline-flex">
+                                            action="{{ route('worker.notifications.read', $notification->id) }}">
                                             @csrf
                                             @method('PATCH')
 
-                                            <flux:button size="xs" icon="check" icon-variant="outline"
+                                            <flux:button size="xs" icon="check-circle" icon-variant="outline"
                                                 variant="primary" type="submit"
-                                                class="!bg-green-600 hover:!bg-green-700 !text-white font-semibold">
+                                                class="!bg-green-600 hover:!bg-green-700 !text-white">
                                                 Marcar como leída
                                             </flux:button>
                                         </form>
                                     @else
-                                        <span class="text-gray-400 text-xs">
-                                            Sin acciones
-                                        </span>
+                                        <span class="text-gray-400 text-xs">Sin acciones</span>
                                     @endif
                                 </td>
                             </tr>

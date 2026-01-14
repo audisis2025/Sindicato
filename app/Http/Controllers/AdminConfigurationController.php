@@ -1,23 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: AdminConfigurationController
-* Descripción de la clase: Controlador encargado de gestionar la configuración del sistema,
-* respaldos y bitácoras para el rol de Administrador. 
-* Fecha de creación: 02/11/2025
-* Elaboró: Iker Piza 
-* Fecha de liberación: 
-* Autorizó: Líder Técnico 
-* Versión: 2.1
-*
-* Fecha de mantenimiento: 11/12/2025
-* Folio de mantenimiento: 
-* Tipo de mantenimiento: Perfectivo
-* Descripción del mantenimiento: Se aplica middleware de administrador, se añaden tipos de retorno 
-* y se refactoriza la bitácora para usar la tabla 'activity_logs', cumpliendo con los estándares de codificación. [cite: 481]
-* Responsable: 
-* Revisor: 
-* ===========================================================
+* Nombre de la clase           : AdminConfigurationController.php
+* Descripción de la clase      : Controlador encargado de administrar la configuración del sistema, respaldos, bitácora y recordatorios.
+* Fecha de creación            : 01/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     : 
+* Versión                      : 1.2
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
+* Responsable                  :
+* Revisor                      : 
 */
 
 namespace App\Http\Controllers;
@@ -34,6 +29,8 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Carbon\Carbon;
+
+use App\Http\Requests\Logs\ActivityLogFilterRequest;
 
 class AdminConfigurationController extends Controller
 {
@@ -122,53 +119,30 @@ class AdminConfigurationController extends Controller
         return back()->with('status', 'Respaldo generado correctamente: ' . $filename);
     }
 
-    public function logs(Request $request): View
+    public function logs(ActivityLogFilterRequest $request): View
     {
-        $query = ActivityLog::query();
+        $data = $request->validated();
 
-        $dateFrom = null;
-        $dateTo = null;
+        $query = ActivityLog::query()->with('user');
 
-        if ($request->filled('date_from'))
+        if (!empty($data['date_from']))
         {
-            try
-            {
-                $dateFrom = Carbon::createFromFormat('d/m/Y', $request->date_from)->format('Y-m-d');
-            }
-            catch (\Exception $e)
-            {
-            }
+            $query->whereDate('created_at', '>=', $data['date_from']);
         }
 
-        if ($request->filled('date_to'))
+        if (!empty($data['date_to']))
         {
-            try
-            {
-                $dateTo = Carbon::createFromFormat('d/m/Y', $request->date_to)->format('Y-m-d');
-            }
-            catch (\Exception $e)
-            {
-            }
+            $query->whereDate('created_at', '<=', $data['date_to']);
         }
 
-        if ($dateFrom)
+        if (!empty($data['keyword']))
         {
-            $query->whereDate('created_at', '>=', $dateFrom);
-        }
-
-        if ($dateTo)
-        {
-            $query->whereDate('created_at', '<=', $dateTo);
-        }
-
-        if ($request->filled('keyword'))
-        {
-            $keyword = $request->keyword;
+            $keyword = $data['keyword'];
 
             $query->where(function ($q) use ($keyword)
             {
                 $q->where('module', 'LIKE', "%{$keyword}%")
-                    ->orWhere('action', 'LIKE', "%{$keyword}%");
+                ->orWhere('action', 'LIKE', "%{$keyword}%");
             });
         }
 
@@ -238,43 +212,56 @@ class AdminConfigurationController extends Controller
 
     public function exportWord(): Response
     {
-        $logs = ActivityLog::orderBy('created_at', 'desc')->get();
+        $logs = ActivityLog::with('user')->orderBy('created_at', 'desc')->get();
 
         $filename = 'Bitacora_Sistema_' . now()->format('Ymd_His') . '.doc';
 
-        $content = '<h2>Bitácora del Sistema</h2>';
-        $content .= '<p>Generado el: ' . now()->timezone('America/Mexico_City')->format('d/m/Y H:i:s') . '</p>';
+        $content  = '<html><head>';
+        $content .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+        $content .= '<style>
+            body { font-family: Arial, sans-serif; font-size: 11pt; }
+            h2 { color: #241178; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #000; padding: 6px; }
+            th { background: #eeeeee; font-weight: bold; }
+        </style>';
+        $content .= '</head><body>';
+
+        $content .= '<h2>Bitácora del Sistema</h2>';
+        $content .= '<p>Generado el: ' .
+            now()->timezone('America/Mexico_City')->format('d/m/Y H:i:s') .
+            '</p>';
         $content .= '<hr>';
 
-        $content .= "
-        <table border='1' cellspacing='0' cellpadding='5' width='100%'>
+        $content .= '<table>
             <thead>
-                <tr style='background:#eeeeee; font-weight:bold;'>
+                <tr>
                     <th>Fecha / Hora</th>
                     <th>Módulo</th>
                     <th>Acción</th>
                     <th>Usuario</th>
                 </tr>
             </thead>
-            <tbody>
-        ";
+            <tbody>';
 
         foreach ($logs as $log)
         {
-            $content .= "
-            <tr>
-                <td>" . $log->created_at->timezone('America/Mexico_City')->format('d/m/Y H:i:s') . "</td>
-                <td>" . ($log->module ?? '-') . "</td>
-                <td>" . ($log->action ?? '-') . "</td>
-                <td>" . ($log->user->name ?? 'Sistema') . "</td>
-            </tr>
-            ";
+            $content .= '<tr>
+                <td>' . e($log->created_at->timezone('America/Mexico_City')->format('d/m/Y H:i:s')) . '</td>
+                <td>' . e($log->module ?? '-') . '</td>
+                <td>' . e($log->action ?? '-') . '</td>
+                <td>' . e($log->user->name ?? 'Sistema') . '</td>
+            </tr>';
         }
 
         $content .= '</tbody></table>';
+        $content .= '</body></html>';
 
-        return response($content)
-            ->header('Content-Type', 'application/msword')
+        return response(
+                mb_convert_encoding($content, 'UTF-8', 'UTF-8')
+            )
+            ->header('Content-Type', 'application/msword; charset=UTF-8')
             ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
     }
+
 }

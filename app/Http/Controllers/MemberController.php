@@ -1,22 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: MemberController
-* Descripción de la clase: Gestiona la administración de trabajadores 
-* por parte del Sindicato (CRUD de miembros).
-* Fecha de creación: 05/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 05/11/2025
-* Autorizó: Líder Técnico
-* Versión: 1.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : MemberController.php
+* Descripción de la clase      : Controlador encargado de la gestión de trabajadores (miembros): listado, alta, edición, actualización y eliminación.
+* Fecha de creación            : 08/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 16/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Http\Controllers;
@@ -27,6 +23,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
+use App\Http\Requests\Members\UnionMemberStoreRequest;
+use App\Http\Requests\Members\MemberUpdateRequest;
+
 class MemberController extends Controller
 {
 	public function index(Request $request): View
@@ -35,7 +34,8 @@ class MemberController extends Controller
 			->where('role', 'worker')
 			->when($request->name, function ($q, $name)
 			{
-				return $q->where('name', 'like', "%{$name}%");
+				return $q->where('name', 'like', "%{$name}%")
+					     ->orWhere('email', 'like', "%{$name}%");
 			})
 			->when($request->gender, function ($q, $gender)
 			{
@@ -52,25 +52,18 @@ class MemberController extends Controller
 		return view('union.members.create');
 	}
 
-	public function store(Request $request): RedirectResponse
+	public function store(UnionMemberStoreRequest $request): RedirectResponse
 	{
-		$request->validate([
-			'name' => 'required|string|max:255',
-			'email' => 'required|email|max:100|unique:users,email',
-			'curp' => 'nullable|string|max:18',
-			'rfc' => 'nullable|string|max:13',
-			'gender' => 'nullable|in:H,M,ND,X',
-			'budget_key' => 'nullable|string|max:50',
-		]);
+		$data = $request->validated();
 
 		User::create([
-			'name' => $request->name,
-			'email' => $request->email,
+			'name' => $data['name'],
+			'email' => $data['email'],
 			'role' => 'worker',
-			'curp' => $request->curp,
-			'rfc' => $request->rfc,
-			'gender' => $request->gender,
-			'budget_key' => $request->budget_key,
+			'curp' => $data['curp'],
+			'rfc' => $data['rfc'],
+			'gender' => $data['gender'],
+			'budget_key' => $data['budget_key'],
 			'password' => Hash::make('12345678'),
 			'active' => true,
 		]);
@@ -87,28 +80,20 @@ class MemberController extends Controller
 		return view('union.members.edit', compact('worker'));
 	}
 
-	public function update(Request $request, string $id): RedirectResponse
+	public function update(MemberUpdateRequest $request, string $id): RedirectResponse
 	{
-		$worker = User::findOrFail($id);
+		$worker = User::where('role', 'worker')->findOrFail($id);
 
-		$request->validate([
-			'name' => 'required|string|max:255',
-			'email' => 'required|email|max:100|unique:users,email,' . $worker->id,
-			'curp' => 'nullable|string|max:18',
-			'rfc' => 'nullable|string|max:13',
-			'gender' => 'nullable|in:H,M,ND,X',
-			'budget_key' => 'nullable|string|max:50',
-			'active' => 'required|boolean',
-		]);
+		$data = $request->validated();
 
 		$worker->update([
-			'name' => $request->name,
-			'email' => $request->email,
-			'active' => $request->active,
-			'curp' => $request->curp,
-			'rfc' => $request->rfc,
-			'gender' => $request->gender,
-			'budget_key' => $request->budget_key,
+			'name' => $data['name'],
+			'email' => $data['email'],
+			'active' => $data['active'],
+			'curp' => $data['curp'],
+			'rfc' => $data['rfc'],
+			'gender' => $data['gender'],
+			'budget_key' => $data['budget_key'],
 		]);
 
 		return redirect()

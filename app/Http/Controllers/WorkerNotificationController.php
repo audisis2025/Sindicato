@@ -1,24 +1,20 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: WorkerNotificationController
-* Descripción de la clase: Controla la visualización y 
-* actualización de notificaciones para trabajadores.
-* Fecha de creación: 09/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 12/11/2025
-* Autorizó: Líder Técnico
-* Versión: 1.0
-*
-* Fecha de mantenimiento: 11/12/2025
-* Folio de mantenimiento: COR-002
-* Tipo de mantenimiento: Correctivo
-* Descripción del mantenimiento: Estandarización del controlador 
-* y aplicación de Type Hinting según el Manual PRO-Laravel V4.0.
-* Responsable: [Tu Nombre]
-* Revisor: QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : WorkerNotificationController.php
+* Descripción de la clase      : Controlador encargado de la visualización y gestión de notificaciones del trabajador, incluyendo el marcado de notificaciones como leídas.
+* Fecha de creación            : 22/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
+
 
 namespace App\Http\Controllers;
 
@@ -53,6 +49,7 @@ class WorkerNotificationController extends Controller
 
 		$notification->update([
 			'status' => 'read',
+			'read_at' => now(),
 		]);
 
 		return back()->with('success', 'Notificación marcada como leída.');

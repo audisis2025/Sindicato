@@ -5,11 +5,11 @@
 * Elaboró                      : Iker Piza
 * Fecha de liberación          : 03/11/2025
 * Autorizó                     : Líder Técnico
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 27/11/2025
+* Versión                      : 1.2
+* Fecha de mantenimiento       : 13/01/2026
 * Folio de mantenimiento       : N/A
 * Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación de estructura, tipografía e iconografía según Manual PRO-Laravel V3.4.
+* Descripción del mantenimiento: Homologación según Manual PRO-Laravel (Regresar, botones, tipografía e iconografía).
 * Responsable                  : Iker Piza
 * Revisor                      : QA SINDISOFT
 --}}
@@ -24,20 +24,19 @@
                     {{ $procedure->name }}
                 </h1>
 
-                <p class="text-[#241178] text-sm">
+                <p class="text-[#272800] text-sm">
                     Trámite creado el {{ $procedure->created_at->format('d/m/Y') }}
                 </p>
             </div>
 
             <div class="flex gap-3 mt-3 sm:mt-0">
                 <flux:button
+                    icon="arrow-long-left"
                     icon-variant="outline"
                     variant="ghost"
                     :href="route('union.procedures.index')"
-                    class="px-4 py-2 !bg-transparent hover:!bg-zinc-100 !text-[#241178] font-semibold rounded-lg flex items-center gap-2"
                 >
-                    <x-heroicon-o-arrow-long-left class="w-5 h-5" />
-                    <span>Volver</span>
+                    Regresar
                 </flux:button>
 
                 <flux:button
@@ -45,7 +44,7 @@
                     icon-variant="outline"
                     variant="primary"
                     :href="route('union.procedures.edit', $procedure->id)"
-                    class="px-4 py-2 !bg-gray-500 hover:!bg-gray-600 !text-white font-semibold rounded-lg"
+                    class="!bg-gray-500 hover:!bg-gray-600 !text-white"
                 >
                     Editar
                 </flux:button>

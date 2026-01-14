@@ -1,26 +1,4 @@
 <?php
-/*
-* ===========================================================
-* Nombre de la clase: ReportController
-* Descripción de la clase: Genera reportes estadísticos de 
-* solicitudes, trámites y usuarios, con exportación a PDF, 
-* Excel y Word según pestaña seleccionada.
-* Fecha de creación: 03/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 4.0
-*
-* Fecha de mantenimiento: 24/11/2025
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: Correctivo y Perfectivo
-* Descripción del mantenimiento: Exportación dinámica por
-* pestañas, limpieza de filtros y optimización de queries.
-* Responsable: [Tu Nombre]
-* Revisor: QA SINDISOFT
-* ===========================================================
-*/
-
 namespace App\Http\Controllers;
 
 use App\Models\User;

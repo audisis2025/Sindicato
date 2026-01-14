@@ -1,23 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: UserController
-* Descripción de la clase: Gestión administrativa de usuarios,
-* incluyendo creación, edición, eliminación y activación.
-* Fecha de creación: 05/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 2.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: Correctivo y Perfectivo
-* Descripción del mantenimiento: Revisión de roles, 
-* validaciones y estandarización del controlador.
-* Responsable: [Tu Nombre]
-* Revisor: QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : UserController.php
+* Descripción de la clase      : Controlador encargado de la administración de usuarios del sistema: listado, alta, edición, actualización, eliminación y cambio de estado.
+* Fecha de creación            : 05/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 17/12/2025
+* Autorizó                     :
+* Versión                      : 1.1
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Http\Controllers;
@@ -28,6 +23,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Services\SystemLogger;
+use App\Http\Requests\Users\UserStoreRequest;
+use App\Http\Requests\Users\UserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -39,7 +36,8 @@ class UserController extends Controller
 
 	public function index(Request $request): View
 	{
-		$query = User::query();
+		 $query = User::query()
+        ->where('role', '!=', 'admin');
 
 		if ($request->filled('role'))
 		{
@@ -56,28 +54,20 @@ class UserController extends Controller
 		return view('admin.users.create');
 	}
 
-	public function store(Request $request): RedirectResponse
+
+	public function store(UserStoreRequest $request): RedirectResponse
 	{
-		$validatedData = $request->validate([
-			'name' => 'required|string|max:100',
-			'email' => 'required|email|max:100|unique:users,email',
-			'password' => 'required|string|min:8',
-			'role' => 'required|in:union,worker',
-			'curp' => 'nullable|string|max:18',
-			'rfc' => 'nullable|string|max:13',
-			'gender' => 'nullable|in:H,M,ND,X',
-			'budget_key' => 'nullable|string|max:50',
-		]);
+		$data = $request->validated();
 
 		$user = User::create([
-			'name' => $validatedData['name'],
-			'email' => $validatedData['email'],
-			'password' => Hash::make($validatedData['password']),
-			'role' => $validatedData['role'],
-			'curp' => $validatedData['curp'] ?? null,
-			'rfc' => $validatedData['rfc'] ?? null,
-			'gender' => $validatedData['gender'] ?? null,
-			'budget_key' => $validatedData['budget_key'] ?? null,
+			'name' => $data['name'],
+			'email' => $data['email'],
+			'password' => Hash::make($data['password']),
+			'role' => $data['role'],
+			'curp' => $data['curp'],
+			'rfc' => $data['rfc'],
+			'gender' => $data['gender'],
+			'budget_key' => $data['budget_key'],
 			'active' => true,
 		]);
 
@@ -95,20 +85,20 @@ class UserController extends Controller
 		return view('admin.users.edit', compact('user'));
 	}
 
-	public function update(Request $request, User $user): RedirectResponse
+	public function update(UserUpdateRequest $request, User $user): RedirectResponse
 	{
-		$validatedData = $request->validate([
-			'name' => 'required|string|max:100',
-			'email' => 'required|email|max:100|unique:users,email,' . $user->id,
-			'role' => 'required|in:union,worker',
-			'curp' => 'nullable|string|max:18',
-			'rfc' => 'nullable|string|max:13',
-			'gender' => 'nullable|in:H,M,ND,X',
-			'budget_key' => 'nullable|string|max:50',
-			'active' => 'required|boolean',
-		]);
+		$data = $request->validated();
 
-		$user->update($validatedData);
+		if (!empty($data['password']))
+		{
+			$data['password'] = Hash::make($data['password']);
+		}
+		else
+		{
+			unset($data['password']);
+		}
+
+		$user->update($data);
 
 		app(SystemLogger::class)->log(
 			'Actualizar usuario',

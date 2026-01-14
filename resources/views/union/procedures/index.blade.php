@@ -74,16 +74,16 @@
                                 </td>
 
                                 <td class="px-4 py-3 text-sm text-center">
-                                    <div class="flex gap-3 overflow-x-auto whitespace-nowrap px-2 py-1">
+                                    <div class="flex flex-col gap-2 px-2 py-1">
                                         <flux:button size="xs" icon="eye" variant="filled"
                                             :href="route('union.procedures.show', $procedure->id)"
-                                            class="!bg-gray-200 hover:!bg-gray-300 text-black">
+                                            class="w-full !bg-gray-200 hover:!bg-gray-300 text-black">
                                             Ver
                                         </flux:button>
 
                                         <flux:button size="xs" icon="pencil-square" variant="primary"
                                             :href="route('union.procedures.edit', $procedure->id)"
-                                            class="!bg-gray-500 hover:!bg-gray-600 !text-white">
+                                            class="w-full !bg-gray-500 hover:!bg-gray-600 !text-white">
                                             Editar
                                         </flux:button>
 
@@ -93,7 +93,7 @@
                                             @method('PATCH')
 
                                             <flux:button size="xs"
-                                                class="!text-white {{ $procedure->status === 'active' ? '!bg-red-600 hover:!bg-red-700' : '!bg-green-600 hover:!bg-green-700' }}"
+                                                class="w-full !text-white {{ $procedure->status === 'active' ? '!bg-red-600 hover:!bg-red-700' : '!bg-green-600 hover:!bg-green-700' }}"
                                                 icon="{{ $procedure->status === 'active' ? 'x-circle' : 'check-circle' }}"
                                                 icon-variant="outline" type="submit">
                                                 {{ $procedure->status === 'active' ? 'Desactivar' : 'Activar' }}
@@ -107,7 +107,7 @@
                                             @method('DELETE')
 
                                             <flux:button size="xs" icon="trash"
-                                                class="!bg-red-600 hover:!bg-red-700 !text-white" type="submit">
+                                                class="w-full !bg-red-600 hover:!bg-red-700 !text-white" type="submit">
                                                 Eliminar
                                             </flux:button>
                                         </form>

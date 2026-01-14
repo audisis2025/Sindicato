@@ -70,9 +70,9 @@
                         Dar de alta usuario
                     </flux:navlist.item>
 
-                    <flux:navlist.item icon="bell-alert" :href="route('admin.reminders')"
-                        :current="request()->routeIs('admin.reminders')">
-                        Recordatorios del sistema
+                    <flux:navlist.item icon="user-circle" :href="route('admin.profile.edit')"
+                        :current="request()->routeIs('admin.profile.*')">
+                        Mi perfil
                     </flux:navlist.item>
 
                     <flux:navlist.item icon="clipboard-document-list" :href="route('admin.configuration.logs')"
@@ -95,11 +95,6 @@
                     <flux:navlist.item icon="inbox-stack" :href="route('union.requests.index')"
                         :current="request()->routeIs('union.requests.*')">
                         Solicitudes de trabajadores
-                    </flux:navlist.item>
-
-                    <flux:navlist.item icon="chart-bar" :href="route('union.reports.index')"
-                        :current="request()->routeIs('union.reports.*')">
-                        Reportes y consultas
                     </flux:navlist.item>
 
                     <flux:navlist.item icon="megaphone" :href="route('union.news.index')"
@@ -157,7 +152,7 @@
                 </flux:menu.radio.group>
 
                 <flux:menu.separator />
-
+              
                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
                     <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">

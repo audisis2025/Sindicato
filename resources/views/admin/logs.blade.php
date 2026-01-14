@@ -5,11 +5,11 @@
 * Elaboró                      : Iker Piza
 * Fecha de liberación          : 25/11/2025
 * Autorizó                     : Líder Técnico
-* Versión                      : 1.3
-* Fecha de mantenimiento       : 27/11/2025
+* Versión                      : 1.4
+* Fecha de mantenimiento       : 13/01/2026
 * Folio de mantenimiento       : N/A
 * Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación de estructura, filtros, botones e iconografía según Manual PRO-Laravel V3.4.
+* Descripción del mantenimiento: Homologación de botones (Buscar/Actualizar/Descargar) y validación de filtros (FormRequest).
 * Responsable                  : Iker Piza
 * Revisor                      : QA SINDISOFT
 --}}
@@ -27,76 +27,55 @@
 
             <div class="flex flex-wrap gap-3">
 
-                <flux:button
-                    icon="arrow-down-tray"
-                    variant="filled"
-                    :href="route('admin.configuration.logs.exportWord')"
-                    class="!bg-blue-600 hover:!bg-blue-700 !text-white h-10 px-4 rounded-lg"
-                >
+                <flux:button icon="arrow-down-tray" variant="filled" :href="route('admin.configuration.logs.exportWord')"
+                    class="!bg-gray-500 hover:!bg-gray-600 !text-white h-10 px-4 rounded-lg">
                     Exportar Word
                 </flux:button>
 
-                <form action="{{ route('admin.configuration.logs.clear') }}" method="POST"
-                      onsubmit="return confirm('¿Deseas eliminar toda la bitácora? Esta acción no se puede deshacer.')">
+                <form id="clear-logs-form" action="{{ route('admin.configuration.logs.clear') }}" method="POST">
                     @csrf
                     @method('DELETE')
 
-                    <flux:button
-                        icon="trash"
-                        variant="danger"
-                        type="submit"
-                        class="!bg-red-600 hover:!bg-red-700 !text-white h-10 px-4 rounded-lg"
-                    >
+                    <flux:button id="btn-clear-logs" icon="trash" variant="danger" type="button"
+                        class="!bg-red-600 hover:!bg-red-700 !text-white h-10 px-4 rounded-lg">
                         Eliminar Bitácora
                     </flux:button>
                 </form>
-
             </div>
         </div>
 
-        <form method="GET" action="{{ route('admin.configuration.logs') }}"
-            class="bg-white p-4 border border-[#D9D9D9] rounded-xl shadow-sm flex flex-wrap gap-4 items-end">
+        <form id="logs-filter-form" method="GET" action="{{ route('admin.configuration.logs') }}"
+            class="flex flex-wrap gap-4 items-end">
 
             <div class="flex flex-col">
-                <label class="text-sm font-semibold text-[#241178]">Fecha inicio</label>
-                <input type="text" name="date_from" id="date_from"
-                    value="{{ request('date_from') }}"
-                    class="border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm outline-none
-                    focus:ring-2 focus:ring-blue-600">
+                <label for="date_from" class="text-sm font-semibold text-[#241178]">Fecha inicio</label>
+                <input type="text" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                    placeholder="dd/mm/aaaa"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600">
             </div>
 
             <div class="flex flex-col">
-                <label class="text-sm font-semibold text-[#241178]">Fecha fin</label>
-                <input type="text" name="date_to" id="date_to"
-                    value="{{ request('date_to') }}"
-                    class="border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm outline-none
-                    focus:ring-2 focus:ring-blue-600">
+                <label for="date_to" class="text-sm font-semibold text-[#241178]">Fecha fin</label>
+                <input type="text" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                    placeholder="dd/mm/aaaa"
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600">
             </div>
 
             <div class="flex flex-col">
-                <label class="text-sm font-semibold text-[#241178]">Palabra clave</label>
-                <input type="text" name="keyword" id="keyword" placeholder="usuario, módulo…"
+                <label for="keyword" class="text-sm font-semibold text-[#241178]">Palabra clave</label>
+                <input type="text" name="keyword" id="keyword" placeholder="usuario, módulo…" maxlength="120"
                     value="{{ request('keyword') }}"
-                    class="border border-[#D9D9D9] rounded-lg px-3 py-2 text-sm outline-none
-                    focus:ring-2 focus:ring-blue-600">
+                    class="border border-zinc-300 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600">
             </div>
 
-            <flux:button
-                icon="magnifying-glass"
-                variant="primary"
-                type="submit"
-                class="h-10 px-4 !bg-gray-500 hover:!bg-gray-600 !text-white rounded-lg"
-            >
-                Filtrar
+            <flux:button icon="magnifying-glass" variant="primary" type="submit"
+                class="h-10 px-4 !bg-gray-500 hover:!bg-gray-600 !text-white rounded-lg">
+                Buscar
             </flux:button>
 
-            <flux:button
-                icon="arrow-path"
-                variant="primary"
-                :href="route('admin.configuration.logs')"
-                class="h-10 px-4 !bg-blue-500 hover:!bg-blue-600 !text-white rounded-lg"
-            >
-                Limpiar
+            <flux:button icon="arrow-path" variant="primary" :href="route('admin.configuration.logs')"
+                class="h-10 px-4 !bg-green-600 hover:!bg-green-700 !text-white rounded-lg">
+                Actualizar
             </flux:button>
 
         </form>
@@ -140,19 +119,54 @@
 
         const convertToBackendFormat = (value) => {
             if (!value) return "";
-            const [day, month, year] = value.split('/');
+            const parts = value.split('/');
+            if (parts.length !== 3) return "";
+            const [day, month, year] = parts;
             return `${year}-${month}-${day}`;
         };
 
-        document.querySelector('form').addEventListener('submit', function() {
-            const df = document.querySelector('#date_from');
-            const dt = document.querySelector('#date_to');
+        const filterForm = document.getElementById('logs-filter-form');
+
+        filterForm.addEventListener('submit', function() {
+            const df = document.getElementById('date_from');
+            const dt = document.getElementById('date_to');
             df.value = convertToBackendFormat(df.value);
             dt.value = convertToBackendFormat(dt.value);
         });
 
-        flatpickr('#date_from', { dateFormat: 'd/m/Y', allowInput: true });
-        flatpickr('#date_to', { dateFormat: 'd/m/Y', allowInput: true });
+        flatpickr('#date_from', {
+            dateFormat: 'd/m/Y',
+            allowInput: true
+        });
+        flatpickr('#date_to', {
+            dateFormat: 'd/m/Y',
+            allowInput: true
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        const clearLogsForm = document.getElementById('clear-logs-form');
+        const clearLogsBtn = document.getElementById('btn-clear-logs');
+
+        if (clearLogsBtn && clearLogsForm) {
+            clearLogsBtn.addEventListener('click', function() {
+                Swal.fire({
+                    title: '¿Eliminar bitácora?',
+                    text: 'Esta acción no se puede deshacer.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#6b7280'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        clearLogsForm.submit();
+                    }
+                });
+            });
+        }
     </script>
 
 </x-layouts.app>

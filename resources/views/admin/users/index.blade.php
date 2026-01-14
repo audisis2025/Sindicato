@@ -5,13 +5,13 @@
 * Elaboró                      : Iker Piza
 * Fecha de liberación          : 25/11/2025
 * Autorizó                     : Líder Técnico
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 27/11/2025
-* Folio de mantenimiento       : N/A
+* Versión                      : 1.2
+* Fecha de mantenimiento       : 13/01/2026
+* Folio de mantenimiento       : 
 * Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación total según sección 8.8 del Manual PRO-Laravel V3.4.
+* Descripción del mantenimiento: Filtro por nombre + ocultar rol admin en listado y filtros.
 * Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Revisor                      : 
 --}}
 
 <x-layouts.app :title="__('Gestión de Usuarios')">
@@ -22,49 +22,38 @@
             <h1 class="text-3xl font-bold text-[#DE6601]">
                 Gestión de Usuarios
             </h1>
-
-            {{-- CREAR — primary azul (blue-600) --}}
-            <flux:button
-                icon="plus"
-                variant="primary"
-                :href="route('users.create')"
-                class="!bg-blue-600 hover:!bg-blue-700 !text-white"
-            >
+            <flux:button icon="plus" variant="primary" :href="route('users.create')"
+                class="!bg-blue-600 hover:!bg-blue-700 !text-white">
                 Crear usuario
             </flux:button>
         </div>
 
-        <form method="GET" action="{{ route('users.index') }}"
-            class="flex flex-wrap gap-4 items-end bg-white p-4 border border-zinc-200 rounded-xl shadow-sm">
+        <form method="GET" action="{{ route('users.index') }}" class="flex flex-wrap gap-4 items-end">
 
             <div class="flex flex-col">
-                <label for="role" class="text-sm font-semibold text-[#241178]">Tipo de usuario</label>
-
+                <label for="role" class="text-sm font-semibold text-[#241178]">
+                    Tipo de usuario
+                </label>
                 <select name="role" id="role"
                     class="border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 outline-none">
                     <option value="">Todos</option>
-                    <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Administrador</option>
-                    <option value="union" {{ request('role') === 'union' ? 'selected' : '' }}>Usuario Sindicato</option>
-                    <option value="worker" {{ request('role') === 'worker' ? 'selected' : '' }}>Usuario Trabajador</option>
+                    <option value="union" {{ request('role') === 'union' ? 'selected' : '' }}>
+                        Usuario Sindicato
+                    </option>
+                    <option value="worker" {{ request('role') === 'worker' ? 'selected' : '' }}>
+                        Usuario Trabajador
+                    </option>
                 </select>
             </div>
 
-            <flux:button
-                icon="magnifying-glass"
-                variant="primary"
-                type="submit"
-                class="!bg-gray-500 hover:!bg-gray-600 !text-white"
-            >
-                Filtrar
+            <flux:button icon="magnifying-glass" variant="primary" type="submit"
+                class="!bg-gray-500 hover:!bg-gray-600 !text-white">
+                Buscar
             </flux:button>
 
-            <flux:button
-                icon="arrow-path"
-                variant="primary"
-                :href="route('users.index')"
-                class="!bg-blue-500 hover:!bg-blue-600 !text-white"
-            >
-                Limpiar
+            <flux:button icon="arrow-path" variant="primary" :href="route('users.index')"
+                class="!bg-green-600 hover:!bg-green-700 !text-white">
+                Actualizar
             </flux:button>
         </form>
 
@@ -90,10 +79,16 @@
 
                             <td class="px-4 py-3 text-sm capitalize text-black">
                                 @switch($user->role)
-                                    @case('union') Usuario Sindicato @break
-                                    @case('worker') Usuario Trabajador @break
-                                    @case('admin') Administrador @break
-                                    @default {{ $user->role }}
+                                    @case('union')
+                                        Usuario Sindicato
+                                    @break
+
+                                    @case('worker')
+                                        Usuario Trabajador
+                                    @break
+
+                                    @default
+                                        {{ $user->role }}
                                 @endswitch
                             </td>
 
@@ -108,45 +103,32 @@
                             <td class="px-4 py-3 text-sm">
                                 <div class="flex items-center justify-center gap-3">
 
-                                    <flux:button
-                                        size="xs"
-                                        icon="pencil-square"
-                                        variant="primary"
+                                    <flux:button size="xs" icon="pencil-square" variant="primary"
                                         :href="route('users.edit', $user->id)"
-                                        class="!bg-gray-500 hover:!bg-gray-600 !text-white"
-                                    >
+                                        class="!bg-gray-500 hover:!bg-gray-600 !text-white">
                                         Editar
                                     </flux:button>
 
                                     <form method="POST" action="{{ route('users.toggle', $user->id) }}"
                                         onsubmit="return confirm('¿Deseas cambiar el estado de este usuario?')">
-
                                         @csrf
                                         @method('PATCH')
 
-                                        <flux:button
-                                            size="xs"
-                                            icon="{{ $user->active ? 'x-circle' : 'check-circle' }}"
-                                            variant="primary"
+                                        <flux:button size="xs"
+                                            icon="{{ $user->active ? 'x-circle' : 'check-circle' }}" variant="primary"
                                             type="submit"
-                                            class="{{ $user->active ? '!bg-red-600 hover:!bg-red-700' : '!bg-green-600 hover:!bg-green-700' }} !text-white"
-                                        >
+                                            class="{{ $user->active ? '!bg-red-600 hover:!bg-red-700' : '!bg-green-600 hover:!bg-green-700' }} !text-white">
                                             {{ $user->active ? 'Desactivar' : 'Activar' }}
                                         </flux:button>
                                     </form>
+
                                     <form method="POST" action="{{ route('users.destroy', $user->id) }}"
                                         onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?')">
-
                                         @csrf
                                         @method('DELETE')
 
-                                        <flux:button
-                                            size="xs"
-                                            icon="trash"
-                                            variant="danger"
-                                            type="submit"
-                                            class="!bg-red-600 hover:!bg-red-700 !text-white"
-                                        >
+                                        <flux:button size="xs" icon="trash" variant="danger" type="submit"
+                                            class="!bg-red-600 hover:!bg-red-700 !text-white">
                                             Eliminar
                                         </flux:button>
                                     </form>
@@ -155,18 +137,18 @@
                             </td>
                         </tr>
 
-                    @empty
-                        <tr>
-                            <td colspan="4" class="px-4 py-6 text-center text-sm text-zinc-500">
-                                No hay usuarios registrados.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-4 py-6 text-center text-sm text-zinc-500">
+                                    No hay usuarios registrados.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+
+            </div>
 
         </div>
 
-    </div>
-
-</x-layouts.app>
+    </x-layouts.app>

@@ -61,7 +61,7 @@
         @endif
 
         <h1 class="text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#DE6601] mb-3">
-            Bienvenido a SINDISOFT
+            Bienvenido a Sindisoft
         </h1>
 
         <p class="text-[#272800] text-base sm:text-lg md:text-xl font-sans mb-3">

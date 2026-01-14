@@ -1,23 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: NewsController
-* Descripción de la clase: Gestiona el CRUD de noticias y
-* comunicados del Sindicato, incluyendo carga de imágenes
-* y documentos PDF.
-* Fecha de creación: 03/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 2.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : NewsController.php
+* Descripción de la clase      : Controlador encargado de la gestión de noticias, comunicados, convocatorias y eventos del sindicato.
+* Fecha de creación            : 12/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 18/12/2025
+* Autorizó                     :
+* Versión                      : 1.1
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Http\Controllers;
@@ -54,6 +49,8 @@ class NewsController extends Controller
 		$validated = $request->validate([
 			'title' => 'required|string|max:255',
 			'content' => 'nullable|string',
+			'publication_date' => 'nullable|date',
+			'expiration_date' => 'nullable|date|after_or_equal:publication_date',
 			'type' => 'required|in:announcement,communication,event',
 			'status' => 'required|in:draft,published',
 			'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
@@ -79,8 +76,8 @@ class NewsController extends Controller
 			'status' => $validated['status'],
 			'image_path' => $imagePath,
 			'file_path' => $filePath,
-			'publication_date' => $request->publication_date,
-			'expiration_date' => $request->expiration_date,
+			'publication_date' => $validated['publication_date'] ?? null,
+			'expiration_date' => $validated['expiration_date'] ?? null,
 			'user_id' => Auth::id(),
 		]);
 
@@ -93,6 +90,7 @@ class NewsController extends Controller
 			->route('union.news.index')
 			->with('success', 'Noticia/convocatoria creada correctamente.');
 	}
+
 
 	public function edit(News $news): View
 	{
