@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : news-edit.blade.php
-* Descripción de la vista      : Formulario para editar noticias y convocatorias del sindicato.
-* Fecha de creación            : 27/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 27/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.0
-* Fecha de mantenimiento       : 27/11/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación con la vista create y ajustes según controlador NewsController@update.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : edit.blade.php
+* Descripción de la vista     : Vista para la edición de publicaciones del sindicato (noticias, comunicados,
+*                               convocatorias y eventos), permitiendo actualizar título, contenido, fechas,
+*                               tipo/estado y reemplazar adjuntos (PDF) o imagen de portada.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Editar publicación')">

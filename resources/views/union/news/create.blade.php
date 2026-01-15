@@ -1,18 +1,21 @@
 {{-- 
-* Nombre de la vista           : news-create.blade.php
-* Descripción de la vista      : Formulario para la creación de noticias y convocatorias del sindicato.
-* Fecha de creación            : 27/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 27/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.0
-* Fecha de mantenimiento       : 27/11/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación con alta de trabajadores y ajuste a controlador NewsController@store según Manual PRO-Laravel V3.4.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : create.blade.php
+* Descripción de la vista     : Vista para la creación de publicaciones del sindicato (noticias, comunicados,
+*                               convocatorias y eventos), permitiendo capturar título, contenido, fechas,
+*                               tipo/estado y adjuntar archivo PDF o imagen de portada.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
+
 <x-layouts.app :title="__('Nueva publicación')">
 
     <div class="w-full flex flex-col items-center justify-center min-h-[80vh] bg-white text-black p-6">

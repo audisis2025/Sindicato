@@ -1,19 +1,22 @@
 <?php
 /*
- * Nombre de la clase         : login.blade.php
- * Descripción de la clase    : Vista Livewire Volt para inicio de sesión de usuarios.
- * Fecha de creación          : 01/11/2025
- * Elaboró                    : Iker Piza
- * Fecha de liberación        : 01/11/2025
- * Autorizó                   : Líder Técnico
- * Versión                    : 2.0
- * Fecha de mantenimiento     : 25/11/2025
- * Folio de mantenimiento     : N/A
- * Tipo de mantenimiento      : Correctivo y perfectivo
- * Descripción del mantenimiento : Ajuste de validaciones, mensajes SweetAlert, homogeneización visual.
- * Responsable                : Iker Piza
- * Revisor                    : QA SINDISOFT
- */
+* Nombre de la clase         : login.blade.php
+* Descripción de la clase    : Vista/Componente Livewire Volt para el inicio de sesión de usuarios,
+*                              validando credenciales, controlando intentos mediante RateLimiter y
+*                              mostrando mensajes de éxito o error mediante alertas.
+* Fecha de creación          : 14/01/2026
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 14/01/2026
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
+*/
+
 
 use App\Models\User;
 use Illuminate\Auth\Events\Lockout;

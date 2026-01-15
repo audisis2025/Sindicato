@@ -1,4 +1,19 @@
 <?php
+/*
+* Nombre de la clase         : 2025_11_23_225812_update_status_enum_on_procedure_requests_table.php
+* Descripción de la clase    : Migración para actualizar el ENUM del campo status en la tabla procedure_requests, ampliando los estados del flujo del trámite e incorporando valores iniciados, pendientes y cancelados.
+* Fecha de creación          : 22/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
+*/
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;

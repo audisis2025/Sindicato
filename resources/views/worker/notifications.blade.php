@@ -1,18 +1,20 @@
 {{-- 
-* Nombre de la vista           : notifications.blade.php
-* Descripción de la vista      : Panel de notificaciones internas del usuario trabajador.
-* Fecha de creación            : 25/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 25/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 27/11/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación de tabla, botones e iconos según Manual PRO-Laravel V3.4.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : notifications.blade.php
+* Descripción de la vista     : Vista para la consulta de notificaciones del trabajador, mostrando el listado
+*                               de avisos del sistema y permitiendo marcar notificaciones como leídas.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
+
 <x-layouts.app :title="__('Mis notificaciones')">
 
     <div class="flex flex-col gap-6 p-6 w-full max-w-6xl mx-auto">

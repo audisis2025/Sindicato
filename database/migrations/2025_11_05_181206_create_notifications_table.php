@@ -1,4 +1,19 @@
 <?php
+/*
+* Nombre de la clase         : 2025_11_05_181206_create_notifications_table.php
+* Descripción de la clase    : Migración para la creación de la tabla de notificaciones del sistema, asociadas a usuarios, con control de tipo y estatus (leída/no leída).
+* Fecha de creación          : 05/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
+*/
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

@@ -1,18 +1,20 @@
 {{-- 
-* Nombre de la vista           : edit.blade.php
-* Descripción de la vista      : Formulario para edición de usuarios del sistema SINDISOFT.
-* Fecha de creación            : 26/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 26/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 13/01/2026
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación Flux UI + validaciones (FormRequest) y estandarización según Manual PRO-Laravel.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : edit.blade.php
+* Descripción de la vista     : Vista para la edición de usuarios del sistema por parte del administrador,
+*                               permitiendo actualizar información personal, rol, estado y datos fiscales.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
+
 
 <x-layouts.app :title="__('Editar usuario')">
 

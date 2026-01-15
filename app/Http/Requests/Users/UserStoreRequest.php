@@ -1,22 +1,20 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase       : UserStoreRequest
-* Descripción de la clase  : Validación para el alta de usuarios
-*                           en el sistema SINDISOFT.
-* Fecha de creación       : 13/01/2026
-* Elaboró                 : Iker Piza
-* Fecha de liberación     : 13/01/2026
-* Autorizó                : Líder Técnico
-* Versión                 : 1.0
-* Fecha de mantenimiento  :
-* Folio de mantenimiento  :
-* Tipo de mantenimiento   :
-* Descripción del mantenimiento :
-* Responsable             :
-* Revisor                 : QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : UserStoreRequest.php
+* Descripción de la clase      : Request encargado de la validación y normalización de datos para el alta de usuarios del sistema, incluyendo reglas de negocio para nombre, correo electrónico, contraseña, rol, género, CURP, RFC y clave presupuestal.
+* Fecha de creación            : 06/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
+
 
 namespace App\Http\Requests\Users;
 

@@ -1,4 +1,21 @@
 <?php
+/*
+* Nombre de la clase         : 2025_12_02_163434_update_type_enum_on_system_notifications_table.php
+* Descripción de la clase    : Migración para actualizar el ENUM del campo type en la tabla de notificaciones del sistema,
+*                              ampliando los tipos disponibles para reflejar distintos estados y eventos del flujo
+*                              de trámites y notificaciones internas.
+* Fecha de creación          : 22/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
+*/
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

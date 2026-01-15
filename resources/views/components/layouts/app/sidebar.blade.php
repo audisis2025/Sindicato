@@ -1,17 +1,18 @@
 {{-- 
-* Nombre de la vista           : sidebar.blade.php
-* Descripción de la vista      : Menú lateral institucional responsive de SINDISOFT con paleta clara PRO-Laravel V3.2.
-* Fecha de creación            : 01/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 01/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 2.0
-* Fecha de mantenimiento       : 26/11/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Alineación total entre roles del sidebar y roles reales del sistema
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : sidebar.blade.php
+* Descripción de la vista     : Layout principal del sistema SINDISOFT que define la estructura base de la interfaz,
+*                               incluyendo sidebar por rol, header responsivo y contenedor de contenido ($slot).
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <!DOCTYPE html>

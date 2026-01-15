@@ -1,19 +1,22 @@
 <?php
 /*
 * Nombre de la clase         : reset-password.blade.php
-* Descripción de la clase    : Vista Livewire Volt para restablecimiento de contraseña en SINDISOFT.
-* Fecha de creación          : 01/11/2025
+* Descripción de la clase    : Vista/Componente Livewire Volt para el restablecimiento de contraseña mediante token,
+*                              validando correo y nueva contraseña, actualizando credenciales y mostrando alertas
+*                              de éxito o error durante el proceso.
+* Fecha de creación          : 14/01/2026
 * Elaboró                    : Iker Piza
-* Fecha de liberación        : 01/11/2025
-* Autorizó                   : Líder Técnico
-* Versión                    : 1.2
-* Fecha de mantenimiento     : 26/11/2025
-* Folio de mantenimiento     : N/A
-* Tipo de mantenimiento      : Correctivo y perfectivo
-* Descripción del mantenimiento : Homogeneización visual completa con login y forgot-password, SweetAlert y colores institucionales.
-* Responsable                : Iker Piza
-* Revisor                    : QA SINDISOFT
+* Fecha de liberación        : 14/01/2026
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
 */
+
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;

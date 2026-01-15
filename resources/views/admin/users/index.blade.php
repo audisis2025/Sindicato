@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : index.blade.php
-* Descripción de la vista      : Módulo de gestión de usuarios del sistema SINDISOFT. Incluye filtrado, listado y acciones CRUD.
-* Fecha de creación            : 25/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 25/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.2
-* Fecha de mantenimiento       : 13/01/2026
-* Folio de mantenimiento       : 
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Filtro por nombre + ocultar rol admin en listado y filtros.
-* Responsable                  : Iker Piza
-* Revisor                      : 
+* Nombre de la vista          : index.blade.php
+* Descripción de la vista     : Vista principal para la gestión de usuarios del sistema, que permite al
+*                               administrador consultar, filtrar, crear, editar, activar, desactivar
+*                               y eliminar usuarios según su rol.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Gestión de Usuarios')">

@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : index.blade.php
-* Descripción de la vista      : Catálogo de trámites y publicaciones visibles para el trabajador, con búsqueda y filtros.
-* Fecha de creación            : 13/01/2026
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 13/01/2026
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.0
-* Fecha de mantenimiento       : N/A
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : N/A
-* Descripción del mantenimiento: Implementación inicial conforme a Manual PRO-Laravel (Buscar/Actualizar, botones y estilos).
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : index.blade.php
+* Descripción de la vista     : Vista del catálogo de trámites para el trabajador, donde se muestran los trámites
+*                               disponibles con opciones de búsqueda y filtros, así como el listado de publicaciones
+*                               del sindicato para consulta general.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Catálogo de Trámites')">

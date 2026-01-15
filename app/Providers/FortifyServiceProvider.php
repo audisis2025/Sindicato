@@ -25,7 +25,6 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureViews();
         $this->configureRateLimiting();
 
-        // Ahora Fortify usará "usuario" como campo para iniciar sesión
         Fortify::username('usuario');
 
         Fortify::authenticateUsing(function (Request $request) {
@@ -38,7 +37,6 @@ class FortifyServiceProvider extends ServiceProvider
                 'password.required' => 'El campo contraseña es obligatorio.',
             ]);
 
-            // Buscar en la columna real "username"
             $user = User::where('username', $request->usuario)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {

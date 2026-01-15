@@ -1,22 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: ProcedureRequest
-* Descripción de la clase: Modelo Eloquent para gestionar 
-* las solicitudes de trámites realizados por los trabajadores.
-* Fecha de creación: 10/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 3.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve del cambio]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : ProcedureRequest.php
+* Descripción de la clase      : Modelo Eloquent encargado de representar las solicitudes de trámites realizadas por los trabajadores, incluyendo estatus, paso actual, relaciones con trámite/usuario/documentos y métodos de avance y validación de flujo.
+* Fecha de creación            : 14/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 18/12/2025
+* Autorizó                     :
+* Versión                      : 1.1
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Models;

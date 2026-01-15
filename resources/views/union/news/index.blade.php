@@ -1,18 +1,21 @@
 {{-- 
-* Nombre de la vista           : news-index.blade.php
-* Descripción de la vista      : Vista para listar y administrar noticias y convocatorias del sindicato.
-* Fecha de creación            : 27/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 27/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.0
-* Fecha de mantenimiento       : 27/11/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación de botones, iconos, colores, tabla y alerts según Manual PRO-Laravel V3.4.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : index.blade.php
+* Descripción de la vista     : Vista para la gestión de publicaciones del sindicato (noticias, comunicados,
+*                               convocatorias y eventos), mostrando el listado con su categoría, fecha de
+*                               publicación, estado y acciones de edición o eliminación.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
+
 <x-layouts.app :title="__('Noticias y convocatorias')">
 
     <div class="flex flex-col gap-6 p-6 w-full max-w-6xl mx-auto">

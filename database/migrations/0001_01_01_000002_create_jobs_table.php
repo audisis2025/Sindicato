@@ -1,4 +1,19 @@
 <?php
+/*
+* Nombre de la clase         : 2025_01_01_000002_create_jobs_tables.php
+* Descripción de la clase    : Migración para la creación de las tablas de colas del sistema: jobs, job_batches y failed_jobs, utilizadas para el manejo de tareas en segundo plano.
+* Fecha de creación          : 01/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
+*/
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

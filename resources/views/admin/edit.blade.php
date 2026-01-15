@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : edit.blade.php
-* Descripción de la vista      : Formulario de perfil del Administrador para actualizar datos generales y credenciales.
-* Fecha de creación            : 14/01/2026
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 14/01/2026
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.0
-* Fecha de mantenimiento       : N/A
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : N/A
-* Descripción del mantenimiento: N/A
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : edit.blade.php
+* Descripción de la vista     : Vista para la actualización del perfil del usuario administrador,
+*                               donde se permite modificar información personal y credenciales
+*                               de acceso al sistema.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Mi perfil')">

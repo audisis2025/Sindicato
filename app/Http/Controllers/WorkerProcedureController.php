@@ -108,7 +108,7 @@ class WorkerProcedureController extends Controller
 			->where('user_id', Auth::id())
 			->firstOrFail();
 
-		return view('worker.procedure_show', [
+		return view('worker.requests.show', [
 			'procedure_request' => $request,
 		]);
 	}

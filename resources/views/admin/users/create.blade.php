@@ -1,18 +1,20 @@
 {{-- 
-* Nombre de la vista           : create.blade.php
-* Descripción de la vista      : Formulario para el alta de usuarios en el sistema SINDISOFT.
-* Fecha de creación            : 25/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 25/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.4
-* Fecha de mantenimiento       : 13/01/2026
-* Folio de mantenimiento       : 
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Validaciones por estándar y homologación Flux UI (inputs, selects, botones).
-* Responsable                  : Iker Piza
-* Revisor                      : 
+* Nombre de la vista          : create.blade.php
+* Descripción de la vista     : Vista para el registro (alta) de usuarios del sistema por parte del administrador,
+*                               permitiendo capturar datos generales, rol, credenciales y datos fiscales.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
+
 
 <x-layouts.app :title="__('Alta de usuario')">
 

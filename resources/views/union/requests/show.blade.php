@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : show.blade.php
-* Descripción de la vista      : Revisión de una solicitud de trámite realizada por un trabajador.
-* Fecha de creación            : 04/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 04/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.8
-* Fecha de mantenimiento       : 13/01/2026
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación según Manual PRO-Laravel (Regresar, botones, colores e integración de acciones).
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : show.blade.php
+* Descripción de la vista     : Vista de revisión y detalle de una solicitud de trámite por parte del sindicato,
+*                               donde se muestra información general del trámite, el estatus actual y el listado
+*                               de pasos para aprobar, rechazar o notificar correcciones al trabajador.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Revisión de solicitud de trámite')">

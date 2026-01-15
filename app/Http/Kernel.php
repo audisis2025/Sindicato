@@ -1,4 +1,19 @@
 <?php
+/*
+* Nombre de la clase           : Kernel.php
+* Descripción de la clase      : Núcleo HTTP de la aplicación encargado del registro y configuración de middlewares globales, grupos de middlewares y middlewares de ruta.
+* Fecha de creación            : N/A
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : N/A
+* Autorizó                     : N/A
+* Versión                      : 1.1
+* Fecha de mantenimiento       : 14/01/2026
+* Folio de mantenimiento       : 
+* Tipo de mantenimiento        : Correctivo / Perfectivo
+* Descripción del mantenimiento: Registro y configuración de middlewares personalizados para control de roles (Administrador, Sindicato y Trabajador).
+* Responsable                  : 
+* Revisor                      : 
+*/
 
 namespace App\Http;
 
@@ -8,7 +23,6 @@ class Kernel extends HttpKernel
 {
 
     protected $middleware = [
-        // Seguridad y saneamiento básico
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,

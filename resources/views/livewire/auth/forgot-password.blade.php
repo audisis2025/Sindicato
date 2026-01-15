@@ -1,18 +1,19 @@
 <?php
 /*
-* Nombre de la clase         : forgot-password.blade.php
-* Descripción de la clase    : Vista Livewire Volt para recuperación de contraseña en SINDISOFT.
-* Fecha de creación          : 01/11/2025
+* Nombre de la clase         : forgot-password.blde.php
+* Descripción de la clase    : Componente Livewire Volt encargado de solicitar el enlace de restablecimiento de
+*                              contraseña, validando el correo electrónico y mostrando alertas de éxito o error.
+* Fecha de creación          : 14/01/2026
 * Elaboró                    : Iker Piza
-* Fecha de liberación        : 01/11/2025
-* Autorizó                   : Líder Técnico
-* Versión                    : 1.2
-* Fecha de mantenimiento     : 26/11/2025
-* Folio de mantenimiento     : N/A
-* Tipo de mantenimiento      : Correctivo y perfectivo
-* Descripción del mantenimiento : Homogeneización completa con el login (botones, colores, tipografías, SweetAlert).
-* Responsable                : Iker Piza
-* Revisor                    : QA SINDISOFT
+* Fecha de liberación        : 14/01/2026
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
 */
 
 use Illuminate\Support\Facades\Password;

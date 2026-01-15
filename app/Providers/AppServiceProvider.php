@@ -4,14 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-// MODELOS REALES DEL SISTEMA
 use App\Models\User;
 use App\Models\Procedure;
 use App\Models\ProcedureRequest;
 use App\Models\News;
 use Livewire\Volt\Volt;
 
-// OBSERVERS REALES
 use App\Observers\UserObserver;
 use App\Observers\ProcedureObserver;
 use App\Observers\ProcedureRequestObserver;
@@ -37,7 +35,6 @@ class AppServiceProvider extends ServiceProvider
         ]);
         Volt::mount('livewire/auth/forgot-password');
 
-        // Observers disponibles en tu proyecto
         User::observe(UserObserver::class);
         Procedure::observe(ProcedureObserver::class);
         ProcedureRequest::observe(ProcedureRequestObserver::class);

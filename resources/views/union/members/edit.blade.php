@@ -1,17 +1,18 @@
 {{-- 
-* Nombre de la vista           : members-edit.blade.php
-* Descripción de la vista      : Formulario para editar los datos de un trabajador del Sindicato.
-* Fecha de creación            : 04/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 04/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.4
-* Fecha de mantenimiento       : 13/01/2026
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación según Manual PRO-Laravel (Flux UI, botones, selects obligatorios y uppercase CURP/RFC).
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : edit.blade.php
+* Descripción de la vista     : Vista para la edición de trabajadores registrados por parte del sindicato,
+*                               permitiendo actualizar información personal, datos fiscales y el estado (activo/inactivo).
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Editar trabajador')">

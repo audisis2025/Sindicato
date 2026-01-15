@@ -1,17 +1,18 @@
 {{-- 
-* Nombre de la vista           : create.blade.php
-* Descripción de la vista      : Formulario para el alta de trabajadores del Sindicato.
-* Fecha de creación            : 04/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 04/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.4
-* Fecha de mantenimiento       : 13/01/2026
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación Flux UI + validaciones (FormRequest) y botones según Manual PRO-Laravel.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : create.blade.php
+* Descripción de la vista     : Vista para el registro (alta) de trabajadores por parte del sindicato,
+*                               permitiendo capturar datos personales y fiscales para su incorporación al sistema.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Alta de trabajador')">

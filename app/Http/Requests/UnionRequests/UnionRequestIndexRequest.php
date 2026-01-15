@@ -1,17 +1,20 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase       : UnionRequestIndexRequest
-* Descripción de la clase  : Validación de filtros para el listado
-*                           de solicitudes sindicales.
-* Fecha de creación       : 13/01/2026
-* Elaboró                 : Iker Piza
-* Fecha de liberación     : 13/01/2026
-* Autorizó                : Líder Técnico
-* Versión                 : 1.0
-* Revisor                 : QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : UnionRequestIndexRequest.php
+* Descripción de la clase      : Request encargado de la validación y normalización de filtros para el listado de solicitudes de trámites del sindicato, incluyendo palabra clave y estatus.
+* Fecha de creación            : 21/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
+
 
 namespace App\Http\Requests\UnionRequests;
 

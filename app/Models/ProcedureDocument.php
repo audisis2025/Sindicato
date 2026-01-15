@@ -1,24 +1,20 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: ProcedureDocument
-* Descripción de la clase: Modelo Eloquent para la tabla 
-* 'procedure_documents', representa documentos cargados por 
-* el trabajador en una solicitud de trámite.
-* Fecha de creación: 10/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 1.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve del cambio]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : ProcedureDocument.php
+* Descripción de la clase      : Modelo Eloquent encargado de representar los documentos asociados a los pasos de una solicitud de trámite, incluyendo archivos cargados por el trabajador y su relación con el paso y la solicitud correspondiente.
+* Fecha de creación            : 14/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 18/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
+
 
 namespace App\Models;
 

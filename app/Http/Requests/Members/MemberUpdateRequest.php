@@ -1,16 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase       : MemberUpdateRequest
-* Descripción de la clase  : Validación para la actualización de
-*                           trabajadores (rol worker) desde el Sindicato.
-* Fecha de creación       : 13/01/2026
-* Elaboró                 : Iker Piza
-* Fecha de liberación     : 13/01/2026
-* Autorizó                : Líder Técnico
-* Versión                 : 1.0
-* Revisor                 : QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : MemberUpdateRequest.php
+* Descripción de la clase      : Request encargado de la validación y normalización de datos para la actualización de trabajadores (miembros), incluyendo reglas de negocio para CURP, RFC, correo electrónico, género, clave presupuestal y estatus.
+* Fecha de creación            : 09/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 18/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Http\Requests\Members;

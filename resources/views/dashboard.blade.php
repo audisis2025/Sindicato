@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : dashboard.blade.php
-* Descripción de la vista      : Panel principal de bienvenida adaptativo según el rol del usuario.
-* Fecha de creación            : 01/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 01/11/2025
-* Autorizó                     : Líder Técnico
-* Version                      : 2.2
-* Fecha de mantenimiento       : 01/11/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homogeneización visual en tonos naranjas institucionales y corrección de fuentes.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : dashboard.blade.php
+* Descripción de la vista     : Vista principal del dashboard del sistema, mostrando un mensaje de bienvenida
+*                               y contenido informativo según el rol del usuario, incluyendo notificaciones
+*                               recientes para el trabajador cuando existan pendientes.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Dashboard')">

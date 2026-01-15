@@ -1,17 +1,20 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase       : UnionNotifyErrorRequest
-* Descripción de la clase  : Validación para notificar errores al trabajador
-*                           en un paso de la solicitud.
-* Fecha de creación       : 13/01/2026
-* Elaboró                 : Iker Piza
-* Fecha de liberación     : 13/01/2026
-* Autorizó                : Líder Técnico
-* Versión                 : 1.0
-* Revisor                 : QA SINDISOFT
-* ===========================================================
+* Nombre de la clase           : UnionNotifyErrorRequest.php
+* Descripción de la clase      : Request encargado de la validación y normalización del mensaje de error enviado por el sindicato al trabajador cuando se requiere corrección en un paso del trámite.
+* Fecha de creación            : 21/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 19/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
+
 
 namespace App\Http\Requests\UnionRequests;
 

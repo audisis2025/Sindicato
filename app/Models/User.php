@@ -1,22 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: User
-* Descripción de la clase: Modelo de autenticación que 
-* representa a los usuarios del sistema.
-* Fecha de creación: 01/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 01/11/2025
-* Autorizó: Líder Técnico
-* Versión: 3.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve del cambio]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : User.php
+* Descripción de la clase      : Modelo Eloquent principal del sistema encargado de representar a los usuarios, incluyendo autenticación, roles, relaciones con solicitudes de trámites, bitácora de actividades, notificaciones del sistema y utilidades auxiliares.
+* Fecha de creación            : 01/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 18/12/2025
+* Autorizó                     :
+* Versión                      : 1.2
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Models;

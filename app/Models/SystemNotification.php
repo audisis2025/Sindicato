@@ -1,24 +1,4 @@
 <?php
-/*
-* ===========================================================
-* Nombre de la clase: SystemNotification
-* Descripción de la clase: Modelo Eloquent para la tabla 
-* 'system_notifications', responsable de registrar las 
-* notificaciones internas del sistema.
-* Fecha de creación: 21/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 21/11/2025
-* Autorizó: Líder Técnico
-* Versión: 2.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve del cambio]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
-*/
 
 namespace App\Models;
 

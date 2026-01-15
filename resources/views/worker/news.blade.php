@@ -1,17 +1,18 @@
 {{-- 
-* Nombre de la vista           : news.blade.php
-* Descripción de la vista      : Vista para consulta de convocatorias, comunicados y eventos visibles para el trabajador.
-* Fecha de creación            : 12/01/2026
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 12/01/2026
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 13/01/2026
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación según Manual PRO-Laravel (Regresar, Buscar/Actualizar, botones Flux y estilos).
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : index.blade.php
+* Descripción de la vista     : Vista de consulta de convocatorias, comunicados y eventos publicados por el sindicato,
+*                               permitiendo al trabajador filtrar y revisar los anuncios oficiales disponibles.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Convocatorias y anuncios')">

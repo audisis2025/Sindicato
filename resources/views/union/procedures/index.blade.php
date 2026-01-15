@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : procedures-index.blade.php
-* Descripción de la vista      : Módulo de gestión de trámites creados por el Sindicato. Incluye listado y acciones CRUD.
-* Fecha de creación            : 03/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 03/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 27/11/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Correctivo y perfectivo
-* Descripción del mantenimiento: Homologación según sección 8.8 del Manual PRO-Laravel V3.4.
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : index.blade.php
+* Descripción de la vista     : Vista principal para la gestión de trámites por parte del sindicato, donde se
+*                               muestra el listado de trámites registrados y se permite acceder a acciones
+*                               de creación, visualización, edición, activación y eliminación de los mismos.
+* Fecha de creación           : 03/11/2025
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 03/11/2025
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Gestión de trámites')">

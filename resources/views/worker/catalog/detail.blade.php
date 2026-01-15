@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : show.blade.php
-* Descripción de la vista      : Detalle del trámite disponible para el trabajador, incluyendo pasos y descarga de formatos.
-* Fecha de creación            : 13/01/2026
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 13/01/2026
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.0
-* Fecha de mantenimiento       : N/A
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : N/A
-* Descripción del mantenimiento: Implementación inicial conforme a Manual PRO-Laravel (Regresar, botones y estilos).
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : detail.blade.php
+* Descripción de la vista     : Vista de detalle del trámite dentro del catálogo del trabajador, donde se muestra
+*                               la descripción, requisitos y pasos definidos, así como la opción para iniciar el
+*                               trámite o consultar el estado si ya se encuentra en proceso.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Detalle del trámite')">

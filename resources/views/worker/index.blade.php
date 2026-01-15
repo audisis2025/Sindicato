@@ -1,17 +1,19 @@
 {{-- 
-* Nombre de la vista           : index.blade.php
-* Descripción de la vista      : Panel del trabajador con trámites activos, historial y trámites disponibles.
-* Fecha de creación            : 13/01/2026
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 13/01/2026
-* Autorizó                     : Líder Técnico
-* Versión                      : 1.0
-* Fecha de mantenimiento       : N/A
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : N/A
-* Descripción del mantenimiento: Implementación inicial conforme a Manual PRO-Laravel (botones, tablas y estilos institucionales).
-* Responsable                  : Iker Piza
-* Revisor                      : QA SINDISOFT
+* Nombre de la vista          : index.blade.php
+* Descripción de la vista     : Vista principal del panel del trabajador, donde se consultan trámites activos,
+*                               historial de trámites finalizados y trámites disponibles para iniciar, con acceso
+*                               al detalle de cada solicitud y acciones correspondientes.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
 
 <x-layouts.app :title="__('Panel del Trabajador')">

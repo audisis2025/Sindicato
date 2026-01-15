@@ -1,22 +1,18 @@
 <?php
-
 /*
-* Nombre de la clase     : create_procedures_table
-* Descripción de la clase: Migración para crear la tabla 'procedures' (trámites).
-* Esta es la tabla maestra que define los trámites disponibles.
-* Fecha de creación      : 10/11/2025
-* Elaboró                : [Autor Original]
-* Fecha de liberación    : 10/11/2025
-* Autorizó               : Líder Técnico
-* Versión                : 2.0
-*
-* Fecha de mantenimiento: 12/11/2025
-* Folio de mantenimiento: [Tu Folio]
-* Tipo de mantenimiento: Perfectivo
-* Descripción del mantenimiento: Se añaden campos faltantes (name, description, status)
-* para que la migración sea funcional.
-* Responsable: [Tu Nombre]
-* Revisor: Gemini
+* Nombre de la clase         : 2025_11_02_06254_create_procedures_table.php
+* Descripción de la clase    : Migración para la creación de la tabla de trámites del sistema, incluyendo nombre, descripción y estatus del trámite.
+* Fecha de creación          : 05/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
 */
 
 use Illuminate\Database\Migrations\Migration;

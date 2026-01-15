@@ -1,21 +1,18 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: News
-* Descripción de la clase: Modelo Eloquent para la tabla 'news'.
-* Fecha de creación: 12/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 12/11/2025
-* Autorizó: Líder Técnico
-* Versión: 3.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : News.php
+* Descripción de la clase      : Modelo Eloquent encargado de la gestión de noticias, comunicados, convocatorias y eventos del sistema, incluyendo manejo de fechas de publicación/expiración, relaciones y scopes de visibilidad para trabajadores.
+* Fecha de creación            : 11/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 18/12/2025
+* Autorizó                     :
+* Versión                      : 1.1
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
 
 namespace App\Models;

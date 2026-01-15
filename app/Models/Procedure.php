@@ -1,23 +1,20 @@
 <?php
 /*
-* ===========================================================
-* Nombre de la clase: Procedure
-* Descripción de la clase: Modelo Eloquent para la gestión de trámites 
-* creados por el Sindicato dentro del sistema.
-* Fecha de creación: 10/11/2025
-* Elaboró: [Tu Nombre]
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 3.0
-*
-* Fecha de mantenimiento: [DD/MM/AAAA]
-* Folio de mantenimiento: [Folio]
-* Tipo de mantenimiento: [Correctivo/Perfectivo/Adaptativo/Preventivo]
-* Descripción del mantenimiento: [Descripción breve del cambio]
-* Responsable: [Tu Nombre]
-* Revisor: [Revisor]
-* ===========================================================
+* Nombre de la clase           : Procedure.php
+* Descripción de la clase      : Modelo Eloquent encargado de representar los trámites del sistema, incluyendo información general, relaciones con pasos, solicitudes y usuario creador.
+* Fecha de creación            : 13/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 18/12/2025
+* Autorizó                     :
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        :
+* Descripción del mantenimiento:
+* Responsable                  :
+* Revisor                      :
 */
+
 
 namespace App\Models;
 

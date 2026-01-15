@@ -1,29 +1,18 @@
 <?php
-
 /*
-* ===========================================================
-* Nombre de la clase: create_news_table.php
-* Descripción: Migración para la tabla 'news' (noticias, convocatorias).
-* Fecha de creación: 05/11/2025
-* Elaboró: Iker Piza
-* Fecha de liberación: 10/11/2025
-* Autorizó: Líder Técnico
-* Versión: 2.1
-*
-* Fecha de mantenimiento: 10/11/2025
-* Folio de mantenimiento: [Tu Folio]
-* Tipo de mantenimiento: Perfectivo
-* Descripción del mantenimiento: Se traducen todas las columnas a inglés...
-* Responsable: [Tu Nombre]
-* Revisor: [Tu Revisor]
-*
-* Fecha de mantenimiento: 12/11/2025
-* Folio de mantenimiento: [Tu Folio 2]
-* Tipo de mantenimiento: Perfectivo (Micro-corrección)
-* Descripción del mantenimiento: Se traducen los valores de los enums (type y status) a inglés.
-* Responsable: [Tu Nombre]
-* Revisor: Gemini
-* ===========================================================
+* Nombre de la clase         : 2025_11_15_180713_create_news_table.php
+* Descripción de la clase    : Migración para la creación de la tabla de noticias del sistema, incluyendo comunicados, convocatorias y eventos, con control de estatus y relación con usuarios.
+* Fecha de creación          : 10/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
 */
 
 use Illuminate\Database\Migrations\Migration;

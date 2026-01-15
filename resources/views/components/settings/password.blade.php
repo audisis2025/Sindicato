@@ -1,16 +1,19 @@
-{{-- ===========================================================
- Nombre de la clase: password.blade.php
- Descripción: Vista para que el trabajador cambie su contraseña en el sistema SINDISOFT.
- Fecha de creación: 02/11/2025
- Elaboró: Iker Piza
- Fecha de liberación: 02/11/2025
- Autorizó: Líder Técnico
- Versión: 1.0
- Tipo de mantenimiento: Creación.
- Descripción del mantenimiento: Implementa formulario institucional Flux UI para actualización de contraseña según Manual PRO-Laravel V3.2.
- Responsable: Iker Piza
- Revisor: QA SINDISOFT
-=========================================================== --}}
+{{-- 
+* Nombre de la vista          : password.blade.php
+* Descripción de la vista     : Vista que permite al usuario autenticado actualizar su contraseña
+*                               de acceso para mantener la seguridad de su cuenta.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
+--}}
 
 <x-layouts.app :title="__('Cambio de contraseña')">
     <div class="flex flex-col items-center justify-center min-h-[80vh] bg-white dark:bg-zinc-900 p-6">
@@ -27,7 +30,6 @@
             @csrf
             @method('PUT')
 
-            <!-- Contraseña actual -->
             <div>
                 <label for="current_password" class="block font-semibold text-[#272800] mb-1">
                     Contraseña actual
@@ -39,7 +41,6 @@
                 @enderror
             </div>
 
-            <!-- Nueva contraseña -->
             <div>
                 <label for="password" class="block font-semibold text-[#272800] mb-1">
                     Nueva contraseña
@@ -51,7 +52,6 @@
                 @enderror
             </div>
 
-            <!-- Confirmación -->
             <div>
                 <label for="password_confirmation" class="block font-semibold text-[#272800] mb-1">
                     Confirmar contraseña

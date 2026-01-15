@@ -1,4 +1,19 @@
 <?php
+/*
+* Nombre de la clase         : 2025_01_01_000000_create_users_table.php
+* Descripción de la clase    : Migración para la creación de las tablas de usuarios, tokens de restablecimiento de contraseña y sesiones del sistema.
+* Fecha de creación          : 01/11/2025
+* Elaboró                    : Iker Piza
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   :
+* Versión                    : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento :
+* Responsable                :
+* Revisor                    :
+*/
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

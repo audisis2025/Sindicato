@@ -1,21 +1,3 @@
-{{-- 
-* Nombre de la vista          : show.blade.php
-* Descripción de la vista     : Vista de detalle de una solicitud de trámite del trabajador, mostrando el estado
-*                               actual, fecha de solicitud y el seguimiento de pasos, incluyendo carga de archivos,
-*                               envío de pasos al sindicato y visualización de documentos asociados.
-* Fecha de creación           : 14/01/2026
-* Elaboró                     : Iker Piza
-* Fecha de liberación         : 14/01/2026
-* Autorizó                    :
-* Versión                     : 1.0
-* Fecha de mantenimiento      :
-* Folio de mantenimiento      :
-* Tipo de mantenimiento       :
-* Descripción del mantenimiento:
-* Responsable                 :
-* Revisor                     :
---}}
-
 <x-layouts.app :title="__('Detalle del trámite')">
 
     <div class="w-full flex flex-col items-center min-h-[80vh] bg-white p-6">

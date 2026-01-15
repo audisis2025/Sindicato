@@ -1,7 +1,7 @@
 <?php
 /*
 * ===========================================================
-* Nombre de la clase       : ActivityLogFilterRequest
+* Nombre de la clase       : ActivityLogFilterRequest.php
 * Descripción de la clase  : Validación de filtros para la Bitácora
 *                           del sistema (ActivityLog).
 * Fecha de creación       : 13/01/2026

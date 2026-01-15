@@ -1,18 +1,20 @@
 {{-- 
-* Nombre de la vista           : welcome.blade.php
-* Descripción de la vista      : Pantalla principal responsive del portal Sindisoft.
-* Fecha de creación            : 01/11/2025
-* Elaboró                      : Iker Piza
-* Fecha de liberación          : 01/11/2025
-* Autorizó                     : Líder Técnico
-* Versión                      : 2.1
-* Fecha de mantenimiento       : 14/12/2025
-* Folio de mantenimiento       : N/A
-* Tipo de mantenimiento        : Perfectivo
-* Descripción del mantenimiento: 
-* Responsable                  : Iker Piza
-* Revisor                      : QA Sindisoft
+* Nombre de la vista          : welcome.blade.php
+* Descripción de la vista     : Página de bienvenida pública del sistema SINDISOFT, que presenta información
+*                               general del sistema y permite el acceso a la pantalla de inicio de sesión.
+* Fecha de creación           : 14/01/2026
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    :
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 --}}
+
 <!DOCTYPE html>
 <html lang="es">
 
