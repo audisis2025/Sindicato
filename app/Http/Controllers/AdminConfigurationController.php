@@ -2,10 +2,10 @@
 /*
 * Nombre de la clase           : AdminConfigurationController.php
 * Descripción de la clase      : Controlador encargado de administrar la configuración del sistema, respaldos, bitácora y recordatorios.
-* Fecha de creación            : 01/11/2025
+* Fecha de creación            : 26/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 19/12/2025
-* Autorizó                     : 
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
 * Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :

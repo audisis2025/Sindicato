@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase         : 2025_11_02_06254_create_procedures_table.php
 * Descripción de la clase    : Migración para la creación de la tabla de trámites del sistema, incluyendo nombre, descripción y estatus del trámite.
-* Fecha de creación          : 05/11/2025
-* Elaboró                    : Iker Piza
-* Fecha de liberación        : 19/12/2025
-* Autorizó                   :
-* Versión                    : 1.0
-* Fecha de mantenimiento     :
-* Folio de mantenimiento     :
-* Tipo de mantenimiento      :
-* Descripción del mantenimiento :
-* Responsable                :
-* Revisor                    :
+* Fecha de creación            : 02/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
+* Responsable                  :
+* Revisor                      : 
 */
 
 use Illuminate\Database\Migrations\Migration;

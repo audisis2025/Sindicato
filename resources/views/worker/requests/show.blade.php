@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista de detalle de una solicitud de trámite del trabajador, mostrando el estado
 *                               actual, fecha de solicitud y el seguimiento de pasos, incluyendo carga de archivos,
 *                               envío de pasos al sindicato y visualización de documentos asociados.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 01/12/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :
@@ -60,10 +60,21 @@
                     'rejected' => 'Rechazado',
                 ];
             @endphp
+            @php
+                $isFinished = in_array($procedure_request->status, ['completed', 'rejected', 'cancelled']);
+            @endphp
+
 
             <h2 class="text-xl font-semibold text-[#241178] mb-4">
                 Información general
             </h2>
+            @if ($isFinished)
+                <div class="mb-6 w-full rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm">
+                    <p class="font-semibold text-[#241178]">
+                        Este trámite ya fue finalizado y no requiere más acciones.
+                    </p>
+                </div>
+            @endif
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-8">
                 <p>
@@ -97,7 +108,7 @@
                         <h3 class="text-[#241178] font-semibold">
                             Paso {{ $number }}: {{ $step->step_name }}
 
-                            @if ($isCurrent)
+                            @if ($isCurrent && !$isFinished)
                                 <span class="text-[#DE6601] text-sm font-semibold">(Actual)</span>
                             @elseif ($locked)
                                 <span class="text-gray-500 text-sm">(Bloqueado)</span>
@@ -128,7 +139,7 @@
                             </p>
                         @endif
 
-                        @if ($isCurrent)
+                        @if ($isCurrent && !$isFinished)
 
                             @if ($procedure_request->status === 'pending_union')
                                 <div class="mt-4 border-t pt-4">

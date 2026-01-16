@@ -5,8 +5,8 @@
 *                              estableciendo credenciales iniciales, rol administrativo y datos generales de control.
 * Fecha de creación          : 14/01/2026
 * Elaboró                    : Iker Piza
-* Fecha de liberación        : 14/01/2026
-* Autorizó                   :
+* Fecha de liberación        : 19/12/2025
+* Autorizó                   : Salvador Monroy
 * Versión                    : 1.0
 * Fecha de mantenimiento     :
 * Folio de mantenimiento     :

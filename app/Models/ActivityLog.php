@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : ActivityLog.php
 * Descripción de la clase      : Modelo Eloquent encargado de representar la bitácora de actividades del sistema, registrando acciones realizadas por los usuarios, módulo afectado y dirección IP.
-* Fecha de creación            : 10/11/2025
+* Fecha de creación            : 03/10/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 18/12/2025
-* Autorizó                     :
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
 * Versión                      : 1.0
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 

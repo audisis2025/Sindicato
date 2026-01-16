@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase         : 2025_11_15_180713_create_news_table.php
 * Descripción de la clase    : Migración para la creación de la tabla de noticias del sistema, incluyendo comunicados, convocatorias y eventos, con control de estatus y relación con usuarios.
-* Fecha de creación          : 10/11/2025
-* Elaboró                    : Iker Piza
-* Fecha de liberación        : 19/12/2025
-* Autorizó                   :
-* Versión                    : 1.0
-* Fecha de mantenimiento     :
-* Folio de mantenimiento     :
-* Tipo de mantenimiento      :
-* Descripción del mantenimiento :
-* Responsable                :
-* Revisor                    :
+* Fecha de creación            : 05/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
+* Responsable                  :
+* Revisor                      : 
 */
 
 use Illuminate\Database\Migrations\Migration;

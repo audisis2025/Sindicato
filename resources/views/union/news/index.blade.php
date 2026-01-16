@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista para la gestión de publicaciones del sindicato (noticias, comunicados,
 *                               convocatorias y eventos), mostrando el listado con su categoría, fecha de
 *                               publicación, estado y acciones de edición o eliminación.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 19/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

@@ -1,49 +1,50 @@
 <?php
-
 /*
-* ===========================================================
-* Nombre del archivo        : worker.php
-* Descripción               : Rutas del módulo Trabajador (Worker).
-* Fecha de creación         : 14/11/2025
-* Elaboró                   : Iker Piza
-* Versión                   : 1.3 (Corrección de rutas duplicadas y vista de trámites)
-* ===========================================================
+* Nombre del archivo          : worker.php
+* Descripción del archivo     : Archivo de definición de rutas para el módulo del trabajador.
+*                               Gestiona las funcionalidades disponibles para el rol trabajador,
+*                               incluyendo el inicio y seguimiento de trámites, carga y envío
+*                               de documentos, consulta del catálogo de trámites, visualización
+*                               de noticias, notificaciones y acceso a soporte.
+* Fecha de creación           : 29/09/2025
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/12/2025
+* Autorizó                   : Salvador Monroy
+* Versión                     : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento:
+* Responsable                :
+* Revisor                    :
 */
+
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkerProcedureController;
 use App\Http\Controllers\WorkerNotificationController;
 use App\Http\Controllers\WorkerNewsController;
 
-Route::prefix('worker')->middleware(['auth', 'isWorker'])->group(function () {
+Route::prefix('worker')->middleware(['auth', 'isWorker'])->group(function () 
+{
 
-    /* -------------------------------------------------------
-       DASHBOARD
-    ------------------------------------------------------- */
     Route::get('/', [WorkerProcedureController::class, 'index'])
         ->name('worker.index');
 
-    /* -------------------------------------------------------
-       NOTICIAS Y CONVOCATORIAS
-    ------------------------------------------------------- */
     Route::get('/news', [WorkerNewsController::class, 'index'])
         ->name('worker.news.index');
 
     Route::get('/news/{id}', [WorkerNewsController::class, 'show'])
         ->name('worker.news.show');
 
-    /* -------------------------------------------------------
-       NOTIFICACIONES
-    ------------------------------------------------------- */
+
     Route::get('/notifications', [WorkerNotificationController::class, 'index'])
         ->name('worker.notifications.index');
 
     Route::patch('/notifications/{id}/read', [WorkerNotificationController::class, 'markAsRead'])
         ->name('worker.notifications.read');
 
-    /* -------------------------------------------------------
-       TRÁMITES DEL TRABAJADOR
-    ------------------------------------------------------- */
+
     Route::post('/procedures/start/{id}', [WorkerProcedureController::class, 'start'])
         ->name('worker.procedures.start');
 
@@ -69,24 +70,15 @@ Route::prefix('worker')->middleware(['auth', 'isWorker'])->group(function () {
         ->name('worker.procedures.send-step');
 
 
-    /* -------------------------------------------------------
-       SOLICITUD DETALLADA (usa show(), NO showDetail())
-    ------------------------------------------------------- */
     Route::get('/requests/{id}', [WorkerProcedureController::class, 'show'])
         ->name('worker.requests.show');
 
-    /* -------------------------------------------------------
-       CATÁLOGO
-    ------------------------------------------------------- */
     Route::get('/catalog', [WorkerProcedureController::class, 'catalog'])
         ->name('worker.catalog.index');
 
     Route::get('/catalog/{id}', [WorkerProcedureController::class, 'catalogDetail'])
         ->name('worker.catalog.detail');
 
-    /* -------------------------------------------------------
-       SOPORTE
-    ------------------------------------------------------- */
     Route::view('/support', 'worker.support')
         ->name('worker.support');
 });

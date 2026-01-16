@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista de detalle del trámite seleccionado, donde se muestra la información
 *                               general del trámite y el desglose completo de los pasos definidos, incluyendo
 *                               descripciones, tiempos estimados, flujo alterno y documentos asociados.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 21/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

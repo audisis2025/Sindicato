@@ -104,12 +104,12 @@
 
                                         <form method="POST"
                                             action="{{ route('union.procedures.destroy', $procedure->id) }}"
-                                            onsubmit="return confirm('¿Seguro que deseas eliminar este trámite?');">
+                                            class="delete-form">
                                             @csrf
                                             @method('DELETE')
 
-                                            <flux:button size="xs" icon="trash"
-                                                class="w-full !bg-red-600 hover:!bg-red-700 !text-white" type="submit">
+                                            <flux:button size="xs" icon="trash" variant="danger" type="button"
+                                                class="w-full !bg-red-600 hover:!bg-red-700 !text-white delete-btn">
                                                 Eliminar
                                             </flux:button>
                                         </form>
@@ -131,5 +131,51 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        document.querySelectorAll('.delete-btn').forEach((btn) => {
+            btn.addEventListener('click', function() {
+                const form = this.closest('form');
+
+                Swal.fire({
+                        title: '¿Eliminar trámite?',
+                        text: 'Esta acción no se puede deshacer.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Confirmar',
+                        cancelButtonText: 'Cancelar',
+                        confirmButtonColor: '#42A958',
+                        cancelButtonColor: '#EE0000',
+                        buttonsStyling: true
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+            });
+        });
+    </script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: @json(session('success')),
+                confirmButtonColor: '#16a34a',
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'No se pudo eliminar',
+                text: @json(session('error')),
+                confirmButtonColor: '#dc2626',
+            });
+        </script>
+    @endif
 </x-layouts.app>

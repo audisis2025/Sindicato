@@ -1,24 +1,23 @@
 <?php
-
 /*
-* ===========================================================
-* Nombre del archivo        : admin.php
-* Descripción de la clase : Define las rutas del módulo de Administración.
-* Fecha de creación       : 14/11/2025
-* Elaboró                 : Iker Piza
-* Fecha de liberación     : 14/11/2025
-* Autorizó                : Technical Lead
-* Versión                 : 1.1
-*
-* Fecha de mantenimiento    : 14/11/2025
-* Folio de mantenimiento  : 001
-* Tipo de mantenimiento   : Correctivo
-* Descripción del mantenimiento: Se corrige el namespace de AdminConfigurationController
-* y se aplica la cabecera del manual (PRO-Laravel V3.3).
-* Responsable             : 
-* Revisor                 : Iker Piza
-* ===========================================================
+* Nombre del archivo          : admin.php
+* Descripción del archivo     : Archivo de definición de rutas para el módulo de administración del sistema.
+*                               Gestiona el acceso a funcionalidades exclusivas del rol administrador,
+*                               incluyendo la administración de usuarios, perfil del administrador,
+*                               configuración general del sistema, recordatorios, bitácoras y respaldos.
+* Fecha de creación           : 29/09/2025
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/12/2025
+* Autorizó                   : Salvador Monroy
+* Versión                     : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento:
+* Responsable                :
+* Revisor                    :
 */
+
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;

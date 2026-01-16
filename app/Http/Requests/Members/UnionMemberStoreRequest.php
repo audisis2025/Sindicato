@@ -3,17 +3,17 @@
 * Nombre de la clase       : UnionMemberStoreRequest.php
 * Descripción de la clase  : Validación para el alta de trabajadores
 *                           del Sindicato (módulo Union/Members).
-* Fecha de creación            : 09/11/2025
+* Fecha de creación            : 26/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 18/12/2025
-* Autorizó                     :
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
 * Versión                      : 1.0
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Http\Requests\Members;
@@ -77,6 +77,8 @@ class UnionMemberStoreRequest extends FormRequest
                 'max:30',
                 'regex:/^[A-Za-z0-9-]+$/',
             ],
+            'password' => ['required', 'string', 'min:8'],
+
         ];
     }
 

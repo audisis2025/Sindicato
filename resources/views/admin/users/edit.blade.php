@@ -2,10 +2,10 @@
 * Nombre de la vista          : edit.blade.php
 * Descripción de la vista     : Vista para la edición de usuarios del sistema por parte del administrador,
 *                               permitiendo actualizar información personal, rol, estado y datos fiscales.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 05/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

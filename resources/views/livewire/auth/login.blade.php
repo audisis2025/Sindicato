@@ -4,17 +4,17 @@
 * Descripción de la clase    : Vista/Componente Livewire Volt para el inicio de sesión de usuarios,
 *                              validando credenciales, controlando intentos mediante RateLimiter y
 *                              mostrando mensajes de éxito o error mediante alertas.
-* Fecha de creación          : 14/01/2026
-* Elaboró                    : Iker Piza
-* Fecha de liberación        : 14/01/2026
-* Autorizó                   :
-* Versión                    : 1.0
-* Fecha de mantenimiento     :
-* Folio de mantenimiento     :
-* Tipo de mantenimiento      :
-* Descripción del mantenimiento :
-* Responsable                :
-* Revisor                    :
+* Fecha de creación           : 14/11/2025
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    : Salvador Monroy
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 */
 
 

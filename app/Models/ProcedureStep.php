@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : ProcedureStep.php
 * Descripción de la clase      : Modelo Eloquent encargado de representar los pasos que conforman un trámite, incluyendo orden, descripción, flujo alterno en caso de error, requerimiento de archivos y relación con el trámite.
-* Fecha de creación            : 13/11/2025
+* Fecha de creación            : 18/10/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 18/12/2025
-* Autorizó                     :
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
 * Versión                      : 1.0
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Models;

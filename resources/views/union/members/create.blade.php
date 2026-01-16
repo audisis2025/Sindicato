@@ -2,10 +2,10 @@
 * Nombre de la vista          : create.blade.php
 * Descripción de la vista     : Vista para el registro (alta) de trabajadores por parte del sindicato,
 *                               permitiendo capturar datos personales y fiscales para su incorporación al sistema.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 17/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :
@@ -45,6 +45,12 @@
 
                 <flux:input name="email" :label="__('Correo electrónico')" type="email" required
                     autocomplete="email" maxlength="120" value="{{ old('email') }}" placeholder="correo@ejemplo.com" />
+
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                <flux:input name="password" :label="__('Contraseña')" type="password" required
+                    autocomplete="new-password" placeholder="********" viewable />
 
             </div>
 

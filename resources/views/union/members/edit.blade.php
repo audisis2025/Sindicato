@@ -2,10 +2,10 @@
 * Nombre de la vista          : edit.blade.php
 * Descripción de la vista     : Vista para la edición de trabajadores registrados por parte del sindicato,
 *                               permitiendo actualizar información personal, datos fiscales y el estado (activo/inactivo).
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 17/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

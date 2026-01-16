@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : WorkerNotificationController.php
 * Descripción de la clase      : Controlador encargado de la visualización y gestión de notificaciones del trabajador, incluyendo el marcado de notificaciones como leídas.
-* Fecha de creación            : 22/11/2025
+* Fecha de creación            : 30/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 19/12/2025
-* Autorizó                     :
-* Versión                      : 1.0
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 

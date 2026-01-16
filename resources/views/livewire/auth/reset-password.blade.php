@@ -4,17 +4,17 @@
 * Descripción de la clase    : Vista/Componente Livewire Volt para el restablecimiento de contraseña mediante token,
 *                              validando correo y nueva contraseña, actualizando credenciales y mostrando alertas
 *                              de éxito o error durante el proceso.
-* Fecha de creación          : 14/01/2026
-* Elaboró                    : Iker Piza
-* Fecha de liberación        : 14/01/2026
-* Autorizó                   :
-* Versión                    : 1.0
-* Fecha de mantenimiento     :
-* Folio de mantenimiento     :
-* Tipo de mantenimiento      :
-* Descripción del mantenimiento :
-* Responsable                :
-* Revisor                    :
+* Fecha de creación           : 14/11/2025
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    : Salvador Monroy
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 */
 
 

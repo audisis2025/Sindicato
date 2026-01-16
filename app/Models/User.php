@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : User.php
 * Descripción de la clase      : Modelo Eloquent principal del sistema encargado de representar a los usuarios, incluyendo autenticación, roles, relaciones con solicitudes de trámites, bitácora de actividades, notificaciones del sistema y utilidades auxiliares.
-* Fecha de creación            : 01/11/2025
+* Fecha de creación            : 21/10/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 18/12/2025
-* Autorizó                     :
-* Versión                      : 1.2
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.0
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Models;

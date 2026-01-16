@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista de detalle del trámite dentro del catálogo del trabajador, donde se muestra
 *                               la descripción, requisitos y pasos definidos, así como la opción para iniciar el
 *                               trámite o consultar el estado si ya se encuentra en proceso.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 01/12/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

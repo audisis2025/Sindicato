@@ -2,10 +2,10 @@
 /*
 * Nombre de la clase         : 2025_11_22_223018_add_procedure_step_id_to_procedure_documents_table.php
 * Descripción de la clase    : Migración para agregar la relación con los pasos del trámite a la tabla de documentos, permitiendo asociar cada archivo a un paso específico del proceso.
-* Fecha de creación          : 22/11/2025
+* Fecha de creación          : 23/11/2025
 * Elaboró                    : Iker Piza
 * Fecha de liberación        : 19/12/2025
-* Autorizó                   :
+* Autorizó                   : Salvador Monroy
 * Versión                    : 1.0
 * Fecha de mantenimiento     :
 * Folio de mantenimiento     :

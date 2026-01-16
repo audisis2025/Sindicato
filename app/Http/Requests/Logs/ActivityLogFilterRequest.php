@@ -1,22 +1,4 @@
 <?php
-/*
-* ===========================================================
-* Nombre de la clase       : ActivityLogFilterRequest.php
-* Descripción de la clase  : Validación de filtros para la Bitácora
-*                           del sistema (ActivityLog).
-* Fecha de creación       : 13/01/2026
-* Elaboró                 : Iker Piza
-* Fecha de liberación     : 13/01/2026
-* Autorizó                : Líder Técnico
-* Versión                 : 1.0
-* Fecha de mantenimiento  :
-* Folio de mantenimiento  :
-* Tipo de mantenimiento   :
-* Descripción del mantenimiento :
-* Responsable             :
-* Revisor                 : QA SINDISOFT
-* ===========================================================
-*/
 
 namespace App\Http\Requests\Logs;
 

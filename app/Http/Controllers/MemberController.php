@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : MemberController.php
 * Descripción de la clase      : Controlador encargado de la gestión de trabajadores (miembros): listado, alta, edición, actualización y eliminación.
-* Fecha de creación            : 08/11/2025
+* Fecha de creación            : 27/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 16/12/2025
-* Autorizó                     :
-* Versión                      : 1.0
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Http\Controllers;
@@ -64,7 +64,7 @@ class MemberController extends Controller
 			'rfc' => $data['rfc'],
 			'gender' => $data['gender'],
 			'budget_key' => $data['budget_key'],
-			'password' => Hash::make('12345678'),
+			'password' => Hash::make($data['password']),
 			'active' => true,
 		]);
 

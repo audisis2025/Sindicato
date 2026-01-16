@@ -2,18 +2,19 @@
 /*
 * Nombre de la clase           : ProcedureController.php
 * Descripción de la clase      : Controlador encargado de la gestión de trámites del sindicato: creación, edición, flujo de pasos, activación/desactivación, eliminación y administración de solicitudes.
-* Fecha de creación            : 15/11/2025
+* Fecha de creación            : 28/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 19/12/2025
-* Autorizó                     :
-* Versión                      : 1.3
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -25,6 +26,8 @@ use App\Models\ProcedureRequest;
 use App\Services\SystemLogger;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\Procedures\ProcedureStoreRequest;
+use App\Http\Requests\Procedures\ProcedureUpdateRequest;
 
 class ProcedureController extends Controller
 {
@@ -40,41 +43,12 @@ class ProcedureController extends Controller
 		return view('union.procedures.create');
 	}
 
-	public function store(Request $request): RedirectResponse
+	public function store(ProcedureStoreRequest $request): RedirectResponse
 	{
-		$validated = $request->validate([
-			'name' => 'required|string|max:255',
-			'description' => 'nullable|string|max:1000',
-			'opening_date' => 'nullable|date',
-			'closing_date' => 'nullable|date|after_or_equal:opening_date',
-			'estimated_days' => 'nullable|integer|min:1|max:365',
-			'steps' => 'required|array|min:1',
-			'steps.*.order' => 'required|integer|min:1',
-			'steps.*.step_name' => 'required|string|max:255',
-			'steps.*.step_description' => 'nullable|string|max:1000',
-			'steps.*.next_step_if_fail' => 'nullable|integer|min:1',
-			'steps.*.requires_file' => 'required|in:yes,no',
-			'steps.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
-		]);
+		$validated = $request->validated();
 
 		$steps = $validated['steps'];
 		$totalSteps = count($steps);
-
-		foreach ($steps as $step)
-		{
-			if (!empty($step['next_step_if_fail']))
-			{
-				if ($step['next_step_if_fail'] > $totalSteps)
-				{
-					return back()->withInput()->with('error', 'El flujo alterno apunta a un paso inexistente.');
-				}
-
-				if ($step['next_step_if_fail'] == $step['order'])
-				{
-					return back()->withInput()->with('error', 'Un paso no puede tener flujo alterno a sí mismo.');
-				}
-			}
-		}
 
 		$procedure = Procedure::create([
 			'user_id' => Auth::id(),
@@ -84,21 +58,18 @@ class ProcedureController extends Controller
 			'opening_date' => $validated['opening_date'],
 			'closing_date' => $validated['closing_date'],
 			'estimated_days' => $validated['estimated_days'],
-			'has_alternate_flow' => collect($steps)->contains(function ($s)
-			{
-				return !empty($s['next_step_if_fail']);
-			}),
+			'has_alternate_flow' => collect($steps)->contains(fn($s) => !empty($s['next_step_if_fail'])),
 		]);
 
 		app(SystemLogger::class)->log('Crear trámite', "El sindicato creó el trámite {$procedure->id}.");
 
-		foreach ($steps as $stepData)
+		foreach ($steps as $i => $stepData) 
 		{
 			$filePath = null;
 
-			if (!empty($stepData['file_path']))
+			if ($request->hasFile("steps.$i.file_path")) 
 			{
-				$filePath = $stepData['file_path']->store('procedure_files', 'public');
+				$filePath = $request->file("steps.$i.file_path")->store('procedure_files', 'public');
 			}
 
 			$procedure->steps()->create([
@@ -111,9 +82,11 @@ class ProcedureController extends Controller
 			]);
 		}
 
-		return redirect()->route('union.procedures.index')
+		return redirect()
+			->route('union.procedures.index')
 			->with('success', 'Trámite creado correctamente.');
 	}
+
 
 	public function show(string $id): View
 	{
@@ -129,47 +102,12 @@ class ProcedureController extends Controller
 		return view('union.procedures.edit', compact('procedure'));
 	}
 
-	public function update(Request $request, string $id): RedirectResponse
+	public function update(ProcedureUpdateRequest $request, string $id): RedirectResponse
 	{
 		$procedure = Procedure::with('steps')->findOrFail($id);
 
-		$validated = $request->validate([
-			'name' => 'required|string|max:255',
-			'description' => 'nullable|string|max:1000',
-			'opening_date' => 'nullable|date',
-			'closing_date' => 'nullable|date|after_or_equal:opening_date',
-			'estimated_days' => 'nullable|integer|min:1|max:365',
-			'steps' => 'nullable|array',
-			'steps.*.order' => 'nullable|integer|min:1',
-			'steps.*.step_name' => 'nullable|string|max:255',
-			'steps.*.step_description' => 'nullable|string|max:1000',
-			'steps.*.next_step_if_fail' => 'nullable|integer|min:1',
-			'steps.*.requires_file' => 'nullable|in:yes,no',
-			'steps.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx|max:10240',
-		]);
-
+		$validated = $request->validated();
 		$stepsInput = $validated['steps'] ?? null;
-
-		if ($stepsInput)
-		{
-			$totalSteps = count($stepsInput);
-
-			foreach ($stepsInput as $step)
-			{
-				if (!empty($step['next_step_if_fail']))
-				{
-					if ($step['next_step_if_fail'] > $totalSteps)
-					{
-						return back()->withInput()->with('error', 'El flujo alterno apunta a un paso inexistente.');
-					}
-
-					if ($step['next_step_if_fail'] == $step['order'])
-					{
-						return back()->withInput()->with('error', 'Un paso no puede tener flujo alterno a sí mismo.');
-					}
-				}
-			}
-		}
 
 		$procedure->update([
 			'name' => $validated['name'],
@@ -178,69 +116,94 @@ class ProcedureController extends Controller
 			'closing_date' => $validated['closing_date'],
 			'estimated_days' => $validated['estimated_days'],
 			'steps_count' => $stepsInput ? count($stepsInput) : $procedure->steps_count,
-			'has_alternate_flow' => $stepsInput && collect($stepsInput)->contains(function ($s)
-			{
-				return !empty($s['next_step_if_fail']);
-			}),
+			'has_alternate_flow' => $stepsInput
+				? collect($stepsInput)->contains(fn($s) => !empty($s['next_step_if_fail']))
+				: $procedure->has_alternate_flow,
 		]);
 
-		if (!$stepsInput)
+		if ($stepsInput === null) 
 		{
-			return redirect()->route('union.procedures.index')
+			return redirect()
+				->route('union.procedures.index')
 				->with('success', 'Trámite actualizado correctamente.');
 		}
 
-		$newOrders = collect($stepsInput)->pluck('order')->filter();
+		$totalSteps = count($stepsInput);
+
+		foreach ($stepsInput as $i => $stepData) 
+		{
+			if (empty($stepData['order']) || empty($stepData['step_name'])) 
+			{
+				return back()->withInput()->with('error', 'Todos los pasos deben tener orden y nombre.');
+			}
+
+			$order = (int) $stepData['order'];
+			if (!empty($stepData['next_step_if_fail'])) 
+			{
+				$next = (int) $stepData['next_step_if_fail'];
+
+				if ($next > $totalSteps) {
+					return back()->withInput()->with('error', 'El flujo alterno apunta a un paso inexistente.');
+				}
+				if ($next === $order) {
+					return back()->withInput()->with('error', 'Un paso no puede tener flujo alterno a sí mismo.');
+				}
+			}
+		}
+		$orders = collect($stepsInput)->pluck('order')->filter()->values();
+
+		if ($orders->count() !== $orders->unique()->count()) 
+		{
+			return back()->withInput()->with('error', 'No puede haber pasos con el mismo orden.');
+		}
+
+		$newOrders = collect($stepsInput)->pluck('order')->filter()->values();
 
 		$procedure->steps()
 			->whereNotIn('order', $newOrders)
 			->get()
-			->each(function ($oldStep)
+			->each(function ($oldStep) 
 			{
-				if ($oldStep->file_path)
+				if ($oldStep->file_path) 
 				{
 					Storage::disk('public')->delete($oldStep->file_path);
 				}
-
 				$oldStep->delete();
 			});
 
-		foreach ($stepsInput as $stepData)
+		foreach ($stepsInput as $i => $stepData) 
 		{
-			if (empty($stepData['order']) || empty($stepData['step_name']))
+			$order = (int) $stepData['order'];
+
+			$step = $procedure->steps()->where('order', $order)->first();
+			$filePath = $step?->file_path;
+
+			if ($request->hasFile("steps.$i.file_path")) 
 			{
-				continue;
-			}
-
-			$step = $procedure->steps()->where('order', $stepData['order'])->first();
-
-			$filePath = $step?->file_path ?? null;
-
-			if (!empty($stepData['file_path']))
-			{
-				if ($filePath)
+				if ($filePath) 
 				{
 					Storage::disk('public')->delete($filePath);
 				}
-
-				$filePath = $stepData['file_path']->store('procedure_files', 'public');
+				$filePath = $request->file("steps.$i.file_path")->store('procedure_files', 'public');
 			}
 
 			$procedure->steps()->updateOrCreate(
-				['order' => $stepData['order']],
+				['order' => $order],
 				[
 					'step_name' => $stepData['step_name'],
 					'step_description' => $stepData['step_description'] ?? null,
 					'next_step_if_fail' => $stepData['next_step_if_fail'] ?? null,
-					'requires_file' => $stepData['requires_file'] === 'yes',
+					'requires_file' => ($stepData['requires_file'] ?? 'no') === 'yes',
 					'file_path' => $filePath,
 				]
 			);
 		}
 
-		return redirect()->route('union.procedures.index')
+		return redirect()
+			->route('union.procedures.index')
 			->with('success', 'Trámite actualizado correctamente.');
 	}
+
 
 	public function toggleStatus(string $id): RedirectResponse
 	{
@@ -261,14 +224,18 @@ class ProcedureController extends Controller
 	{
 		$procedure = Procedure::with('requests', 'steps')->findOrFail($id);
 
-		if ($procedure->requests()->exists())
-		{
-			return back()->with('error', 'No puedes eliminar este trámite porque tiene solicitudes asociadas. Puedes desactivarlo.');
+		if ($procedure->requests()->whereIn('status', [
+			ProcedureRequest::STATUS_INITIATED,
+			ProcedureRequest::STATUS_IN_PROGRESS,
+			ProcedureRequest::STATUS_PENDING_UNION,
+			ProcedureRequest::STATUS_PENDING_WORKER,
+		])->exists()) {
+			return back()->with('error', 'No puedes eliminar este trámite porque tiene solicitudes activas asociadas. Puedes desactivarlo.');
 		}
 
-		foreach ($procedure->steps as $step)
+		foreach ($procedure->steps as $step) 
 		{
-			if ($step->file_path)
+			if ($step->file_path) 
 			{
 				Storage::disk('public')->delete($step->file_path);
 			}
@@ -315,7 +282,7 @@ class ProcedureController extends Controller
 
 		$estado = strtolower($estado);
 
-		if (!in_array($estado, ['completed', 'rejected']))
+		if (!in_array($estado, ['completed', 'rejected'])) 
 		{
 			abort(400, 'Estado no válido.');
 		}

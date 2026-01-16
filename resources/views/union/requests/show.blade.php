@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista de revisión y detalle de una solicitud de trámite por parte del sindicato,
 *                               donde se muestra información general del trámite, el estatus actual y el listado
 *                               de pasos para aprobar, rechazar o notificar correcciones al trabajador.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 24/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

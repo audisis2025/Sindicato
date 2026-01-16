@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : WorkerProcedureController.php
 * Descripción de la clase      : Controlador encargado de la gestión de trámites del trabajador: listado de solicitudes activas/finalizadas, inicio de trámites, visualización de pasos, envío de pasos, carga de documentos, cancelación y consulta del catálogo.
-* Fecha de creación            : 25/11/2025
+* Fecha de creación            : 30/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 19/12/2025
-* Autorizó                     :
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
 * Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Http\Controllers;
@@ -26,6 +26,7 @@ use App\Models\ProcedureDocument;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Models\News;
+use Illuminate\Support\Facades\Storage;
 
 class WorkerProcedureController extends Controller
 {
@@ -85,7 +86,8 @@ class WorkerProcedureController extends Controller
 			->whereIn('status', $blocked)
 			->exists();
 
-		if ($exists) {
+		if ($exists) 
+		{
 			return back()->with('error', 'Ya registraste este trámite y no puedes iniciarlo nuevamente.');
 		}
 
@@ -113,34 +115,64 @@ class WorkerProcedureController extends Controller
 		]);
 	}
 
-	public function upload(Request $req, string $requestId): RedirectResponse
+	public function upload(Request $req, string $solicitudId, string $pasoId): RedirectResponse
 	{
 		$validated = $req->validate([
-			'file' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:10240',
-			'step_id' => 'required|integer|exists:procedure_steps,id',
+			'file' => ['required', 'file', 'max:10240', 'mimes:pdf,doc,docx,jpg,jpeg,png,xls,xlsx'],
 		]);
 
-		$procedureRequest = ProcedureRequest::where('id', $requestId)
+		$procedureRequest = ProcedureRequest::with('procedure.steps')
+			->where('id', $solicitudId)
 			->where('user_id', Auth::id())
 			->firstOrFail();
+
+		$step = $procedureRequest->procedure->steps->firstWhere('id', (int) $pasoId);
+
+		if (!$step) 
+		{
+			return back()->with('error', 'El paso seleccionado no pertenece a este trámite.');
+		}
+
+		if ((int) $procedureRequest->current_step !== (int) $step->order) 
+		{
+			return back()->with('error', 'Debes completar los pasos en orden.');
+		}
+
+		if (!$step->requires_file) 
+		{
+			return back()->with('error', 'Este paso no requiere archivo.');
+		}
 
 		$file = $validated['file'];
 		$path = $file->store('worker_uploads', 'public');
 
-		ProcedureDocument::create([
-			'procedure_request_id' => $procedureRequest->id,
-			'procedure_step_id' => $validated['step_id'],
-			'file_name' => $file->getClientOriginalName(),
-			'file_path' => $path,
-			'type' => $file->getClientOriginalExtension(),
-			'year' => now()->year,
-		]);
+		$existing = ProcedureDocument::where('procedure_request_id', $procedureRequest->id)
+			->where('procedure_step_id', $step->id)
+			->first();
+
+		if ($existing && $existing->file_path) 
+		{
+			Storage::disk('public')->delete($existing->file_path);
+		}
+
+		ProcedureDocument::updateOrCreate(
+			[
+				'procedure_request_id' => $procedureRequest->id,
+				'procedure_step_id' => $step->id,
+			],
+			[
+				'file_name' => $file->getClientOriginalName(),
+				'file_path' => $path,
+				'type' => $file->getClientOriginalExtension(),
+				'year' => now()->year,
+			]
+		);
 
 		$procedureRequest->update([
 			'status' => 'pending_union',
 		]);
 
-		return back()->with('success', 'Archivo enviado al sindicato.');
+		return back()->with('success', 'Archivo enviado al sindicato para revisión.');
 	}
 
 	public function cancel(string $id): RedirectResponse
@@ -163,13 +195,20 @@ class WorkerProcedureController extends Controller
 			->where('user_id', Auth::id())
 			->firstOrFail();
 
-		$step = ProcedureStep::findOrFail($stepId);
+		$step = $request->procedure->steps->firstWhere('id', (int) $stepId);
 
-		if ($request->current_step != $step->order) {
+		if (!$step) 
+		{
+			return back()->with('error', 'El paso seleccionado no pertenece a este trámite.');
+		}
+
+		if ((int) $request->current_step !== (int) $step->order) 
+		{
 			return back()->with('error', 'Debes completar los pasos en orden.');
 		}
 
-		if ($step->requires_file) {
+		if ($step->requires_file) 
+		{
 			return back()->with('error', 'Este paso requiere subir un archivo primero.');
 		}
 
@@ -179,6 +218,7 @@ class WorkerProcedureController extends Controller
 
 		return back()->with('success', 'Paso enviado al sindicato para revisión.');
 	}
+
 
 	public function catalog(): View
 	{

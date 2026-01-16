@@ -2,16 +2,16 @@
 /*
 * Nombre de la clase           : Kernel.php
 * Descripción de la clase      : Núcleo HTTP de la aplicación encargado del registro y configuración de middlewares globales, grupos de middlewares y middlewares de ruta.
-* Fecha de creación            : N/A
+* Fecha de creación            : 10/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : N/A
-* Autorizó                     : N/A
-* Versión                      : 1.1
-* Fecha de mantenimiento       : 14/01/2026
-* Folio de mantenimiento       : 
-* Tipo de mantenimiento        : Correctivo / Perfectivo
-* Descripción del mantenimiento: Registro y configuración de middlewares personalizados para control de roles (Administrador, Sindicato y Trabajador).
-* Responsable                  : 
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
+* Responsable                  :
 * Revisor                      : 
 */
 

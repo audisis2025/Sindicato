@@ -2,10 +2,10 @@
 * Nombre de la vista          : notifications.blade.php
 * Descripción de la vista     : Vista para la consulta de notificaciones del trabajador, mostrando el listado
 *                               de avisos del sistema y permitiendo marcar notificaciones como leídas.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 11/12/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

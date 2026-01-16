@@ -4,10 +4,10 @@
 * Descripción de la clase    : Migración para actualizar el ENUM del campo type en la tabla de notificaciones del sistema,
 *                              ampliando los tipos disponibles para reflejar distintos estados y eventos del flujo
 *                              de trámites y notificaciones internas.
-* Fecha de creación          : 22/11/2025
+* Fecha de creación          : 02/12/2025
 * Elaboró                    : Iker Piza
 * Fecha de liberación        : 19/12/2025
-* Autorizó                   :
+* Autorizó                   : Salvador Monroy
 * Versión                    : 1.0
 * Fecha de mantenimiento     :
 * Folio de mantenimiento     :

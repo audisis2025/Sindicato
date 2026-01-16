@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase         : 2025_11_10_224011_create_procedure_documents_table.php
 * Descripción de la clase    : Migración para la creación de la tabla de documentos asociados a las solicitudes de trámites, incluyendo información del archivo, tipo y año.
-* Fecha de creación          : 10/11/2025
-* Elaboró                    : Iker Piza
-* Fecha de liberación        : 19/12/2025
-* Autorizó                   :
-* Versión                    : 1.0
-* Fecha de mantenimiento     :
-* Folio de mantenimiento     :
-* Tipo de mantenimiento      :
-* Descripción del mantenimiento :
-* Responsable                :
-* Revisor                    :
+* Fecha de creación            : 10/11/2025
+* Elaboró                      : Iker Piza
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.0
+* Fecha de mantenimiento       :
+* Folio de mantenimiento       :
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
+* Responsable                  :
+* Revisor                      :
 */
 
 use Illuminate\Database\Migrations\Migration;

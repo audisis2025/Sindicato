@@ -2,10 +2,10 @@
 * Nombre de la vista          : index.blade.php
 * Descripción de la vista     : Vista de consulta de convocatorias, comunicados y eventos publicados por el sindicato,
 *                               permitiendo al trabajador filtrar y revisar los anuncios oficiales disponibles.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 08/12/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

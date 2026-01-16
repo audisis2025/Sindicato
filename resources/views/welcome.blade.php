@@ -2,10 +2,10 @@
 * Nombre de la vista          : welcome.blade.php
 * Descripción de la vista     : Página de bienvenida pública del sistema SINDISOFT, que presenta información
 *                               general del sistema y permite el acceso a la pantalla de inicio de sesión.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 03/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

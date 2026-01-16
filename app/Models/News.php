@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : News.php
 * Descripción de la clase      : Modelo Eloquent encargado de la gestión de noticias, comunicados, convocatorias y eventos del sistema, incluyendo manejo de fechas de publicación/expiración, relaciones y scopes de visibilidad para trabajadores.
-* Fecha de creación            : 11/11/2025
+* Fecha de creación            : 06/10/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 18/12/2025
-* Autorizó                     :
-* Versión                      : 1.1
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.0
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Models;

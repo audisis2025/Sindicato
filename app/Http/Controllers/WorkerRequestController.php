@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : WorkerRequestController.php
 * Descripción de la clase      : Controlador encargado de la gestión de solicitudes de trámites del trabajador: dashboard, inicio de trámites, visualización, envío de correcciones por paso y finalización/cancelación.
-* Fecha de creación            : 27/11/2025
+* Fecha de creación            : 30/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 19/12/2025
-* Autorizó                     :
-* Versión                      : 1.1
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Http\Controllers;

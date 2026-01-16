@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista principal del panel del trabajador, donde se consultan trámites activos,
 *                               historial de trámites finalizados y trámites disponibles para iniciar, con acceso
 *                               al detalle de cada solicitud y acciones correspondientes.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 04/12/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

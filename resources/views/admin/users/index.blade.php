@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista principal para la gestión de usuarios del sistema, que permite al
 *                               administrador consultar, filtrar, crear, editar, activar, desactivar
 *                               y eliminar usuarios según su rol.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 07/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

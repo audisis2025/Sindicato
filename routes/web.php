@@ -1,13 +1,23 @@
 <?php
-
-/**
- * ===========================================================
- * File name: web.php
- * Descripción: Rutas públicas, login con Livewire Volt,
- * dashboard por roles y módulos institucionales SINDISOFT.
- * Versión: 4.0
- * ===========================================================
- */
+/*
+* Nombre del archivo          : web.php
+* Descripción del archivo     : Archivo principal de definición de rutas del sistema.
+*                               Gestiona el acceso general, autenticación, sesión,
+*                               redirecciones por rol, configuración de usuario y
+*                               carga de los módulos de administración, sindicato
+*                               y trabajador.
+* Fecha de creación           : 29/09/2025
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/12/2025
+* Autorizó                   : Salvador Monroy
+* Versión                     : 1.0
+* Fecha de mantenimiento     :
+* Folio de mantenimiento     :
+* Tipo de mantenimiento      :
+* Descripción del mantenimiento:
+* Responsable                :
+* Revisor                    :
+*/
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -15,36 +25,18 @@ use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\WorkerNotificationController;
 
-/*
-|--------------------------------------------------------------------------
-| Página principal
-|--------------------------------------------------------------------------
-*/
-
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
 
-/*
-|--------------------------------------------------------------------------
-| LOGIN / LOGOUT — LIVEWIRE VOLT
-|--------------------------------------------------------------------------
-| SECCIÓN CRÍTICA PARA SOLUCIONAR TU ERROR
-| "Using $this when not in object context"
-|--------------------------------------------------------------------------
-*/
-
-// LOGIN (Volt)
 Volt::route('login', 'auth.login')->name('login');
-// FORGOT PASSWORD (Volt)
 Volt::route('forgot-password', 'auth.forgot-password')->name('password.request');
 
-// RESET PASSWORD (Volt)
 Volt::route('reset-password/{token}', 'auth.reset-password')->name('password.reset');
 
-// LOGOUT tradicional de Laravel
-Route::post('/logout', function () {
+Route::post('/logout', function () 
+{
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
@@ -53,13 +45,8 @@ Route::post('/logout', function () {
 
 
 
-/*
-|--------------------------------------------------------------------------
-| DASHBOARD GENERAL (con roles)
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
+Route::middleware(['auth', 'verified'])->get('/dashboard', function () 
+{
     $user = Auth::user();
     $rol  = $user->role;
 
@@ -72,15 +59,8 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 
 
 
-
-
-/*
-|--------------------------------------------------------------------------
-| AJUSTES / SETTINGS (Livewire Volt)
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () 
+{
 
     Route::redirect('settings', '/settings/profile');
 
@@ -106,9 +86,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// =====================================
-// Rutas modulares (se cargan al final)
-// =====================================
 require __DIR__ . '/admin.php';
 require __DIR__ . '/union.php';
 require __DIR__ . '/worker.php';

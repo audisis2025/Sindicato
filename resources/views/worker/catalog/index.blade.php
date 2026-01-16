@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista del catálogo de trámites para el trabajador, donde se muestran los trámites
 *                               disponibles con opciones de búsqueda y filtros, así como el listado de publicaciones
 *                               del sindicato para consulta general.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 01/12/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

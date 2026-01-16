@@ -3,10 +3,10 @@
 * Descripción de la vista     : Vista principal del dashboard del sistema, mostrando un mensaje de bienvenida
 *                               y contenido informativo según el rol del usuario, incluyendo notificaciones
 *                               recientes para el trabajador cuando existan pendientes.
-* Fecha de creación           : 14/01/2026
+* Fecha de creación           : 03/11/2025
 * Elaboró                     : Iker Piza
 * Fecha de liberación         : 14/01/2026
-* Autorizó                    :
+* Autorizó                    : Salvador Monroy
 * Versión                     : 1.0
 * Fecha de mantenimiento      :
 * Folio de mantenimiento      :

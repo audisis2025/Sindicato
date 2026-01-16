@@ -4,10 +4,10 @@
 * Descripción de la clase    : Migración para actualizar el ENUM del campo gender en la tabla de usuarios,
 *                              incorporando opciones adicionales para una representación más inclusiva
 *                              y flexible del sexo / género.
-* Fecha de creación          : 22/11/2025
+* Fecha de creación          : 14/01/2026
 * Elaboró                    : Iker Piza
 * Fecha de liberación        : 19/12/2025
-* Autorizó                   :
+* Autorizó                   : Salvador Monroy
 * Versión                    : 1.0
 * Fecha de mantenimiento     :
 * Folio de mantenimiento     :

@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : UnionRequestController.php
 * Descripción de la clase      : Controlador encargado de la gestión de solicitudes de trámites por parte del sindicato: listado, visualización, aprobación/rechazo de pasos, notificación de errores y finalización.
-* Fecha de creación            : 18/11/2025
+* Fecha de creación            : 29/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 19/12/2025
-* Autorizó                     :
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
 * Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Http\Controllers;

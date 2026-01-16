@@ -2,17 +2,17 @@
 /*
 * Nombre de la clase           : UserController.php
 * Descripción de la clase      : Controlador encargado de la administración de usuarios del sistema: listado, alta, edición, actualización, eliminación y cambio de estado.
-* Fecha de creación            : 05/11/2025
+* Fecha de creación            : 29/09/2025
 * Elaboró                      : Iker Piza
-* Fecha de liberación          : 17/12/2025
-* Autorizó                     :
-* Versión                      : 1.1
+* Fecha de liberación          : 14/12/2025
+* Autorizó                     : Salvador Monroy
+* Versión                      : 1.2
 * Fecha de mantenimiento       :
 * Folio de mantenimiento       :
-* Tipo de mantenimiento        :
-* Descripción del mantenimiento:
+* Tipo de mantenimiento        : 
+* Descripción del mantenimiento: 
 * Responsable                  :
-* Revisor                      :
+* Revisor                      : 
 */
 
 namespace App\Http\Controllers;

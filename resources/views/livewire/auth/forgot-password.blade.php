@@ -3,17 +3,17 @@
 * Nombre de la clase         : forgot-password.blde.php
 * Descripción de la clase    : Componente Livewire Volt encargado de solicitar el enlace de restablecimiento de
 *                              contraseña, validando el correo electrónico y mostrando alertas de éxito o error.
-* Fecha de creación          : 14/01/2026
-* Elaboró                    : Iker Piza
-* Fecha de liberación        : 14/01/2026
-* Autorizó                   :
-* Versión                    : 1.0
-* Fecha de mantenimiento     :
-* Folio de mantenimiento     :
-* Tipo de mantenimiento      :
-* Descripción del mantenimiento :
-* Responsable                :
-* Revisor                    :
+* Fecha de creación           : 14/11/2025
+* Elaboró                     : Iker Piza
+* Fecha de liberación         : 14/01/2026
+* Autorizó                    : Salvador Monroy
+* Versión                     : 1.0
+* Fecha de mantenimiento      :
+* Folio de mantenimiento      :
+* Tipo de mantenimiento       :
+* Descripción del mantenimiento:
+* Responsable                 :
+* Revisor                     :
 */
 
 use Illuminate\Support\Facades\Password;
